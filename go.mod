@@ -66,7 +66,7 @@ require (
 	github.com/DataDog/zstd_0 v0.0.0-20210310093942-586c1286621f
 	github.com/Masterminds/semver v1.5.0
 	github.com/Masterminds/sprig/v3 v3.2.2
-	github.com/Microsoft/go-winio v0.5.2
+	github.com/Microsoft/go-winio v0.6.0
 	github.com/Microsoft/hcsshim v0.9.4
 	github.com/acobaugh/osrelease v0.1.0
 	github.com/alecthomas/participle v0.7.1
@@ -74,7 +74,7 @@ require (
 	github.com/alecthomas/units v0.0.0-20211218093645-b94a6e3cc137
 	github.com/avast/retry-go/v4 v4.3.1
 	github.com/aws/aws-lambda-go v1.32.0
-	github.com/aws/aws-sdk-go v1.44.117
+	github.com/aws/aws-sdk-go v1.44.136
 	github.com/beevik/ntp v0.3.0
 	github.com/benbjohnson/clock v1.3.0
 	github.com/benesch/cgosymbolizer v0.0.0-20190515212042-bec6fe6e597b
@@ -95,7 +95,7 @@ require (
 	github.com/cri-o/ocicni v0.4.0
 	github.com/cyphar/filepath-securejoin v0.2.3
 	github.com/davecgh/go-spew v1.1.1
-	github.com/docker/docker v20.10.17+incompatible
+	github.com/docker/docker v20.10.20+incompatible
 	github.com/docker/go-connections v0.4.0
 	github.com/docker/libnetwork v0.5.6
 	github.com/dustin/go-humanize v1.0.0
@@ -125,7 +125,7 @@ require (
 	github.com/hashicorp/golang-lru/v2 v2.0.1
 	github.com/hectane/go-acl v0.0.0-20190604041725-da78bae5fc95
 	github.com/iceber/iouring-go v0.0.0-20220511091803-99712053f7ec
-	github.com/imdario/mergo v0.3.12
+	github.com/imdario/mergo v0.3.13
 	github.com/invopop/jsonschema v0.7.0
 	github.com/iovisor/gobpf v0.2.0
 	github.com/itchyny/gojq v0.12.9
@@ -145,8 +145,8 @@ require (
 	github.com/oliveagle/jsonpath v0.0.0-20180606110733-2e52cf6e6852
 	github.com/open-policy-agent/opa v0.45.0
 	github.com/open-telemetry/opentelemetry-collector-contrib/pkg/resourcetotelemetry v0.64.0
-	github.com/opencontainers/image-spec v1.0.3-0.20211202183452-c5a74bcca799
-	github.com/opencontainers/runtime-spec v1.0.3-0.20210326190908-1c3f411f0417
+	github.com/opencontainers/image-spec v1.1.0-rc2
+	github.com/opencontainers/runtime-spec v1.0.3-0.20220311020903-6969a0a09ab1
 	github.com/openshift/api v3.9.0+incompatible
 	github.com/pahanini/go-grpc-bidirectional-streaming-example v0.0.0-20211027164128-cc6111af44be
 	github.com/patrickmn/go-cache v2.1.0+incompatible
@@ -193,7 +193,7 @@ require (
 	golang.org/x/sync v0.1.0
 	golang.org/x/sys v0.2.0
 	golang.org/x/text v0.4.0
-	golang.org/x/time v0.0.0-20220411224347-583f2d630306
+	golang.org/x/time v0.0.0-20220609170525-579cf78fd858
 	golang.org/x/tools v0.3.0
 	google.golang.org/genproto v0.0.0-20221027153422-115e99e71e1c
 	google.golang.org/grpc v1.50.1
@@ -204,19 +204,19 @@ require (
 	gopkg.in/yaml.v3 v3.0.1
 	gopkg.in/zorkian/go-datadog-api.v2 v2.30.0
 	gotest.tools v2.2.0+incompatible
-	k8s.io/api v0.23.8
-	k8s.io/apimachinery v0.23.8
-	k8s.io/apiserver v0.23.8
+	k8s.io/api v0.25.3
+	k8s.io/apimachinery v0.25.3
+	k8s.io/apiserver v0.25.0
 	k8s.io/autoscaler/vertical-pod-autoscaler v0.10.0
-	k8s.io/client-go v0.23.8
+	k8s.io/client-go v0.25.3
 	k8s.io/cri-api v0.23.8
 	k8s.io/klog v1.0.1-0.20200310124935-4ad0115ba9e4 // Min version that includes fix for Windows Nano
-	k8s.io/klog/v2 v2.60.1
-	k8s.io/kube-openapi v0.0.0-20220124234850-424119656bbf
+	k8s.io/klog/v2 v2.70.1
+	k8s.io/kube-openapi v0.0.0-20220803162953-67bda5d908f1
 	k8s.io/kube-state-metrics/v2 v2.4.2
 	k8s.io/kubelet v0.23.8
 	k8s.io/metrics v0.23.8
-	k8s.io/utils v0.0.0-20220210201930-3a6ce19ff2f9
+	k8s.io/utils v0.0.0-20220728103510-ee6ede2d64ed
 	sigs.k8s.io/custom-metrics-apiserver v1.23.0
 )
 
@@ -239,7 +239,6 @@ require (
 	code.cloudfoundry.org/tlsconfig v0.0.0-20200131000646-bbe0f8da39b3 // indirect
 	contrib.go.opencensus.io/exporter/prometheus v0.4.2 // indirect
 	github.com/AlekSi/pointer v1.1.0 // indirect
-	github.com/BurntSushi/toml v1.1.0 // indirect
 	github.com/DataDog/aptly v1.5.0 // indirect
 	github.com/DataDog/extendeddaemonset v0.7.1-0.20220530183123-9c60ea5abbc6 // indirect
 	github.com/DataDog/gostackparse v0.5.0 // indirect
@@ -253,29 +252,29 @@ require (
 	github.com/StackExchange/wmi v1.2.1 // indirect
 	github.com/agnivade/levenshtein v1.1.1 // indirect
 	github.com/andybalholm/brotli v1.0.2 // indirect
+	github.com/aquasecurity/trivy v0.35.0
 	github.com/arduino/go-apt-client v0.0.0-20190812130613-5613f843fdc8 // indirect
 	github.com/armon/go-metrics v0.3.10 // indirect
 	github.com/awalterschulze/gographviz v2.0.1+incompatible // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
-	github.com/blang/semver v3.5.1+incompatible // indirect
 	github.com/bmizerany/pat v0.0.0-20170815010413-6226ea591a40 // indirect
 	github.com/cavaliergopher/grab/v3 v3.0.1 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
-	github.com/containerd/continuity v0.2.2 // indirect
+	github.com/containerd/continuity v0.3.0 // indirect
 	github.com/containerd/fifo v1.0.0 // indirect
-	github.com/containerd/ttrpc v1.1.0 // indirect
+	github.com/containerd/ttrpc v1.1.1-0.20220420014843-944ef4a40df3 // indirect
 	github.com/containernetworking/plugins v1.1.1 // indirect
 	github.com/coreos/go-systemd/v22 v22.3.2 // indirect
 	github.com/coreos/pkg v0.0.0-20180928190104-399ea9e2e55f // indirect
 	github.com/dgraph-io/ristretto v0.1.0 // indirect
 	github.com/dgryski/go-jump v0.0.0-20211018200510-ba001c3ffce0 // indirect
-	github.com/docker/distribution v2.7.1+incompatible // indirect
+	github.com/docker/distribution v2.8.1+incompatible // indirect
 	github.com/docker/go-events v0.0.0-20190806004212-e31b211e4f1c // indirect
-	github.com/docker/go-units v0.4.0 // indirect
+	github.com/docker/go-units v0.5.0 // indirect
 	github.com/dsnet/compress v0.0.2-0.20210315054119-f66993602bf5 // indirect
 	github.com/emicklei/go-restful v2.16.0+incompatible // indirect
 	github.com/emicklei/go-restful-swagger12 v0.0.0-20201014110547-68ccff494617 // indirect
-	github.com/evanphx/json-patch v4.12.0+incompatible // indirect
+	github.com/evanphx/json-patch v5.6.0+incompatible // indirect
 	github.com/felixge/httpsnoop v1.0.3 // indirect
 	github.com/fsnotify/fsnotify v1.6.0
 	github.com/ghodss/yaml v1.0.0 // indirect
@@ -285,10 +284,10 @@ require (
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-openapi/jsonpointer v0.19.5 // indirect
 	github.com/go-openapi/jsonreference v0.20.0 // indirect
-	github.com/go-openapi/swag v0.21.1 // indirect
-	github.com/go-test/deep v1.0.5 // indirect
+	github.com/go-openapi/swag v0.22.3 // indirect
+	github.com/go-test/deep v1.0.7 // indirect
 	github.com/godbus/dbus/v5 v5.0.6 // indirect
-	github.com/gogo/googleapis v1.4.0 // indirect
+	github.com/gogo/googleapis v1.4.1 // indirect
 	github.com/golang/glog v1.0.0 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/google/gofuzz v1.2.0 // indirect
@@ -335,7 +334,7 @@ require (
 	github.com/mitchellh/reflectwalk v1.0.2 // indirect
 	github.com/mkrautz/goar v0.0.0-20150919110319-282caa8bd9da // indirect
 	github.com/moby/locker v1.0.1 // indirect
-	github.com/moby/sys/signal v0.6.0 // indirect
+	github.com/moby/sys/signal v0.7.0 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/mostynb/go-grpc-compression v1.1.17 // indirect
@@ -360,7 +359,7 @@ require (
 	github.com/rivo/uniseg v0.2.0 // indirect
 	github.com/rs/cors v1.8.2 // indirect
 	github.com/sassoftware/go-rpmutils v0.2.0 // indirect
-	github.com/secure-systems-lab/go-securesystemslib v0.3.1
+	github.com/secure-systems-lab/go-securesystemslib v0.4.0
 	github.com/shopspring/decimal v1.2.0 // indirect
 	github.com/skydive-project/go-debouncer v1.0.0 // indirect
 	github.com/smira/go-ftp-protocol v0.0.0-20140829150050-066b75c2b70d // indirect
@@ -405,7 +404,7 @@ require (
 	go.uber.org/fx v1.18.2
 	golang.org/x/crypto v0.1.0 // indirect
 	golang.org/x/mod v0.7.0 // indirect
-	golang.org/x/oauth2 v0.0.0-20221014153046-6fdb5e3db783 // indirect
+	golang.org/x/oauth2 v0.1.0 // indirect
 	golang.org/x/term v0.2.0 // indirect
 	golang.org/x/xerrors v0.0.0-20220907171357-04be3eba64a2 // indirect
 	gomodules.xyz/jsonpatch/v2 v2.2.0 // indirect
@@ -414,14 +413,22 @@ require (
 	gopkg.in/Knetic/govaluate.v3 v3.0.0 // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0 // indirect
-	k8s.io/apiextensions-apiserver v0.23.5 // indirect
-	k8s.io/component-base v0.23.8 // indirect
-	k8s.io/gengo v0.0.0-20210813121822-485abfe95c7c // indirect
-	sigs.k8s.io/apiserver-network-proxy/konnectivity-client v0.0.30 // indirect
+	k8s.io/apiextensions-apiserver v0.25.0 // indirect
+	k8s.io/component-base v0.25.3 // indirect
+	k8s.io/gengo v0.0.0-20211129171323-c02415ce4185 // indirect
+	sigs.k8s.io/apiserver-network-proxy/konnectivity-client v0.0.32 // indirect
 	sigs.k8s.io/controller-runtime v0.11.2 // indirect
-	sigs.k8s.io/json v0.0.0-20211208200746-9f7c6b3444d2 // indirect
-	sigs.k8s.io/structured-merge-diff/v4 v4.2.1 // indirect
+	sigs.k8s.io/json v0.0.0-20220713155537-f223a00ba0e2 // indirect
+	sigs.k8s.io/structured-merge-diff/v4 v4.2.3 // indirect
 	sigs.k8s.io/yaml v1.3.0 // indirect
+)
+
+require (
+	github.com/aquasecurity/trivy-db v0.0.0-20220627104749-930461748b63 // indirect
+	github.com/blang/semver v3.5.1+incompatible // indirect
+	github.com/caarlos0/env/v6 v6.10.1 // indirect
+	github.com/google/go-containerregistry v0.12.0 // indirect
+	github.com/spdx/tools-golang v0.3.0 // indirect
 )
 
 replace github.com/pahanini/go-grpc-bidirectional-streaming-example v0.0.0-20211027164128-cc6111af44be => github.com/DataDog/go-grpc-bidirectional-streaming-example v0.0.0-20221024060302-b9cf785c02fe
@@ -441,3 +448,15 @@ replace github.com/vishvananda/netlink => github.com/DataDog/netlink v1.0.1-0.20
 // so we created a fork that removed the dependency entirely. This can be
 // removed once k8s.io uses opentelemetry 1.0 or newer
 replace k8s.io/apiserver => github.com/juliogreff/apiserver v0.23.6-0.20220531090536-be42650a25e5
+
+replace (
+	github.com/gogo/googleapis => github.com/gogo/googleapis v1.4.0
+	k8s.io/api => k8s.io/api v0.23.8
+	k8s.io/apiextensions-apiserver => k8s.io/apiextensions-apiserver v0.23.5 // indirect
+	k8s.io/apimachinery => k8s.io/apimachinery v0.23.8
+	k8s.io/client-go => k8s.io/client-go v0.23.8
+	k8s.io/component-base => k8s.io/component-base v0.23.8 // indirect
+	k8s.io/gengo => k8s.io/gengo v0.0.0-20210813121822-485abfe95c7c // indirect
+	k8s.io/kube-openapi => k8s.io/kube-openapi v0.0.0-20220124234850-424119656bbf
+	sigs.k8s.io/apiserver-network-proxy/konnectivity-client => sigs.k8s.io/apiserver-network-proxy/konnectivity-client v0.0.30 // indirect
+)
