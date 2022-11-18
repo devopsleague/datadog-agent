@@ -39,6 +39,20 @@ const (
 	// Python config
 	pythonPathKey   = "PYTHONPATH"
 	pythonPathValue = "/datadog-lib/"
+
+	// Dotnet config
+	clrEnableProfilingKey     = "CORECLR_ENABLE_PROFILING"
+	clrEnableProfilingValue   = "1"
+
+	clrProfilerIdKey          = "CORECLR_PROFILER"
+	clrProfilerIdValue        = "{918728DD-259F-4A6A-AC2B-B85E1B658318}"
+
+	// TODO: Need to handle somehow the platform specific path here.
+	clrProfilerPathKey        = "CORECLR_PROFILER_PATH"
+	clrProfilerPathValue      = "/datadog-lib/linux-x64/Datadog.Trace.ClrProfiler.Native.so"
+
+	tracerHomeKey             = "DD_DOTNET_TRACER_HOME"
+	tracerHomeValue           = "/datadog-lib"
 )
 
 type language string
@@ -47,12 +61,13 @@ const (
 	java   language = "java"
 	js     language = "js"
 	python language = "python"
+	dotnet language = "dotnet"
 )
 
 var (
 	libVersionAnnotationKeyFormat = "admission.datadoghq.com/%s-lib.version"
 	customLibAnnotationKeyFormat  = "admission.datadoghq.com/%s-lib.custom-image"
-	supportedLanguages            = []language{java, js, python}
+	supportedLanguages            = []language{java, js, python, dotnet}
 )
 
 // InjectAutoInstrumentation injects APM libraries into pods
@@ -132,6 +147,15 @@ func injectAutoInstruConfig(pod *corev1.Pod, lang language, image string) error 
 			return err
 		}
 
+
+	case dotnet:
+		injectLibInitContainer(pod, image)
+		err := injectDotnetLibConfig(pod)
+		if err != nil {
+			metrics.LibInjectionErrors.Inc(langStr)
+			return err
+		}
+
 	default:
 		metrics.LibInjectionErrors.Inc(langStr)
 		return fmt.Errorf("language %q is not supported. Supported languages are %v", lang, supportedLanguages)
@@ -177,6 +201,55 @@ func injectLibConfig(pod *corev1.Pod, envKey string, envVal envValFunc) error {
 		}
 
 		pod.Spec.Containers[i].VolumeMounts = append(pod.Spec.Containers[i].VolumeMounts, corev1.VolumeMount{Name: volumeName, MountPath: mountPath})
+	}
+
+	return nil
+}
+
+func injectDotnetLibConfig(pod *corev1.Pod) error {
+	for i := range pod.Spec.Containers {
+
+		err := setEnvVar(&pod.Spec.Containers[i], clrEnableProfilingKey, clrEnableProfilingValue)
+		if err != nil {
+			return err
+		}
+
+		err2 := setEnvVar(&pod.Spec.Containers[i], clrProfilerIdKey, clrProfilerIdValue)
+		if err2 != nil {
+			return err2
+		}
+
+		err3 := setEnvVar(&pod.Spec.Containers[i], clrProfilerPathKey, clrProfilerPathValue)
+		if err3 != nil {
+			return err3
+		}
+
+		err4 := setEnvVar(&pod.Spec.Containers[i], tracerHomeKey, tracerHomeValue)
+		if err4 != nil {
+			return err4
+		}
+
+		pod.Spec.Containers[i].VolumeMounts = append(pod.Spec.Containers[i].VolumeMounts, corev1.VolumeMount{Name: volumeName, MountPath: mountPath})
+	}
+
+	return nil
+}
+
+func setEnvVar(ctr *corev1.Container, envKey string, envValue string) error {
+	index := envIndex(ctr.Env, envKey)
+
+	if index < 0 {
+		ctr.Env = append(ctr.Env, corev1.EnvVar{
+			Name:  envKey,
+			Value: envValue,
+		})
+	} else {
+		if ctr.Env[index].ValueFrom != nil {
+			return fmt.Errorf("%q is defined via ValueFrom", envKey)
+		}
+
+		// TBC: If the values has been set, then we should override any preexisting values
+		ctr.Env[index].Value = envValue;
 	}
 
 	return nil
