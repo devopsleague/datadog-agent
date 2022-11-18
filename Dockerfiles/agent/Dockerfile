@@ -26,24 +26,25 @@ RUN gcc -pipe -Wall -Wextra -O2 -shared -fPIC -Wl,--version-script=/tmp/nosys.sy
 ############################################
 
 FROM baseimage AS extract
+ARG TARGETARCH
 ARG WITH_JMX
 ARG PYTHON_VERSION
-ARG DD_AGENT_ARTIFACT=datadog-agent*_amd64.deb
+ARG DD_AGENT_ARTIFACT=datadog-agent*_$TARGETARCH.deb
 ARG GENERAL_ARTIFACTS_CACHE_BUCKET_URL
 
 # copy everything - globbing with args wont work
-COPY datadog-agent*_amd64.deb /
+COPY datadog-agent*_$TARGETARCH.deb /
 WORKDIR /output
 
 # Get s6-overlay
 ENV S6_VERSION v1.22.1.0
 # To calculate S6_SHA256SUM for a specific version, run:
-# curl -L https://github.com/just-containers/s6-overlay/releases/download/${S6_VERSION}/s6-overlay-amd64.tar.gz | sha256sum
-ENV S6_SHA256SUM=73f9779203310ddf9c5132546a1978e1a2b05990263b92ed2c34c1e258e2df6c
+# curl -L https://github.com/just-containers/s6-overlay/releases/download/${S6_VERSION}/s6-overlay-<arch>.tar.gz | sha256sum
 ENV JUST_CONTAINERS_DOWNLOAD_LOCATION=${GENERAL_ARTIFACTS_CACHE_BUCKET_URL:+${GENERAL_ARTIFACTS_CACHE_BUCKET_URL}/s6-overlay}
 ENV JUST_CONTAINERS_DOWNLOAD_LOCATION=${JUST_CONTAINERS_DOWNLOAD_LOCATION:-https://github.com/just-containers/s6-overlay/releases/download}
-ADD ${JUST_CONTAINERS_DOWNLOAD_LOCATION}/${S6_VERSION}/s6-overlay-amd64.tar.gz /output/s6.tgz
-RUN echo "${S6_SHA256SUM} /output/s6.tgz" | sha256sum -c -
+RUN declare -A s6versions=(["amd64"]="amd64" ["arm64"]="aarch64") && curl -L ${JUST_CONTAINERS_DOWNLOAD_LOCATION}/${S6_VERSION}/s6-overlay-${s6versions[$TARGETARCH]}.tar.gz -o /output/s6.tgz
+COPY s6.$TARGETARCH.sha256 /output/s6.$TARGETARCH.sha256
+RUN echo "$(cat /output/s6.$TARGETARCH.sha256) /output/s6.tgz" | sha256sum -c -
 
 # Extract and cleanup:
 #   - unused systemd unit
@@ -52,17 +53,12 @@ RUN echo "${S6_SHA256SUM} /output/s6.tgz" | sha256sum -c -
 #   - static libraries                   # FIXME: move upstream
 #   - jmxfetch on nojmx build
 
-# DEBUGGING
-RUN find / -maxdepth 1 -type f -name 'datadog-agent*_amd64.deb' ! -name "$DD_AGENT_ARTIFACT" -exec rm {} \; \
- && find / -maxdepth 1 -name 'datadog-agent*_amd64.deb' -exec dpkg -X {} . \; | egrep '.*' \
+RUN find / -maxdepth 1 -type f -name 'datadog-agent*_$TARGETARCH.deb' ! -name "$DD_AGENT_ARTIFACT" -exec rm {} \; \
+ && find / -maxdepth 1 -name 'datadog-agent*_$TARGETARCH.deb' -exec dpkg -X {} . \; | egrep '.*' \
  && rm -rf usr etc/init lib \
     opt/datadog-agent/sources \
     opt/datadog-agent/embedded/share/doc \
     opt/datadog-agent/embedded/share/man \
-    # remove libcurl 4.4.0 - it gets removed later anyway but the docker store scanner doesn't see that
-    opt/datadog-agent/embedded/lib/libcurl.so.4.4.0 \
-    # ditto for this older libsystemd
-    usr/lib/x86_64-linux-gnu/libsystemd.so.0.21.0 \
     # self-test certificates that are detected (false positive) as private keys
     opt/datadog-agent/embedded/lib/python*/site-packages/future/backports/test \
  && if [ "$PYTHON_VERSION" = "2" ]; then \
@@ -126,11 +122,7 @@ RUN apt full-upgrade -y \
   # this can be removed
   # Install libssl-dev as it's required by some Python checks and we rely on system version
   # Install libseccomp2 as required by `nosys-seccomp` wrapper
-  && apt install -y iproute2 libssl-dev libseccomp2 tzdata \
-  # https://security-tracker.debian.org/tracker/CVE-2016-2779
-  && rm -f /usr/sbin/runuser \
-  # https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2018-6954
-  && rm -f /usr/lib/x86_64-linux-gnu/libdb-5.3.so
+  && apt install -y iproute2 libssl-dev libseccomp2 tzdata
 
 # Install openjdk-11-jre-headless on jmx flavor
 RUN if [ -n "$WITH_JMX" ]; then echo "Pulling openjdk-11 from testing" \
@@ -173,13 +165,11 @@ RUN tar xzf s6.tgz -C / --exclude="./bin" \
  && chmod 550 /readsecret.py /readsecret.sh /readsecret_multiple_providers.sh
 
 # Update links to python binaries
-
 RUN if [ -n "$PYTHON_VERSION" ]; then \
  ln -sfn /opt/datadog-agent/embedded/bin/python${PYTHON_VERSION} /opt/datadog-agent/embedded/bin/python \
  && ln -sfn /opt/datadog-agent/embedded/bin/python${PYTHON_VERSION}-config /opt/datadog-agent/embedded/bin/python-config \
  && ln -sfn /opt/datadog-agent/embedded/bin/pip${PYTHON_VERSION} /opt/datadog-agent/embedded/bin/pip ; \
  fi
-
 
 # Override the exit script by ours to fix --pid=host operations
 RUN  mv /etc/s6/init/init-stage3 /etc/s6/init/init-stage3-original
@@ -201,8 +191,8 @@ HEALTHCHECK --interval=30s --timeout=5s --retries=2 \
 VOLUME ["/var/run/s6", "/var/log/datadog"]
 
 # Ensure the glibc doesn't try to call syscalls that may not be supported
-COPY --from=nosys-seccomp /tmp/nosys.so /lib/x86_64-linux-gnu/nosys.so
-ENV LD_PRELOAD=/lib/x86_64-linux-gnu/nosys.so
+COPY --from=nosys-seccomp /tmp/nosys.so /opt/lib/nosys.so
+ENV LD_PRELOAD=/opt/lib/nosys.so
 
 # Single entrypoint
 COPY entrypoint.sh /bin/entrypoint.sh
