@@ -67,7 +67,7 @@ def ninja_define_windows_resources(ctx, nw, major_version):
 
 def ninja_define_ebpf_compiler(nw, strip_object_files=False, kernel_release=None):
     nw.variable("target", "-emit-llvm")
-    nw.variable("ebpfflags", get_ebpf_build_flags())
+    nw.variable("ebpfflags", get_ebpf_build_flags(True))
     nw.variable("kheaders", get_kernel_headers_flags(kernel_release))
 
     nw.rule(
@@ -860,7 +860,7 @@ def get_linux_header_dirs(kernel_release=None, minimal_kernel_release=None):
     return dirs
 
 
-def get_ebpf_build_flags():
+def get_ebpf_build_flags(test=False):
     flags = []
     flags.extend(
         [
@@ -870,6 +870,8 @@ def get_ebpf_build_flags():
             '-DKBUILD_MODNAME=\\"ddsysprobe\\"',
         ]
     )
+    if test:
+        flags.extend(['-D__BALOUM__'])
     flags.extend(
         [
             '-Wno-unused-value',
