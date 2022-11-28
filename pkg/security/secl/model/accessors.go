@@ -295,6 +295,46 @@ func (m *Model) GetEvaluator(field eval.Field, regID eval.RegisterID) (eval.Eval
 			Field:  field,
 			Weight: eval.HandlerWeight,
 		}, nil
+	case "chmod.file.package.major":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).Chmod.File.PkgMajor
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "chmod.file.package.minor":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).Chmod.File.PkgMinor
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "chmod.file.package.name":
+		return &eval.StringEvaluator{
+			EvalFnc: func(ctx *eval.Context) string {
+				return (*Event)(ctx.Object).Chmod.File.PkgName
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "chmod.file.package.patch":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).Chmod.File.PkgPatch
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "chmod.file.package.version":
+		return &eval.StringEvaluator{
+			EvalFnc: func(ctx *eval.Context) string {
+				return (*Event)(ctx.Object).Chmod.File.PkgVersion
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
 	case "chmod.file.path":
 		return &eval.StringEvaluator{
 			OpOverrides: ProcessSymlinkPathname,
@@ -463,6 +503,46 @@ func (m *Model) GetEvaluator(field eval.Field, regID eval.RegisterID) (eval.Eval
 			OpOverrides: ProcessSymlinkBasename,
 			EvalFnc: func(ctx *eval.Context) int {
 				return len((*Event)(ctx.Object).Chown.File.BasenameStr)
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "chown.file.package.major":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).Chown.File.PkgMajor
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "chown.file.package.minor":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).Chown.File.PkgMinor
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "chown.file.package.name":
+		return &eval.StringEvaluator{
+			EvalFnc: func(ctx *eval.Context) string {
+				return (*Event)(ctx.Object).Chown.File.PkgName
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "chown.file.package.patch":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).Chown.File.PkgPatch
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "chown.file.package.version":
+		return &eval.StringEvaluator{
+			EvalFnc: func(ctx *eval.Context) string {
+				return (*Event)(ctx.Object).Chown.File.PkgVersion
 			},
 			Field:  field,
 			Weight: eval.HandlerWeight,
@@ -833,6 +913,46 @@ func (m *Model) GetEvaluator(field eval.Field, regID eval.RegisterID) (eval.Eval
 			Field:  field,
 			Weight: eval.HandlerWeight,
 		}, nil
+	case "exec.file.package.major":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).Exec.Process.FileEvent.PkgMajor
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "exec.file.package.minor":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).Exec.Process.FileEvent.PkgMinor
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "exec.file.package.name":
+		return &eval.StringEvaluator{
+			EvalFnc: func(ctx *eval.Context) string {
+				return (*Event)(ctx.Object).Exec.Process.FileEvent.PkgName
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "exec.file.package.patch":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).Exec.Process.FileEvent.PkgPatch
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "exec.file.package.version":
+		return &eval.StringEvaluator{
+			EvalFnc: func(ctx *eval.Context) string {
+				return (*Event)(ctx.Object).Exec.Process.FileEvent.PkgVersion
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
 	case "exec.file.path":
 		return &eval.StringEvaluator{
 			OpOverrides: ProcessSymlinkPathname,
@@ -1039,6 +1159,61 @@ func (m *Model) GetEvaluator(field eval.Field, regID eval.RegisterID) (eval.Eval
 			OpOverrides: ProcessSymlinkBasename,
 			EvalFnc: func(ctx *eval.Context) int {
 				return len((*Event)(ctx.Object).Exec.Process.LinuxBinprm.FileEvent.BasenameStr)
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "exec.interpreter.file.package.major":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				if !(*Event)(ctx.Object).Exec.Process.HasInterpreter() {
+					return 0
+				}
+				return (*Event)(ctx.Object).Exec.Process.LinuxBinprm.FileEvent.PkgMajor
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "exec.interpreter.file.package.minor":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				if !(*Event)(ctx.Object).Exec.Process.HasInterpreter() {
+					return 0
+				}
+				return (*Event)(ctx.Object).Exec.Process.LinuxBinprm.FileEvent.PkgMinor
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "exec.interpreter.file.package.name":
+		return &eval.StringEvaluator{
+			EvalFnc: func(ctx *eval.Context) string {
+				if !(*Event)(ctx.Object).Exec.Process.HasInterpreter() {
+					return ""
+				}
+				return (*Event)(ctx.Object).Exec.Process.LinuxBinprm.FileEvent.PkgName
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "exec.interpreter.file.package.patch":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				if !(*Event)(ctx.Object).Exec.Process.HasInterpreter() {
+					return 0
+				}
+				return (*Event)(ctx.Object).Exec.Process.LinuxBinprm.FileEvent.PkgPatch
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "exec.interpreter.file.package.version":
+		return &eval.StringEvaluator{
+			EvalFnc: func(ctx *eval.Context) string {
+				if !(*Event)(ctx.Object).Exec.Process.HasInterpreter() {
+					return ""
+				}
+				return (*Event)(ctx.Object).Exec.Process.LinuxBinprm.FileEvent.PkgVersion
 			},
 			Field:  field,
 			Weight: eval.HandlerWeight,
@@ -1419,6 +1594,46 @@ func (m *Model) GetEvaluator(field eval.Field, regID eval.RegisterID) (eval.Eval
 			Field:  field,
 			Weight: eval.HandlerWeight,
 		}, nil
+	case "exit.file.package.major":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).Exit.Process.FileEvent.PkgMajor
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "exit.file.package.minor":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).Exit.Process.FileEvent.PkgMinor
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "exit.file.package.name":
+		return &eval.StringEvaluator{
+			EvalFnc: func(ctx *eval.Context) string {
+				return (*Event)(ctx.Object).Exit.Process.FileEvent.PkgName
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "exit.file.package.patch":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).Exit.Process.FileEvent.PkgPatch
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "exit.file.package.version":
+		return &eval.StringEvaluator{
+			EvalFnc: func(ctx *eval.Context) string {
+				return (*Event)(ctx.Object).Exit.Process.FileEvent.PkgVersion
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
 	case "exit.file.path":
 		return &eval.StringEvaluator{
 			OpOverrides: ProcessSymlinkPathname,
@@ -1625,6 +1840,61 @@ func (m *Model) GetEvaluator(field eval.Field, regID eval.RegisterID) (eval.Eval
 			OpOverrides: ProcessSymlinkBasename,
 			EvalFnc: func(ctx *eval.Context) int {
 				return len((*Event)(ctx.Object).Exit.Process.LinuxBinprm.FileEvent.BasenameStr)
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "exit.interpreter.file.package.major":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				if !(*Event)(ctx.Object).Exit.Process.HasInterpreter() {
+					return 0
+				}
+				return (*Event)(ctx.Object).Exit.Process.LinuxBinprm.FileEvent.PkgMajor
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "exit.interpreter.file.package.minor":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				if !(*Event)(ctx.Object).Exit.Process.HasInterpreter() {
+					return 0
+				}
+				return (*Event)(ctx.Object).Exit.Process.LinuxBinprm.FileEvent.PkgMinor
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "exit.interpreter.file.package.name":
+		return &eval.StringEvaluator{
+			EvalFnc: func(ctx *eval.Context) string {
+				if !(*Event)(ctx.Object).Exit.Process.HasInterpreter() {
+					return ""
+				}
+				return (*Event)(ctx.Object).Exit.Process.LinuxBinprm.FileEvent.PkgName
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "exit.interpreter.file.package.patch":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				if !(*Event)(ctx.Object).Exit.Process.HasInterpreter() {
+					return 0
+				}
+				return (*Event)(ctx.Object).Exit.Process.LinuxBinprm.FileEvent.PkgPatch
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "exit.interpreter.file.package.version":
+		return &eval.StringEvaluator{
+			EvalFnc: func(ctx *eval.Context) string {
+				if !(*Event)(ctx.Object).Exit.Process.HasInterpreter() {
+					return ""
+				}
+				return (*Event)(ctx.Object).Exit.Process.LinuxBinprm.FileEvent.PkgVersion
 			},
 			Field:  field,
 			Weight: eval.HandlerWeight,
@@ -1845,6 +2115,46 @@ func (m *Model) GetEvaluator(field eval.Field, regID eval.RegisterID) (eval.Eval
 			Field:  field,
 			Weight: eval.HandlerWeight,
 		}, nil
+	case "link.file.destination.package.major":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).Link.Target.PkgMajor
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "link.file.destination.package.minor":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).Link.Target.PkgMinor
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "link.file.destination.package.name":
+		return &eval.StringEvaluator{
+			EvalFnc: func(ctx *eval.Context) string {
+				return (*Event)(ctx.Object).Link.Target.PkgName
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "link.file.destination.package.patch":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).Link.Target.PkgPatch
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "link.file.destination.package.version":
+		return &eval.StringEvaluator{
+			EvalFnc: func(ctx *eval.Context) string {
+				return (*Event)(ctx.Object).Link.Target.PkgVersion
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
 	case "link.file.destination.path":
 		return &eval.StringEvaluator{
 			OpOverrides: ProcessSymlinkPathname,
@@ -1965,6 +2275,46 @@ func (m *Model) GetEvaluator(field eval.Field, regID eval.RegisterID) (eval.Eval
 			OpOverrides: ProcessSymlinkBasename,
 			EvalFnc: func(ctx *eval.Context) int {
 				return len((*Event)(ctx.Object).Link.Source.BasenameStr)
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "link.file.package.major":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).Link.Source.PkgMajor
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "link.file.package.minor":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).Link.Source.PkgMinor
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "link.file.package.name":
+		return &eval.StringEvaluator{
+			EvalFnc: func(ctx *eval.Context) string {
+				return (*Event)(ctx.Object).Link.Source.PkgName
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "link.file.package.patch":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).Link.Source.PkgPatch
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "link.file.package.version":
+		return &eval.StringEvaluator{
+			EvalFnc: func(ctx *eval.Context) string {
+				return (*Event)(ctx.Object).Link.Source.PkgVersion
 			},
 			Field:  field,
 			Weight: eval.HandlerWeight,
@@ -2105,6 +2455,46 @@ func (m *Model) GetEvaluator(field eval.Field, regID eval.RegisterID) (eval.Eval
 			OpOverrides: ProcessSymlinkBasename,
 			EvalFnc: func(ctx *eval.Context) int {
 				return len((*Event)(ctx.Object).LoadModule.File.BasenameStr)
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "load_module.file.package.major":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).LoadModule.File.PkgMajor
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "load_module.file.package.minor":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).LoadModule.File.PkgMinor
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "load_module.file.package.name":
+		return &eval.StringEvaluator{
+			EvalFnc: func(ctx *eval.Context) string {
+				return (*Event)(ctx.Object).LoadModule.File.PkgName
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "load_module.file.package.patch":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).LoadModule.File.PkgPatch
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "load_module.file.package.version":
+		return &eval.StringEvaluator{
+			EvalFnc: func(ctx *eval.Context) string {
+				return (*Event)(ctx.Object).LoadModule.File.PkgVersion
 			},
 			Field:  field,
 			Weight: eval.HandlerWeight,
@@ -2281,6 +2671,46 @@ func (m *Model) GetEvaluator(field eval.Field, regID eval.RegisterID) (eval.Eval
 			Field:  field,
 			Weight: eval.HandlerWeight,
 		}, nil
+	case "mkdir.file.package.major":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).Mkdir.File.PkgMajor
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "mkdir.file.package.minor":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).Mkdir.File.PkgMinor
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "mkdir.file.package.name":
+		return &eval.StringEvaluator{
+			EvalFnc: func(ctx *eval.Context) string {
+				return (*Event)(ctx.Object).Mkdir.File.PkgName
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "mkdir.file.package.patch":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).Mkdir.File.PkgPatch
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "mkdir.file.package.version":
+		return &eval.StringEvaluator{
+			EvalFnc: func(ctx *eval.Context) string {
+				return (*Event)(ctx.Object).Mkdir.File.PkgVersion
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
 	case "mkdir.file.path":
 		return &eval.StringEvaluator{
 			OpOverrides: ProcessSymlinkPathname,
@@ -2417,6 +2847,46 @@ func (m *Model) GetEvaluator(field eval.Field, regID eval.RegisterID) (eval.Eval
 			OpOverrides: ProcessSymlinkBasename,
 			EvalFnc: func(ctx *eval.Context) int {
 				return len((*Event)(ctx.Object).MMap.File.BasenameStr)
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "mmap.file.package.major":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).MMap.File.PkgMajor
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "mmap.file.package.minor":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).MMap.File.PkgMinor
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "mmap.file.package.name":
+		return &eval.StringEvaluator{
+			EvalFnc: func(ctx *eval.Context) string {
+				return (*Event)(ctx.Object).MMap.File.PkgName
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "mmap.file.package.patch":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).MMap.File.PkgPatch
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "mmap.file.package.version":
+		return &eval.StringEvaluator{
+			EvalFnc: func(ctx *eval.Context) string {
+				return (*Event)(ctx.Object).MMap.File.PkgVersion
 			},
 			Field:  field,
 			Weight: eval.HandlerWeight,
@@ -2677,6 +3147,46 @@ func (m *Model) GetEvaluator(field eval.Field, regID eval.RegisterID) (eval.Eval
 			OpOverrides: ProcessSymlinkBasename,
 			EvalFnc: func(ctx *eval.Context) int {
 				return len((*Event)(ctx.Object).Open.File.BasenameStr)
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "open.file.package.major":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).Open.File.PkgMajor
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "open.file.package.minor":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).Open.File.PkgMinor
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "open.file.package.name":
+		return &eval.StringEvaluator{
+			EvalFnc: func(ctx *eval.Context) string {
+				return (*Event)(ctx.Object).Open.File.PkgName
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "open.file.package.patch":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).Open.File.PkgPatch
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "open.file.package.version":
+		return &eval.StringEvaluator{
+			EvalFnc: func(ctx *eval.Context) string {
+				return (*Event)(ctx.Object).Open.File.PkgVersion
 			},
 			Field:  field,
 			Weight: eval.HandlerWeight,
@@ -3221,6 +3731,86 @@ func (m *Model) GetEvaluator(field eval.Field, regID eval.RegisterID) (eval.Eval
 			}, Field: field,
 			Weight: eval.IteratorWeight,
 		}, nil
+	case "process.ancestors.file.package.major":
+		return &eval.IntArrayEvaluator{
+			EvalFnc: func(ctx *eval.Context) []int {
+				var results []int
+				iterator := &ProcessAncestorsIterator{}
+				value := iterator.Front(ctx)
+				for value != nil {
+					element := (*ProcessCacheEntry)(value)
+					result := int(element.ProcessContext.Process.FileEvent.PkgMajor)
+					results = append(results, result)
+					value = iterator.Next()
+				}
+				return results
+			}, Field: field,
+			Weight: eval.IteratorWeight,
+		}, nil
+	case "process.ancestors.file.package.minor":
+		return &eval.IntArrayEvaluator{
+			EvalFnc: func(ctx *eval.Context) []int {
+				var results []int
+				iterator := &ProcessAncestorsIterator{}
+				value := iterator.Front(ctx)
+				for value != nil {
+					element := (*ProcessCacheEntry)(value)
+					result := int(element.ProcessContext.Process.FileEvent.PkgMinor)
+					results = append(results, result)
+					value = iterator.Next()
+				}
+				return results
+			}, Field: field,
+			Weight: eval.IteratorWeight,
+		}, nil
+	case "process.ancestors.file.package.name":
+		return &eval.StringArrayEvaluator{
+			EvalFnc: func(ctx *eval.Context) []string {
+				var results []string
+				iterator := &ProcessAncestorsIterator{}
+				value := iterator.Front(ctx)
+				for value != nil {
+					element := (*ProcessCacheEntry)(value)
+					result := element.ProcessContext.Process.FileEvent.PkgName
+					results = append(results, result)
+					value = iterator.Next()
+				}
+				return results
+			}, Field: field,
+			Weight: eval.IteratorWeight,
+		}, nil
+	case "process.ancestors.file.package.patch":
+		return &eval.IntArrayEvaluator{
+			EvalFnc: func(ctx *eval.Context) []int {
+				var results []int
+				iterator := &ProcessAncestorsIterator{}
+				value := iterator.Front(ctx)
+				for value != nil {
+					element := (*ProcessCacheEntry)(value)
+					result := int(element.ProcessContext.Process.FileEvent.PkgPatch)
+					results = append(results, result)
+					value = iterator.Next()
+				}
+				return results
+			}, Field: field,
+			Weight: eval.IteratorWeight,
+		}, nil
+	case "process.ancestors.file.package.version":
+		return &eval.StringArrayEvaluator{
+			EvalFnc: func(ctx *eval.Context) []string {
+				var results []string
+				iterator := &ProcessAncestorsIterator{}
+				value := iterator.Front(ctx)
+				for value != nil {
+					element := (*ProcessCacheEntry)(value)
+					result := element.ProcessContext.Process.FileEvent.PkgVersion
+					results = append(results, result)
+					value = iterator.Next()
+				}
+				return results
+			}, Field: field,
+			Weight: eval.IteratorWeight,
+		}, nil
 	case "process.ancestors.file.path":
 		return &eval.StringArrayEvaluator{
 			OpOverrides: ProcessSymlinkPathname,
@@ -3600,6 +4190,101 @@ func (m *Model) GetEvaluator(field eval.Field, regID eval.RegisterID) (eval.Eval
 				for value != nil {
 					element := (*ProcessCacheEntry)(value)
 					result := len(element.ProcessContext.Process.LinuxBinprm.FileEvent.BasenameStr)
+					results = append(results, result)
+					value = iterator.Next()
+				}
+				return results
+			}, Field: field,
+			Weight: eval.IteratorWeight,
+		}, nil
+	case "process.ancestors.interpreter.file.package.major":
+		return &eval.IntArrayEvaluator{
+			EvalFnc: func(ctx *eval.Context) []int {
+				if !(*Event)(ctx.Object).ProcessContext.Ancestor.ProcessContext.Process.HasInterpreter() {
+					return []int{}
+				}
+				var results []int
+				iterator := &ProcessAncestorsIterator{}
+				value := iterator.Front(ctx)
+				for value != nil {
+					element := (*ProcessCacheEntry)(value)
+					result := int(element.ProcessContext.Process.LinuxBinprm.FileEvent.PkgMajor)
+					results = append(results, result)
+					value = iterator.Next()
+				}
+				return results
+			}, Field: field,
+			Weight: eval.IteratorWeight,
+		}, nil
+	case "process.ancestors.interpreter.file.package.minor":
+		return &eval.IntArrayEvaluator{
+			EvalFnc: func(ctx *eval.Context) []int {
+				if !(*Event)(ctx.Object).ProcessContext.Ancestor.ProcessContext.Process.HasInterpreter() {
+					return []int{}
+				}
+				var results []int
+				iterator := &ProcessAncestorsIterator{}
+				value := iterator.Front(ctx)
+				for value != nil {
+					element := (*ProcessCacheEntry)(value)
+					result := int(element.ProcessContext.Process.LinuxBinprm.FileEvent.PkgMinor)
+					results = append(results, result)
+					value = iterator.Next()
+				}
+				return results
+			}, Field: field,
+			Weight: eval.IteratorWeight,
+		}, nil
+	case "process.ancestors.interpreter.file.package.name":
+		return &eval.StringArrayEvaluator{
+			EvalFnc: func(ctx *eval.Context) []string {
+				if !(*Event)(ctx.Object).ProcessContext.Ancestor.ProcessContext.Process.HasInterpreter() {
+					return []string{}
+				}
+				var results []string
+				iterator := &ProcessAncestorsIterator{}
+				value := iterator.Front(ctx)
+				for value != nil {
+					element := (*ProcessCacheEntry)(value)
+					result := element.ProcessContext.Process.LinuxBinprm.FileEvent.PkgName
+					results = append(results, result)
+					value = iterator.Next()
+				}
+				return results
+			}, Field: field,
+			Weight: eval.IteratorWeight,
+		}, nil
+	case "process.ancestors.interpreter.file.package.patch":
+		return &eval.IntArrayEvaluator{
+			EvalFnc: func(ctx *eval.Context) []int {
+				if !(*Event)(ctx.Object).ProcessContext.Ancestor.ProcessContext.Process.HasInterpreter() {
+					return []int{}
+				}
+				var results []int
+				iterator := &ProcessAncestorsIterator{}
+				value := iterator.Front(ctx)
+				for value != nil {
+					element := (*ProcessCacheEntry)(value)
+					result := int(element.ProcessContext.Process.LinuxBinprm.FileEvent.PkgPatch)
+					results = append(results, result)
+					value = iterator.Next()
+				}
+				return results
+			}, Field: field,
+			Weight: eval.IteratorWeight,
+		}, nil
+	case "process.ancestors.interpreter.file.package.version":
+		return &eval.StringArrayEvaluator{
+			EvalFnc: func(ctx *eval.Context) []string {
+				if !(*Event)(ctx.Object).ProcessContext.Ancestor.ProcessContext.Process.HasInterpreter() {
+					return []string{}
+				}
+				var results []string
+				iterator := &ProcessAncestorsIterator{}
+				value := iterator.Front(ctx)
+				for value != nil {
+					element := (*ProcessCacheEntry)(value)
+					result := element.ProcessContext.Process.LinuxBinprm.FileEvent.PkgVersion
 					results = append(results, result)
 					value = iterator.Next()
 				}
@@ -4071,6 +4756,46 @@ func (m *Model) GetEvaluator(field eval.Field, regID eval.RegisterID) (eval.Eval
 			Field:  field,
 			Weight: eval.HandlerWeight,
 		}, nil
+	case "process.file.package.major":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).ProcessContext.Process.FileEvent.PkgMajor
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "process.file.package.minor":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).ProcessContext.Process.FileEvent.PkgMinor
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "process.file.package.name":
+		return &eval.StringEvaluator{
+			EvalFnc: func(ctx *eval.Context) string {
+				return (*Event)(ctx.Object).ProcessContext.Process.FileEvent.PkgName
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "process.file.package.patch":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).ProcessContext.Process.FileEvent.PkgPatch
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "process.file.package.version":
+		return &eval.StringEvaluator{
+			EvalFnc: func(ctx *eval.Context) string {
+				return (*Event)(ctx.Object).ProcessContext.Process.FileEvent.PkgVersion
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
 	case "process.file.path":
 		return &eval.StringEvaluator{
 			OpOverrides: ProcessSymlinkPathname,
@@ -4277,6 +5002,61 @@ func (m *Model) GetEvaluator(field eval.Field, regID eval.RegisterID) (eval.Eval
 			OpOverrides: ProcessSymlinkBasename,
 			EvalFnc: func(ctx *eval.Context) int {
 				return len((*Event)(ctx.Object).ProcessContext.Process.LinuxBinprm.FileEvent.BasenameStr)
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "process.interpreter.file.package.major":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				if !(*Event)(ctx.Object).ProcessContext.Process.HasInterpreter() {
+					return 0
+				}
+				return (*Event)(ctx.Object).ProcessContext.Process.LinuxBinprm.FileEvent.PkgMajor
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "process.interpreter.file.package.minor":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				if !(*Event)(ctx.Object).ProcessContext.Process.HasInterpreter() {
+					return 0
+				}
+				return (*Event)(ctx.Object).ProcessContext.Process.LinuxBinprm.FileEvent.PkgMinor
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "process.interpreter.file.package.name":
+		return &eval.StringEvaluator{
+			EvalFnc: func(ctx *eval.Context) string {
+				if !(*Event)(ctx.Object).ProcessContext.Process.HasInterpreter() {
+					return ""
+				}
+				return (*Event)(ctx.Object).ProcessContext.Process.LinuxBinprm.FileEvent.PkgName
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "process.interpreter.file.package.patch":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				if !(*Event)(ctx.Object).ProcessContext.Process.HasInterpreter() {
+					return 0
+				}
+				return (*Event)(ctx.Object).ProcessContext.Process.LinuxBinprm.FileEvent.PkgPatch
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "process.interpreter.file.package.version":
+		return &eval.StringEvaluator{
+			EvalFnc: func(ctx *eval.Context) string {
+				if !(*Event)(ctx.Object).ProcessContext.Process.HasInterpreter() {
+					return ""
+				}
+				return (*Event)(ctx.Object).ProcessContext.Process.LinuxBinprm.FileEvent.PkgVersion
 			},
 			Field:  field,
 			Weight: eval.HandlerWeight,
@@ -4593,6 +5373,46 @@ func (m *Model) GetEvaluator(field eval.Field, regID eval.RegisterID) (eval.Eval
 			Field:  field,
 			Weight: eval.HandlerWeight,
 		}, nil
+	case "process.parent.file.package.major":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).ProcessContext.Parent.FileEvent.PkgMajor
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "process.parent.file.package.minor":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).ProcessContext.Parent.FileEvent.PkgMinor
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "process.parent.file.package.name":
+		return &eval.StringEvaluator{
+			EvalFnc: func(ctx *eval.Context) string {
+				return (*Event)(ctx.Object).ProcessContext.Parent.FileEvent.PkgName
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "process.parent.file.package.patch":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).ProcessContext.Parent.FileEvent.PkgPatch
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "process.parent.file.package.version":
+		return &eval.StringEvaluator{
+			EvalFnc: func(ctx *eval.Context) string {
+				return (*Event)(ctx.Object).ProcessContext.Parent.FileEvent.PkgVersion
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
 	case "process.parent.file.path":
 		return &eval.StringEvaluator{
 			OpOverrides: ProcessSymlinkPathname,
@@ -4799,6 +5619,61 @@ func (m *Model) GetEvaluator(field eval.Field, regID eval.RegisterID) (eval.Eval
 			OpOverrides: ProcessSymlinkBasename,
 			EvalFnc: func(ctx *eval.Context) int {
 				return len((*Event)(ctx.Object).ProcessContext.Parent.LinuxBinprm.FileEvent.BasenameStr)
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "process.parent.interpreter.file.package.major":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				if !(*Event)(ctx.Object).ProcessContext.Parent.HasInterpreter() {
+					return 0
+				}
+				return (*Event)(ctx.Object).ProcessContext.Parent.LinuxBinprm.FileEvent.PkgMajor
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "process.parent.interpreter.file.package.minor":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				if !(*Event)(ctx.Object).ProcessContext.Parent.HasInterpreter() {
+					return 0
+				}
+				return (*Event)(ctx.Object).ProcessContext.Parent.LinuxBinprm.FileEvent.PkgMinor
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "process.parent.interpreter.file.package.name":
+		return &eval.StringEvaluator{
+			EvalFnc: func(ctx *eval.Context) string {
+				if !(*Event)(ctx.Object).ProcessContext.Parent.HasInterpreter() {
+					return ""
+				}
+				return (*Event)(ctx.Object).ProcessContext.Parent.LinuxBinprm.FileEvent.PkgName
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "process.parent.interpreter.file.package.patch":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				if !(*Event)(ctx.Object).ProcessContext.Parent.HasInterpreter() {
+					return 0
+				}
+				return (*Event)(ctx.Object).ProcessContext.Parent.LinuxBinprm.FileEvent.PkgPatch
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "process.parent.interpreter.file.package.version":
+		return &eval.StringEvaluator{
+			EvalFnc: func(ctx *eval.Context) string {
+				if !(*Event)(ctx.Object).ProcessContext.Parent.HasInterpreter() {
+					return ""
+				}
+				return (*Event)(ctx.Object).ProcessContext.Parent.LinuxBinprm.FileEvent.PkgVersion
 			},
 			Field:  field,
 			Weight: eval.HandlerWeight,
@@ -5467,6 +6342,86 @@ func (m *Model) GetEvaluator(field eval.Field, regID eval.RegisterID) (eval.Eval
 			}, Field: field,
 			Weight: eval.IteratorWeight,
 		}, nil
+	case "ptrace.tracee.ancestors.file.package.major":
+		return &eval.IntArrayEvaluator{
+			EvalFnc: func(ctx *eval.Context) []int {
+				var results []int
+				iterator := &ProcessAncestorsIterator{}
+				value := iterator.Front(ctx)
+				for value != nil {
+					element := (*ProcessCacheEntry)(value)
+					result := int(element.ProcessContext.Process.FileEvent.PkgMajor)
+					results = append(results, result)
+					value = iterator.Next()
+				}
+				return results
+			}, Field: field,
+			Weight: eval.IteratorWeight,
+		}, nil
+	case "ptrace.tracee.ancestors.file.package.minor":
+		return &eval.IntArrayEvaluator{
+			EvalFnc: func(ctx *eval.Context) []int {
+				var results []int
+				iterator := &ProcessAncestorsIterator{}
+				value := iterator.Front(ctx)
+				for value != nil {
+					element := (*ProcessCacheEntry)(value)
+					result := int(element.ProcessContext.Process.FileEvent.PkgMinor)
+					results = append(results, result)
+					value = iterator.Next()
+				}
+				return results
+			}, Field: field,
+			Weight: eval.IteratorWeight,
+		}, nil
+	case "ptrace.tracee.ancestors.file.package.name":
+		return &eval.StringArrayEvaluator{
+			EvalFnc: func(ctx *eval.Context) []string {
+				var results []string
+				iterator := &ProcessAncestorsIterator{}
+				value := iterator.Front(ctx)
+				for value != nil {
+					element := (*ProcessCacheEntry)(value)
+					result := element.ProcessContext.Process.FileEvent.PkgName
+					results = append(results, result)
+					value = iterator.Next()
+				}
+				return results
+			}, Field: field,
+			Weight: eval.IteratorWeight,
+		}, nil
+	case "ptrace.tracee.ancestors.file.package.patch":
+		return &eval.IntArrayEvaluator{
+			EvalFnc: func(ctx *eval.Context) []int {
+				var results []int
+				iterator := &ProcessAncestorsIterator{}
+				value := iterator.Front(ctx)
+				for value != nil {
+					element := (*ProcessCacheEntry)(value)
+					result := int(element.ProcessContext.Process.FileEvent.PkgPatch)
+					results = append(results, result)
+					value = iterator.Next()
+				}
+				return results
+			}, Field: field,
+			Weight: eval.IteratorWeight,
+		}, nil
+	case "ptrace.tracee.ancestors.file.package.version":
+		return &eval.StringArrayEvaluator{
+			EvalFnc: func(ctx *eval.Context) []string {
+				var results []string
+				iterator := &ProcessAncestorsIterator{}
+				value := iterator.Front(ctx)
+				for value != nil {
+					element := (*ProcessCacheEntry)(value)
+					result := element.ProcessContext.Process.FileEvent.PkgVersion
+					results = append(results, result)
+					value = iterator.Next()
+				}
+				return results
+			}, Field: field,
+			Weight: eval.IteratorWeight,
+		}, nil
 	case "ptrace.tracee.ancestors.file.path":
 		return &eval.StringArrayEvaluator{
 			OpOverrides: ProcessSymlinkPathname,
@@ -5846,6 +6801,101 @@ func (m *Model) GetEvaluator(field eval.Field, regID eval.RegisterID) (eval.Eval
 				for value != nil {
 					element := (*ProcessCacheEntry)(value)
 					result := len(element.ProcessContext.Process.LinuxBinprm.FileEvent.BasenameStr)
+					results = append(results, result)
+					value = iterator.Next()
+				}
+				return results
+			}, Field: field,
+			Weight: eval.IteratorWeight,
+		}, nil
+	case "ptrace.tracee.ancestors.interpreter.file.package.major":
+		return &eval.IntArrayEvaluator{
+			EvalFnc: func(ctx *eval.Context) []int {
+				if !(*Event)(ctx.Object).PTrace.Tracee.Ancestor.ProcessContext.Process.HasInterpreter() {
+					return []int{}
+				}
+				var results []int
+				iterator := &ProcessAncestorsIterator{}
+				value := iterator.Front(ctx)
+				for value != nil {
+					element := (*ProcessCacheEntry)(value)
+					result := int(element.ProcessContext.Process.LinuxBinprm.FileEvent.PkgMajor)
+					results = append(results, result)
+					value = iterator.Next()
+				}
+				return results
+			}, Field: field,
+			Weight: eval.IteratorWeight,
+		}, nil
+	case "ptrace.tracee.ancestors.interpreter.file.package.minor":
+		return &eval.IntArrayEvaluator{
+			EvalFnc: func(ctx *eval.Context) []int {
+				if !(*Event)(ctx.Object).PTrace.Tracee.Ancestor.ProcessContext.Process.HasInterpreter() {
+					return []int{}
+				}
+				var results []int
+				iterator := &ProcessAncestorsIterator{}
+				value := iterator.Front(ctx)
+				for value != nil {
+					element := (*ProcessCacheEntry)(value)
+					result := int(element.ProcessContext.Process.LinuxBinprm.FileEvent.PkgMinor)
+					results = append(results, result)
+					value = iterator.Next()
+				}
+				return results
+			}, Field: field,
+			Weight: eval.IteratorWeight,
+		}, nil
+	case "ptrace.tracee.ancestors.interpreter.file.package.name":
+		return &eval.StringArrayEvaluator{
+			EvalFnc: func(ctx *eval.Context) []string {
+				if !(*Event)(ctx.Object).PTrace.Tracee.Ancestor.ProcessContext.Process.HasInterpreter() {
+					return []string{}
+				}
+				var results []string
+				iterator := &ProcessAncestorsIterator{}
+				value := iterator.Front(ctx)
+				for value != nil {
+					element := (*ProcessCacheEntry)(value)
+					result := element.ProcessContext.Process.LinuxBinprm.FileEvent.PkgName
+					results = append(results, result)
+					value = iterator.Next()
+				}
+				return results
+			}, Field: field,
+			Weight: eval.IteratorWeight,
+		}, nil
+	case "ptrace.tracee.ancestors.interpreter.file.package.patch":
+		return &eval.IntArrayEvaluator{
+			EvalFnc: func(ctx *eval.Context) []int {
+				if !(*Event)(ctx.Object).PTrace.Tracee.Ancestor.ProcessContext.Process.HasInterpreter() {
+					return []int{}
+				}
+				var results []int
+				iterator := &ProcessAncestorsIterator{}
+				value := iterator.Front(ctx)
+				for value != nil {
+					element := (*ProcessCacheEntry)(value)
+					result := int(element.ProcessContext.Process.LinuxBinprm.FileEvent.PkgPatch)
+					results = append(results, result)
+					value = iterator.Next()
+				}
+				return results
+			}, Field: field,
+			Weight: eval.IteratorWeight,
+		}, nil
+	case "ptrace.tracee.ancestors.interpreter.file.package.version":
+		return &eval.StringArrayEvaluator{
+			EvalFnc: func(ctx *eval.Context) []string {
+				if !(*Event)(ctx.Object).PTrace.Tracee.Ancestor.ProcessContext.Process.HasInterpreter() {
+					return []string{}
+				}
+				var results []string
+				iterator := &ProcessAncestorsIterator{}
+				value := iterator.Front(ctx)
+				for value != nil {
+					element := (*ProcessCacheEntry)(value)
+					result := element.ProcessContext.Process.LinuxBinprm.FileEvent.PkgVersion
 					results = append(results, result)
 					value = iterator.Next()
 				}
@@ -6317,6 +7367,46 @@ func (m *Model) GetEvaluator(field eval.Field, regID eval.RegisterID) (eval.Eval
 			Field:  field,
 			Weight: eval.HandlerWeight,
 		}, nil
+	case "ptrace.tracee.file.package.major":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).PTrace.Tracee.Process.FileEvent.PkgMajor
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "ptrace.tracee.file.package.minor":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).PTrace.Tracee.Process.FileEvent.PkgMinor
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "ptrace.tracee.file.package.name":
+		return &eval.StringEvaluator{
+			EvalFnc: func(ctx *eval.Context) string {
+				return (*Event)(ctx.Object).PTrace.Tracee.Process.FileEvent.PkgName
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "ptrace.tracee.file.package.patch":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).PTrace.Tracee.Process.FileEvent.PkgPatch
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "ptrace.tracee.file.package.version":
+		return &eval.StringEvaluator{
+			EvalFnc: func(ctx *eval.Context) string {
+				return (*Event)(ctx.Object).PTrace.Tracee.Process.FileEvent.PkgVersion
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
 	case "ptrace.tracee.file.path":
 		return &eval.StringEvaluator{
 			OpOverrides: ProcessSymlinkPathname,
@@ -6523,6 +7613,61 @@ func (m *Model) GetEvaluator(field eval.Field, regID eval.RegisterID) (eval.Eval
 			OpOverrides: ProcessSymlinkBasename,
 			EvalFnc: func(ctx *eval.Context) int {
 				return len((*Event)(ctx.Object).PTrace.Tracee.Process.LinuxBinprm.FileEvent.BasenameStr)
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "ptrace.tracee.interpreter.file.package.major":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				if !(*Event)(ctx.Object).PTrace.Tracee.Process.HasInterpreter() {
+					return 0
+				}
+				return (*Event)(ctx.Object).PTrace.Tracee.Process.LinuxBinprm.FileEvent.PkgMajor
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "ptrace.tracee.interpreter.file.package.minor":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				if !(*Event)(ctx.Object).PTrace.Tracee.Process.HasInterpreter() {
+					return 0
+				}
+				return (*Event)(ctx.Object).PTrace.Tracee.Process.LinuxBinprm.FileEvent.PkgMinor
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "ptrace.tracee.interpreter.file.package.name":
+		return &eval.StringEvaluator{
+			EvalFnc: func(ctx *eval.Context) string {
+				if !(*Event)(ctx.Object).PTrace.Tracee.Process.HasInterpreter() {
+					return ""
+				}
+				return (*Event)(ctx.Object).PTrace.Tracee.Process.LinuxBinprm.FileEvent.PkgName
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "ptrace.tracee.interpreter.file.package.patch":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				if !(*Event)(ctx.Object).PTrace.Tracee.Process.HasInterpreter() {
+					return 0
+				}
+				return (*Event)(ctx.Object).PTrace.Tracee.Process.LinuxBinprm.FileEvent.PkgPatch
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "ptrace.tracee.interpreter.file.package.version":
+		return &eval.StringEvaluator{
+			EvalFnc: func(ctx *eval.Context) string {
+				if !(*Event)(ctx.Object).PTrace.Tracee.Process.HasInterpreter() {
+					return ""
+				}
+				return (*Event)(ctx.Object).PTrace.Tracee.Process.LinuxBinprm.FileEvent.PkgVersion
 			},
 			Field:  field,
 			Weight: eval.HandlerWeight,
@@ -6839,6 +7984,46 @@ func (m *Model) GetEvaluator(field eval.Field, regID eval.RegisterID) (eval.Eval
 			Field:  field,
 			Weight: eval.HandlerWeight,
 		}, nil
+	case "ptrace.tracee.parent.file.package.major":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).PTrace.Tracee.Parent.FileEvent.PkgMajor
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "ptrace.tracee.parent.file.package.minor":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).PTrace.Tracee.Parent.FileEvent.PkgMinor
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "ptrace.tracee.parent.file.package.name":
+		return &eval.StringEvaluator{
+			EvalFnc: func(ctx *eval.Context) string {
+				return (*Event)(ctx.Object).PTrace.Tracee.Parent.FileEvent.PkgName
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "ptrace.tracee.parent.file.package.patch":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).PTrace.Tracee.Parent.FileEvent.PkgPatch
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "ptrace.tracee.parent.file.package.version":
+		return &eval.StringEvaluator{
+			EvalFnc: func(ctx *eval.Context) string {
+				return (*Event)(ctx.Object).PTrace.Tracee.Parent.FileEvent.PkgVersion
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
 	case "ptrace.tracee.parent.file.path":
 		return &eval.StringEvaluator{
 			OpOverrides: ProcessSymlinkPathname,
@@ -7045,6 +8230,61 @@ func (m *Model) GetEvaluator(field eval.Field, regID eval.RegisterID) (eval.Eval
 			OpOverrides: ProcessSymlinkBasename,
 			EvalFnc: func(ctx *eval.Context) int {
 				return len((*Event)(ctx.Object).PTrace.Tracee.Parent.LinuxBinprm.FileEvent.BasenameStr)
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "ptrace.tracee.parent.interpreter.file.package.major":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				if !(*Event)(ctx.Object).PTrace.Tracee.Parent.HasInterpreter() {
+					return 0
+				}
+				return (*Event)(ctx.Object).PTrace.Tracee.Parent.LinuxBinprm.FileEvent.PkgMajor
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "ptrace.tracee.parent.interpreter.file.package.minor":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				if !(*Event)(ctx.Object).PTrace.Tracee.Parent.HasInterpreter() {
+					return 0
+				}
+				return (*Event)(ctx.Object).PTrace.Tracee.Parent.LinuxBinprm.FileEvent.PkgMinor
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "ptrace.tracee.parent.interpreter.file.package.name":
+		return &eval.StringEvaluator{
+			EvalFnc: func(ctx *eval.Context) string {
+				if !(*Event)(ctx.Object).PTrace.Tracee.Parent.HasInterpreter() {
+					return ""
+				}
+				return (*Event)(ctx.Object).PTrace.Tracee.Parent.LinuxBinprm.FileEvent.PkgName
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "ptrace.tracee.parent.interpreter.file.package.patch":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				if !(*Event)(ctx.Object).PTrace.Tracee.Parent.HasInterpreter() {
+					return 0
+				}
+				return (*Event)(ctx.Object).PTrace.Tracee.Parent.LinuxBinprm.FileEvent.PkgPatch
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "ptrace.tracee.parent.interpreter.file.package.version":
+		return &eval.StringEvaluator{
+			EvalFnc: func(ctx *eval.Context) string {
+				if !(*Event)(ctx.Object).PTrace.Tracee.Parent.HasInterpreter() {
+					return ""
+				}
+				return (*Event)(ctx.Object).PTrace.Tracee.Parent.LinuxBinprm.FileEvent.PkgVersion
 			},
 			Field:  field,
 			Weight: eval.HandlerWeight,
@@ -7321,6 +8561,46 @@ func (m *Model) GetEvaluator(field eval.Field, regID eval.RegisterID) (eval.Eval
 			Field:  field,
 			Weight: eval.HandlerWeight,
 		}, nil
+	case "removexattr.file.package.major":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).RemoveXAttr.File.PkgMajor
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "removexattr.file.package.minor":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).RemoveXAttr.File.PkgMinor
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "removexattr.file.package.name":
+		return &eval.StringEvaluator{
+			EvalFnc: func(ctx *eval.Context) string {
+				return (*Event)(ctx.Object).RemoveXAttr.File.PkgName
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "removexattr.file.package.patch":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).RemoveXAttr.File.PkgPatch
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "removexattr.file.package.version":
+		return &eval.StringEvaluator{
+			EvalFnc: func(ctx *eval.Context) string {
+				return (*Event)(ctx.Object).RemoveXAttr.File.PkgVersion
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
 	case "removexattr.file.path":
 		return &eval.StringEvaluator{
 			OpOverrides: ProcessSymlinkPathname,
@@ -7469,6 +8749,46 @@ func (m *Model) GetEvaluator(field eval.Field, regID eval.RegisterID) (eval.Eval
 			Field:  field,
 			Weight: eval.HandlerWeight,
 		}, nil
+	case "rename.file.destination.package.major":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).Rename.New.PkgMajor
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "rename.file.destination.package.minor":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).Rename.New.PkgMinor
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "rename.file.destination.package.name":
+		return &eval.StringEvaluator{
+			EvalFnc: func(ctx *eval.Context) string {
+				return (*Event)(ctx.Object).Rename.New.PkgName
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "rename.file.destination.package.patch":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).Rename.New.PkgPatch
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "rename.file.destination.package.version":
+		return &eval.StringEvaluator{
+			EvalFnc: func(ctx *eval.Context) string {
+				return (*Event)(ctx.Object).Rename.New.PkgVersion
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
 	case "rename.file.destination.path":
 		return &eval.StringEvaluator{
 			OpOverrides: ProcessSymlinkPathname,
@@ -7589,6 +8909,46 @@ func (m *Model) GetEvaluator(field eval.Field, regID eval.RegisterID) (eval.Eval
 			OpOverrides: ProcessSymlinkBasename,
 			EvalFnc: func(ctx *eval.Context) int {
 				return len((*Event)(ctx.Object).Rename.Old.BasenameStr)
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "rename.file.package.major":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).Rename.Old.PkgMajor
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "rename.file.package.minor":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).Rename.Old.PkgMinor
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "rename.file.package.name":
+		return &eval.StringEvaluator{
+			EvalFnc: func(ctx *eval.Context) string {
+				return (*Event)(ctx.Object).Rename.Old.PkgName
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "rename.file.package.patch":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).Rename.Old.PkgPatch
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "rename.file.package.version":
+		return &eval.StringEvaluator{
+			EvalFnc: func(ctx *eval.Context) string {
+				return (*Event)(ctx.Object).Rename.Old.PkgVersion
 			},
 			Field:  field,
 			Weight: eval.HandlerWeight,
@@ -7729,6 +9089,46 @@ func (m *Model) GetEvaluator(field eval.Field, regID eval.RegisterID) (eval.Eval
 			OpOverrides: ProcessSymlinkBasename,
 			EvalFnc: func(ctx *eval.Context) int {
 				return len((*Event)(ctx.Object).Rmdir.File.BasenameStr)
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "rmdir.file.package.major":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).Rmdir.File.PkgMajor
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "rmdir.file.package.minor":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).Rmdir.File.PkgMinor
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "rmdir.file.package.name":
+		return &eval.StringEvaluator{
+			EvalFnc: func(ctx *eval.Context) string {
+				return (*Event)(ctx.Object).Rmdir.File.PkgName
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "rmdir.file.package.patch":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).Rmdir.File.PkgPatch
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "rmdir.file.package.version":
+		return &eval.StringEvaluator{
+			EvalFnc: func(ctx *eval.Context) string {
+				return (*Event)(ctx.Object).Rmdir.File.PkgVersion
 			},
 			Field:  field,
 			Weight: eval.HandlerWeight,
@@ -8013,6 +9413,46 @@ func (m *Model) GetEvaluator(field eval.Field, regID eval.RegisterID) (eval.Eval
 			OpOverrides: ProcessSymlinkBasename,
 			EvalFnc: func(ctx *eval.Context) int {
 				return len((*Event)(ctx.Object).SetXAttr.File.BasenameStr)
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "setxattr.file.package.major":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).SetXAttr.File.PkgMajor
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "setxattr.file.package.minor":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).SetXAttr.File.PkgMinor
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "setxattr.file.package.name":
+		return &eval.StringEvaluator{
+			EvalFnc: func(ctx *eval.Context) string {
+				return (*Event)(ctx.Object).SetXAttr.File.PkgName
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "setxattr.file.package.patch":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).SetXAttr.File.PkgPatch
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "setxattr.file.package.version":
+		return &eval.StringEvaluator{
+			EvalFnc: func(ctx *eval.Context) string {
+				return (*Event)(ctx.Object).SetXAttr.File.PkgVersion
 			},
 			Field:  field,
 			Weight: eval.HandlerWeight,
@@ -8565,6 +10005,86 @@ func (m *Model) GetEvaluator(field eval.Field, regID eval.RegisterID) (eval.Eval
 			}, Field: field,
 			Weight: eval.IteratorWeight,
 		}, nil
+	case "signal.target.ancestors.file.package.major":
+		return &eval.IntArrayEvaluator{
+			EvalFnc: func(ctx *eval.Context) []int {
+				var results []int
+				iterator := &ProcessAncestorsIterator{}
+				value := iterator.Front(ctx)
+				for value != nil {
+					element := (*ProcessCacheEntry)(value)
+					result := int(element.ProcessContext.Process.FileEvent.PkgMajor)
+					results = append(results, result)
+					value = iterator.Next()
+				}
+				return results
+			}, Field: field,
+			Weight: eval.IteratorWeight,
+		}, nil
+	case "signal.target.ancestors.file.package.minor":
+		return &eval.IntArrayEvaluator{
+			EvalFnc: func(ctx *eval.Context) []int {
+				var results []int
+				iterator := &ProcessAncestorsIterator{}
+				value := iterator.Front(ctx)
+				for value != nil {
+					element := (*ProcessCacheEntry)(value)
+					result := int(element.ProcessContext.Process.FileEvent.PkgMinor)
+					results = append(results, result)
+					value = iterator.Next()
+				}
+				return results
+			}, Field: field,
+			Weight: eval.IteratorWeight,
+		}, nil
+	case "signal.target.ancestors.file.package.name":
+		return &eval.StringArrayEvaluator{
+			EvalFnc: func(ctx *eval.Context) []string {
+				var results []string
+				iterator := &ProcessAncestorsIterator{}
+				value := iterator.Front(ctx)
+				for value != nil {
+					element := (*ProcessCacheEntry)(value)
+					result := element.ProcessContext.Process.FileEvent.PkgName
+					results = append(results, result)
+					value = iterator.Next()
+				}
+				return results
+			}, Field: field,
+			Weight: eval.IteratorWeight,
+		}, nil
+	case "signal.target.ancestors.file.package.patch":
+		return &eval.IntArrayEvaluator{
+			EvalFnc: func(ctx *eval.Context) []int {
+				var results []int
+				iterator := &ProcessAncestorsIterator{}
+				value := iterator.Front(ctx)
+				for value != nil {
+					element := (*ProcessCacheEntry)(value)
+					result := int(element.ProcessContext.Process.FileEvent.PkgPatch)
+					results = append(results, result)
+					value = iterator.Next()
+				}
+				return results
+			}, Field: field,
+			Weight: eval.IteratorWeight,
+		}, nil
+	case "signal.target.ancestors.file.package.version":
+		return &eval.StringArrayEvaluator{
+			EvalFnc: func(ctx *eval.Context) []string {
+				var results []string
+				iterator := &ProcessAncestorsIterator{}
+				value := iterator.Front(ctx)
+				for value != nil {
+					element := (*ProcessCacheEntry)(value)
+					result := element.ProcessContext.Process.FileEvent.PkgVersion
+					results = append(results, result)
+					value = iterator.Next()
+				}
+				return results
+			}, Field: field,
+			Weight: eval.IteratorWeight,
+		}, nil
 	case "signal.target.ancestors.file.path":
 		return &eval.StringArrayEvaluator{
 			OpOverrides: ProcessSymlinkPathname,
@@ -8944,6 +10464,101 @@ func (m *Model) GetEvaluator(field eval.Field, regID eval.RegisterID) (eval.Eval
 				for value != nil {
 					element := (*ProcessCacheEntry)(value)
 					result := len(element.ProcessContext.Process.LinuxBinprm.FileEvent.BasenameStr)
+					results = append(results, result)
+					value = iterator.Next()
+				}
+				return results
+			}, Field: field,
+			Weight: eval.IteratorWeight,
+		}, nil
+	case "signal.target.ancestors.interpreter.file.package.major":
+		return &eval.IntArrayEvaluator{
+			EvalFnc: func(ctx *eval.Context) []int {
+				if !(*Event)(ctx.Object).Signal.Target.Ancestor.ProcessContext.Process.HasInterpreter() {
+					return []int{}
+				}
+				var results []int
+				iterator := &ProcessAncestorsIterator{}
+				value := iterator.Front(ctx)
+				for value != nil {
+					element := (*ProcessCacheEntry)(value)
+					result := int(element.ProcessContext.Process.LinuxBinprm.FileEvent.PkgMajor)
+					results = append(results, result)
+					value = iterator.Next()
+				}
+				return results
+			}, Field: field,
+			Weight: eval.IteratorWeight,
+		}, nil
+	case "signal.target.ancestors.interpreter.file.package.minor":
+		return &eval.IntArrayEvaluator{
+			EvalFnc: func(ctx *eval.Context) []int {
+				if !(*Event)(ctx.Object).Signal.Target.Ancestor.ProcessContext.Process.HasInterpreter() {
+					return []int{}
+				}
+				var results []int
+				iterator := &ProcessAncestorsIterator{}
+				value := iterator.Front(ctx)
+				for value != nil {
+					element := (*ProcessCacheEntry)(value)
+					result := int(element.ProcessContext.Process.LinuxBinprm.FileEvent.PkgMinor)
+					results = append(results, result)
+					value = iterator.Next()
+				}
+				return results
+			}, Field: field,
+			Weight: eval.IteratorWeight,
+		}, nil
+	case "signal.target.ancestors.interpreter.file.package.name":
+		return &eval.StringArrayEvaluator{
+			EvalFnc: func(ctx *eval.Context) []string {
+				if !(*Event)(ctx.Object).Signal.Target.Ancestor.ProcessContext.Process.HasInterpreter() {
+					return []string{}
+				}
+				var results []string
+				iterator := &ProcessAncestorsIterator{}
+				value := iterator.Front(ctx)
+				for value != nil {
+					element := (*ProcessCacheEntry)(value)
+					result := element.ProcessContext.Process.LinuxBinprm.FileEvent.PkgName
+					results = append(results, result)
+					value = iterator.Next()
+				}
+				return results
+			}, Field: field,
+			Weight: eval.IteratorWeight,
+		}, nil
+	case "signal.target.ancestors.interpreter.file.package.patch":
+		return &eval.IntArrayEvaluator{
+			EvalFnc: func(ctx *eval.Context) []int {
+				if !(*Event)(ctx.Object).Signal.Target.Ancestor.ProcessContext.Process.HasInterpreter() {
+					return []int{}
+				}
+				var results []int
+				iterator := &ProcessAncestorsIterator{}
+				value := iterator.Front(ctx)
+				for value != nil {
+					element := (*ProcessCacheEntry)(value)
+					result := int(element.ProcessContext.Process.LinuxBinprm.FileEvent.PkgPatch)
+					results = append(results, result)
+					value = iterator.Next()
+				}
+				return results
+			}, Field: field,
+			Weight: eval.IteratorWeight,
+		}, nil
+	case "signal.target.ancestors.interpreter.file.package.version":
+		return &eval.StringArrayEvaluator{
+			EvalFnc: func(ctx *eval.Context) []string {
+				if !(*Event)(ctx.Object).Signal.Target.Ancestor.ProcessContext.Process.HasInterpreter() {
+					return []string{}
+				}
+				var results []string
+				iterator := &ProcessAncestorsIterator{}
+				value := iterator.Front(ctx)
+				for value != nil {
+					element := (*ProcessCacheEntry)(value)
+					result := element.ProcessContext.Process.LinuxBinprm.FileEvent.PkgVersion
 					results = append(results, result)
 					value = iterator.Next()
 				}
@@ -9415,6 +11030,46 @@ func (m *Model) GetEvaluator(field eval.Field, regID eval.RegisterID) (eval.Eval
 			Field:  field,
 			Weight: eval.HandlerWeight,
 		}, nil
+	case "signal.target.file.package.major":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).Signal.Target.Process.FileEvent.PkgMajor
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "signal.target.file.package.minor":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).Signal.Target.Process.FileEvent.PkgMinor
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "signal.target.file.package.name":
+		return &eval.StringEvaluator{
+			EvalFnc: func(ctx *eval.Context) string {
+				return (*Event)(ctx.Object).Signal.Target.Process.FileEvent.PkgName
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "signal.target.file.package.patch":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).Signal.Target.Process.FileEvent.PkgPatch
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "signal.target.file.package.version":
+		return &eval.StringEvaluator{
+			EvalFnc: func(ctx *eval.Context) string {
+				return (*Event)(ctx.Object).Signal.Target.Process.FileEvent.PkgVersion
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
 	case "signal.target.file.path":
 		return &eval.StringEvaluator{
 			OpOverrides: ProcessSymlinkPathname,
@@ -9621,6 +11276,61 @@ func (m *Model) GetEvaluator(field eval.Field, regID eval.RegisterID) (eval.Eval
 			OpOverrides: ProcessSymlinkBasename,
 			EvalFnc: func(ctx *eval.Context) int {
 				return len((*Event)(ctx.Object).Signal.Target.Process.LinuxBinprm.FileEvent.BasenameStr)
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "signal.target.interpreter.file.package.major":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				if !(*Event)(ctx.Object).Signal.Target.Process.HasInterpreter() {
+					return 0
+				}
+				return (*Event)(ctx.Object).Signal.Target.Process.LinuxBinprm.FileEvent.PkgMajor
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "signal.target.interpreter.file.package.minor":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				if !(*Event)(ctx.Object).Signal.Target.Process.HasInterpreter() {
+					return 0
+				}
+				return (*Event)(ctx.Object).Signal.Target.Process.LinuxBinprm.FileEvent.PkgMinor
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "signal.target.interpreter.file.package.name":
+		return &eval.StringEvaluator{
+			EvalFnc: func(ctx *eval.Context) string {
+				if !(*Event)(ctx.Object).Signal.Target.Process.HasInterpreter() {
+					return ""
+				}
+				return (*Event)(ctx.Object).Signal.Target.Process.LinuxBinprm.FileEvent.PkgName
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "signal.target.interpreter.file.package.patch":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				if !(*Event)(ctx.Object).Signal.Target.Process.HasInterpreter() {
+					return 0
+				}
+				return (*Event)(ctx.Object).Signal.Target.Process.LinuxBinprm.FileEvent.PkgPatch
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "signal.target.interpreter.file.package.version":
+		return &eval.StringEvaluator{
+			EvalFnc: func(ctx *eval.Context) string {
+				if !(*Event)(ctx.Object).Signal.Target.Process.HasInterpreter() {
+					return ""
+				}
+				return (*Event)(ctx.Object).Signal.Target.Process.LinuxBinprm.FileEvent.PkgVersion
 			},
 			Field:  field,
 			Weight: eval.HandlerWeight,
@@ -9937,6 +11647,46 @@ func (m *Model) GetEvaluator(field eval.Field, regID eval.RegisterID) (eval.Eval
 			Field:  field,
 			Weight: eval.HandlerWeight,
 		}, nil
+	case "signal.target.parent.file.package.major":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).Signal.Target.Parent.FileEvent.PkgMajor
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "signal.target.parent.file.package.minor":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).Signal.Target.Parent.FileEvent.PkgMinor
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "signal.target.parent.file.package.name":
+		return &eval.StringEvaluator{
+			EvalFnc: func(ctx *eval.Context) string {
+				return (*Event)(ctx.Object).Signal.Target.Parent.FileEvent.PkgName
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "signal.target.parent.file.package.patch":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).Signal.Target.Parent.FileEvent.PkgPatch
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "signal.target.parent.file.package.version":
+		return &eval.StringEvaluator{
+			EvalFnc: func(ctx *eval.Context) string {
+				return (*Event)(ctx.Object).Signal.Target.Parent.FileEvent.PkgVersion
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
 	case "signal.target.parent.file.path":
 		return &eval.StringEvaluator{
 			OpOverrides: ProcessSymlinkPathname,
@@ -10143,6 +11893,61 @@ func (m *Model) GetEvaluator(field eval.Field, regID eval.RegisterID) (eval.Eval
 			OpOverrides: ProcessSymlinkBasename,
 			EvalFnc: func(ctx *eval.Context) int {
 				return len((*Event)(ctx.Object).Signal.Target.Parent.LinuxBinprm.FileEvent.BasenameStr)
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "signal.target.parent.interpreter.file.package.major":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				if !(*Event)(ctx.Object).Signal.Target.Parent.HasInterpreter() {
+					return 0
+				}
+				return (*Event)(ctx.Object).Signal.Target.Parent.LinuxBinprm.FileEvent.PkgMajor
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "signal.target.parent.interpreter.file.package.minor":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				if !(*Event)(ctx.Object).Signal.Target.Parent.HasInterpreter() {
+					return 0
+				}
+				return (*Event)(ctx.Object).Signal.Target.Parent.LinuxBinprm.FileEvent.PkgMinor
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "signal.target.parent.interpreter.file.package.name":
+		return &eval.StringEvaluator{
+			EvalFnc: func(ctx *eval.Context) string {
+				if !(*Event)(ctx.Object).Signal.Target.Parent.HasInterpreter() {
+					return ""
+				}
+				return (*Event)(ctx.Object).Signal.Target.Parent.LinuxBinprm.FileEvent.PkgName
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "signal.target.parent.interpreter.file.package.patch":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				if !(*Event)(ctx.Object).Signal.Target.Parent.HasInterpreter() {
+					return 0
+				}
+				return (*Event)(ctx.Object).Signal.Target.Parent.LinuxBinprm.FileEvent.PkgPatch
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "signal.target.parent.interpreter.file.package.version":
+		return &eval.StringEvaluator{
+			EvalFnc: func(ctx *eval.Context) string {
+				if !(*Event)(ctx.Object).Signal.Target.Parent.HasInterpreter() {
+					return ""
+				}
+				return (*Event)(ctx.Object).Signal.Target.Parent.LinuxBinprm.FileEvent.PkgVersion
 			},
 			Field:  field,
 			Weight: eval.HandlerWeight,
@@ -10411,6 +12216,46 @@ func (m *Model) GetEvaluator(field eval.Field, regID eval.RegisterID) (eval.Eval
 			Field:  field,
 			Weight: eval.HandlerWeight,
 		}, nil
+	case "splice.file.package.major":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).Splice.File.PkgMajor
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "splice.file.package.minor":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).Splice.File.PkgMinor
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "splice.file.package.name":
+		return &eval.StringEvaluator{
+			EvalFnc: func(ctx *eval.Context) string {
+				return (*Event)(ctx.Object).Splice.File.PkgName
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "splice.file.package.patch":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).Splice.File.PkgPatch
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "splice.file.package.version":
+		return &eval.StringEvaluator{
+			EvalFnc: func(ctx *eval.Context) string {
+				return (*Event)(ctx.Object).Splice.File.PkgVersion
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
 	case "splice.file.path":
 		return &eval.StringEvaluator{
 			OpOverrides: ProcessSymlinkPathname,
@@ -10563,6 +12408,46 @@ func (m *Model) GetEvaluator(field eval.Field, regID eval.RegisterID) (eval.Eval
 			OpOverrides: ProcessSymlinkBasename,
 			EvalFnc: func(ctx *eval.Context) int {
 				return len((*Event)(ctx.Object).Unlink.File.BasenameStr)
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "unlink.file.package.major":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).Unlink.File.PkgMajor
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "unlink.file.package.minor":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).Unlink.File.PkgMinor
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "unlink.file.package.name":
+		return &eval.StringEvaluator{
+			EvalFnc: func(ctx *eval.Context) string {
+				return (*Event)(ctx.Object).Unlink.File.PkgName
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "unlink.file.package.patch":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).Unlink.File.PkgPatch
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "unlink.file.package.version":
+		return &eval.StringEvaluator{
+			EvalFnc: func(ctx *eval.Context) string {
+				return (*Event)(ctx.Object).Unlink.File.PkgVersion
 			},
 			Field:  field,
 			Weight: eval.HandlerWeight,
@@ -10731,6 +12616,46 @@ func (m *Model) GetEvaluator(field eval.Field, regID eval.RegisterID) (eval.Eval
 			Field:  field,
 			Weight: eval.HandlerWeight,
 		}, nil
+	case "utimes.file.package.major":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).Utimes.File.PkgMajor
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "utimes.file.package.minor":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).Utimes.File.PkgMinor
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "utimes.file.package.name":
+		return &eval.StringEvaluator{
+			EvalFnc: func(ctx *eval.Context) string {
+				return (*Event)(ctx.Object).Utimes.File.PkgName
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "utimes.file.package.patch":
+		return &eval.IntEvaluator{
+			EvalFnc: func(ctx *eval.Context) int {
+				return (*Event)(ctx.Object).Utimes.File.PkgPatch
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
+	case "utimes.file.package.version":
+		return &eval.StringEvaluator{
+			EvalFnc: func(ctx *eval.Context) string {
+				return (*Event)(ctx.Object).Utimes.File.PkgVersion
+			},
+			Field:  field,
+			Weight: eval.HandlerWeight,
+		}, nil
 	case "utimes.file.path":
 		return &eval.StringEvaluator{
 			OpOverrides: ProcessSymlinkPathname,
@@ -10815,6 +12740,11 @@ func (e *Event) GetFields() []eval.Field {
 		"chmod.file.mount_id",
 		"chmod.file.name",
 		"chmod.file.name.length",
+		"chmod.file.package.major",
+		"chmod.file.package.minor",
+		"chmod.file.package.name",
+		"chmod.file.package.patch",
+		"chmod.file.package.version",
 		"chmod.file.path",
 		"chmod.file.path.length",
 		"chmod.file.rights",
@@ -10836,6 +12766,11 @@ func (e *Event) GetFields() []eval.Field {
 		"chown.file.mount_id",
 		"chown.file.name",
 		"chown.file.name.length",
+		"chown.file.package.major",
+		"chown.file.package.minor",
+		"chown.file.package.name",
+		"chown.file.package.patch",
+		"chown.file.package.version",
 		"chown.file.path",
 		"chown.file.path.length",
 		"chown.file.rights",
@@ -10881,6 +12816,11 @@ func (e *Event) GetFields() []eval.Field {
 		"exec.file.mount_id",
 		"exec.file.name",
 		"exec.file.name.length",
+		"exec.file.package.major",
+		"exec.file.package.minor",
+		"exec.file.package.name",
+		"exec.file.package.patch",
+		"exec.file.package.version",
 		"exec.file.path",
 		"exec.file.path.length",
 		"exec.file.rights",
@@ -10903,6 +12843,11 @@ func (e *Event) GetFields() []eval.Field {
 		"exec.interpreter.file.mount_id",
 		"exec.interpreter.file.name",
 		"exec.interpreter.file.name.length",
+		"exec.interpreter.file.package.major",
+		"exec.interpreter.file.package.minor",
+		"exec.interpreter.file.package.name",
+		"exec.interpreter.file.package.patch",
+		"exec.interpreter.file.package.version",
 		"exec.interpreter.file.path",
 		"exec.interpreter.file.path.length",
 		"exec.interpreter.file.rights",
@@ -10948,6 +12893,11 @@ func (e *Event) GetFields() []eval.Field {
 		"exit.file.mount_id",
 		"exit.file.name",
 		"exit.file.name.length",
+		"exit.file.package.major",
+		"exit.file.package.minor",
+		"exit.file.package.name",
+		"exit.file.package.patch",
+		"exit.file.package.version",
 		"exit.file.path",
 		"exit.file.path.length",
 		"exit.file.rights",
@@ -10970,6 +12920,11 @@ func (e *Event) GetFields() []eval.Field {
 		"exit.interpreter.file.mount_id",
 		"exit.interpreter.file.name",
 		"exit.interpreter.file.name.length",
+		"exit.interpreter.file.package.major",
+		"exit.interpreter.file.package.minor",
+		"exit.interpreter.file.package.name",
+		"exit.interpreter.file.package.patch",
+		"exit.interpreter.file.package.version",
 		"exit.interpreter.file.path",
 		"exit.interpreter.file.path.length",
 		"exit.interpreter.file.rights",
@@ -10995,6 +12950,11 @@ func (e *Event) GetFields() []eval.Field {
 		"link.file.destination.mount_id",
 		"link.file.destination.name",
 		"link.file.destination.name.length",
+		"link.file.destination.package.major",
+		"link.file.destination.package.minor",
+		"link.file.destination.package.name",
+		"link.file.destination.package.patch",
+		"link.file.destination.package.version",
 		"link.file.destination.path",
 		"link.file.destination.path.length",
 		"link.file.destination.rights",
@@ -11010,6 +12970,11 @@ func (e *Event) GetFields() []eval.Field {
 		"link.file.mount_id",
 		"link.file.name",
 		"link.file.name.length",
+		"link.file.package.major",
+		"link.file.package.minor",
+		"link.file.package.name",
+		"link.file.package.patch",
+		"link.file.package.version",
 		"link.file.path",
 		"link.file.path.length",
 		"link.file.rights",
@@ -11027,6 +12992,11 @@ func (e *Event) GetFields() []eval.Field {
 		"load_module.file.mount_id",
 		"load_module.file.name",
 		"load_module.file.name.length",
+		"load_module.file.package.major",
+		"load_module.file.package.minor",
+		"load_module.file.package.name",
+		"load_module.file.package.patch",
+		"load_module.file.package.version",
 		"load_module.file.path",
 		"load_module.file.path.length",
 		"load_module.file.rights",
@@ -11048,6 +13018,11 @@ func (e *Event) GetFields() []eval.Field {
 		"mkdir.file.mount_id",
 		"mkdir.file.name",
 		"mkdir.file.name.length",
+		"mkdir.file.package.major",
+		"mkdir.file.package.minor",
+		"mkdir.file.package.name",
+		"mkdir.file.package.patch",
+		"mkdir.file.package.version",
 		"mkdir.file.path",
 		"mkdir.file.path.length",
 		"mkdir.file.rights",
@@ -11065,6 +13040,11 @@ func (e *Event) GetFields() []eval.Field {
 		"mmap.file.mount_id",
 		"mmap.file.name",
 		"mmap.file.name.length",
+		"mmap.file.package.major",
+		"mmap.file.package.minor",
+		"mmap.file.package.name",
+		"mmap.file.package.patch",
+		"mmap.file.package.version",
 		"mmap.file.path",
 		"mmap.file.path.length",
 		"mmap.file.rights",
@@ -11097,6 +13077,11 @@ func (e *Event) GetFields() []eval.Field {
 		"open.file.mount_id",
 		"open.file.name",
 		"open.file.name.length",
+		"open.file.package.major",
+		"open.file.package.minor",
+		"open.file.package.name",
+		"open.file.package.patch",
+		"open.file.package.version",
 		"open.file.path",
 		"open.file.path.length",
 		"open.file.rights",
@@ -11134,6 +13119,11 @@ func (e *Event) GetFields() []eval.Field {
 		"process.ancestors.file.mount_id",
 		"process.ancestors.file.name",
 		"process.ancestors.file.name.length",
+		"process.ancestors.file.package.major",
+		"process.ancestors.file.package.minor",
+		"process.ancestors.file.package.name",
+		"process.ancestors.file.package.patch",
+		"process.ancestors.file.package.version",
 		"process.ancestors.file.path",
 		"process.ancestors.file.path.length",
 		"process.ancestors.file.rights",
@@ -11156,6 +13146,11 @@ func (e *Event) GetFields() []eval.Field {
 		"process.ancestors.interpreter.file.mount_id",
 		"process.ancestors.interpreter.file.name",
 		"process.ancestors.interpreter.file.name.length",
+		"process.ancestors.interpreter.file.package.major",
+		"process.ancestors.interpreter.file.package.minor",
+		"process.ancestors.interpreter.file.package.name",
+		"process.ancestors.interpreter.file.package.patch",
+		"process.ancestors.interpreter.file.package.version",
 		"process.ancestors.interpreter.file.path",
 		"process.ancestors.interpreter.file.path.length",
 		"process.ancestors.interpreter.file.rights",
@@ -11199,6 +13194,11 @@ func (e *Event) GetFields() []eval.Field {
 		"process.file.mount_id",
 		"process.file.name",
 		"process.file.name.length",
+		"process.file.package.major",
+		"process.file.package.minor",
+		"process.file.package.name",
+		"process.file.package.patch",
+		"process.file.package.version",
 		"process.file.path",
 		"process.file.path.length",
 		"process.file.rights",
@@ -11221,6 +13221,11 @@ func (e *Event) GetFields() []eval.Field {
 		"process.interpreter.file.mount_id",
 		"process.interpreter.file.name",
 		"process.interpreter.file.name.length",
+		"process.interpreter.file.package.major",
+		"process.interpreter.file.package.minor",
+		"process.interpreter.file.package.name",
+		"process.interpreter.file.package.patch",
+		"process.interpreter.file.package.version",
 		"process.interpreter.file.path",
 		"process.interpreter.file.path.length",
 		"process.interpreter.file.rights",
@@ -11258,6 +13263,11 @@ func (e *Event) GetFields() []eval.Field {
 		"process.parent.file.mount_id",
 		"process.parent.file.name",
 		"process.parent.file.name.length",
+		"process.parent.file.package.major",
+		"process.parent.file.package.minor",
+		"process.parent.file.package.name",
+		"process.parent.file.package.patch",
+		"process.parent.file.package.version",
 		"process.parent.file.path",
 		"process.parent.file.path.length",
 		"process.parent.file.rights",
@@ -11280,6 +13290,11 @@ func (e *Event) GetFields() []eval.Field {
 		"process.parent.interpreter.file.mount_id",
 		"process.parent.interpreter.file.name",
 		"process.parent.interpreter.file.name.length",
+		"process.parent.interpreter.file.package.major",
+		"process.parent.interpreter.file.package.minor",
+		"process.parent.interpreter.file.package.name",
+		"process.parent.interpreter.file.package.patch",
+		"process.parent.interpreter.file.package.version",
 		"process.parent.interpreter.file.path",
 		"process.parent.interpreter.file.path.length",
 		"process.parent.interpreter.file.rights",
@@ -11331,6 +13346,11 @@ func (e *Event) GetFields() []eval.Field {
 		"ptrace.tracee.ancestors.file.mount_id",
 		"ptrace.tracee.ancestors.file.name",
 		"ptrace.tracee.ancestors.file.name.length",
+		"ptrace.tracee.ancestors.file.package.major",
+		"ptrace.tracee.ancestors.file.package.minor",
+		"ptrace.tracee.ancestors.file.package.name",
+		"ptrace.tracee.ancestors.file.package.patch",
+		"ptrace.tracee.ancestors.file.package.version",
 		"ptrace.tracee.ancestors.file.path",
 		"ptrace.tracee.ancestors.file.path.length",
 		"ptrace.tracee.ancestors.file.rights",
@@ -11353,6 +13373,11 @@ func (e *Event) GetFields() []eval.Field {
 		"ptrace.tracee.ancestors.interpreter.file.mount_id",
 		"ptrace.tracee.ancestors.interpreter.file.name",
 		"ptrace.tracee.ancestors.interpreter.file.name.length",
+		"ptrace.tracee.ancestors.interpreter.file.package.major",
+		"ptrace.tracee.ancestors.interpreter.file.package.minor",
+		"ptrace.tracee.ancestors.interpreter.file.package.name",
+		"ptrace.tracee.ancestors.interpreter.file.package.patch",
+		"ptrace.tracee.ancestors.interpreter.file.package.version",
 		"ptrace.tracee.ancestors.interpreter.file.path",
 		"ptrace.tracee.ancestors.interpreter.file.path.length",
 		"ptrace.tracee.ancestors.interpreter.file.rights",
@@ -11396,6 +13421,11 @@ func (e *Event) GetFields() []eval.Field {
 		"ptrace.tracee.file.mount_id",
 		"ptrace.tracee.file.name",
 		"ptrace.tracee.file.name.length",
+		"ptrace.tracee.file.package.major",
+		"ptrace.tracee.file.package.minor",
+		"ptrace.tracee.file.package.name",
+		"ptrace.tracee.file.package.patch",
+		"ptrace.tracee.file.package.version",
 		"ptrace.tracee.file.path",
 		"ptrace.tracee.file.path.length",
 		"ptrace.tracee.file.rights",
@@ -11418,6 +13448,11 @@ func (e *Event) GetFields() []eval.Field {
 		"ptrace.tracee.interpreter.file.mount_id",
 		"ptrace.tracee.interpreter.file.name",
 		"ptrace.tracee.interpreter.file.name.length",
+		"ptrace.tracee.interpreter.file.package.major",
+		"ptrace.tracee.interpreter.file.package.minor",
+		"ptrace.tracee.interpreter.file.package.name",
+		"ptrace.tracee.interpreter.file.package.patch",
+		"ptrace.tracee.interpreter.file.package.version",
 		"ptrace.tracee.interpreter.file.path",
 		"ptrace.tracee.interpreter.file.path.length",
 		"ptrace.tracee.interpreter.file.rights",
@@ -11455,6 +13490,11 @@ func (e *Event) GetFields() []eval.Field {
 		"ptrace.tracee.parent.file.mount_id",
 		"ptrace.tracee.parent.file.name",
 		"ptrace.tracee.parent.file.name.length",
+		"ptrace.tracee.parent.file.package.major",
+		"ptrace.tracee.parent.file.package.minor",
+		"ptrace.tracee.parent.file.package.name",
+		"ptrace.tracee.parent.file.package.patch",
+		"ptrace.tracee.parent.file.package.version",
 		"ptrace.tracee.parent.file.path",
 		"ptrace.tracee.parent.file.path.length",
 		"ptrace.tracee.parent.file.rights",
@@ -11477,6 +13517,11 @@ func (e *Event) GetFields() []eval.Field {
 		"ptrace.tracee.parent.interpreter.file.mount_id",
 		"ptrace.tracee.parent.interpreter.file.name",
 		"ptrace.tracee.parent.interpreter.file.name.length",
+		"ptrace.tracee.parent.interpreter.file.package.major",
+		"ptrace.tracee.parent.interpreter.file.package.minor",
+		"ptrace.tracee.parent.interpreter.file.package.name",
+		"ptrace.tracee.parent.interpreter.file.package.patch",
+		"ptrace.tracee.parent.interpreter.file.package.version",
 		"ptrace.tracee.parent.interpreter.file.path",
 		"ptrace.tracee.parent.interpreter.file.path.length",
 		"ptrace.tracee.parent.interpreter.file.rights",
@@ -11509,6 +13554,11 @@ func (e *Event) GetFields() []eval.Field {
 		"removexattr.file.mount_id",
 		"removexattr.file.name",
 		"removexattr.file.name.length",
+		"removexattr.file.package.major",
+		"removexattr.file.package.minor",
+		"removexattr.file.package.name",
+		"removexattr.file.package.patch",
+		"removexattr.file.package.version",
 		"removexattr.file.path",
 		"removexattr.file.path.length",
 		"removexattr.file.rights",
@@ -11527,6 +13577,11 @@ func (e *Event) GetFields() []eval.Field {
 		"rename.file.destination.mount_id",
 		"rename.file.destination.name",
 		"rename.file.destination.name.length",
+		"rename.file.destination.package.major",
+		"rename.file.destination.package.minor",
+		"rename.file.destination.package.name",
+		"rename.file.destination.package.patch",
+		"rename.file.destination.package.version",
 		"rename.file.destination.path",
 		"rename.file.destination.path.length",
 		"rename.file.destination.rights",
@@ -11542,6 +13597,11 @@ func (e *Event) GetFields() []eval.Field {
 		"rename.file.mount_id",
 		"rename.file.name",
 		"rename.file.name.length",
+		"rename.file.package.major",
+		"rename.file.package.minor",
+		"rename.file.package.name",
+		"rename.file.package.patch",
+		"rename.file.package.version",
 		"rename.file.path",
 		"rename.file.path.length",
 		"rename.file.rights",
@@ -11559,6 +13619,11 @@ func (e *Event) GetFields() []eval.Field {
 		"rmdir.file.mount_id",
 		"rmdir.file.name",
 		"rmdir.file.name.length",
+		"rmdir.file.package.major",
+		"rmdir.file.package.minor",
+		"rmdir.file.package.name",
+		"rmdir.file.package.patch",
+		"rmdir.file.package.version",
 		"rmdir.file.path",
 		"rmdir.file.path.length",
 		"rmdir.file.rights",
@@ -11594,6 +13659,11 @@ func (e *Event) GetFields() []eval.Field {
 		"setxattr.file.mount_id",
 		"setxattr.file.name",
 		"setxattr.file.name.length",
+		"setxattr.file.package.major",
+		"setxattr.file.package.minor",
+		"setxattr.file.package.name",
+		"setxattr.file.package.patch",
+		"setxattr.file.package.version",
 		"setxattr.file.path",
 		"setxattr.file.path.length",
 		"setxattr.file.rights",
@@ -11632,6 +13702,11 @@ func (e *Event) GetFields() []eval.Field {
 		"signal.target.ancestors.file.mount_id",
 		"signal.target.ancestors.file.name",
 		"signal.target.ancestors.file.name.length",
+		"signal.target.ancestors.file.package.major",
+		"signal.target.ancestors.file.package.minor",
+		"signal.target.ancestors.file.package.name",
+		"signal.target.ancestors.file.package.patch",
+		"signal.target.ancestors.file.package.version",
 		"signal.target.ancestors.file.path",
 		"signal.target.ancestors.file.path.length",
 		"signal.target.ancestors.file.rights",
@@ -11654,6 +13729,11 @@ func (e *Event) GetFields() []eval.Field {
 		"signal.target.ancestors.interpreter.file.mount_id",
 		"signal.target.ancestors.interpreter.file.name",
 		"signal.target.ancestors.interpreter.file.name.length",
+		"signal.target.ancestors.interpreter.file.package.major",
+		"signal.target.ancestors.interpreter.file.package.minor",
+		"signal.target.ancestors.interpreter.file.package.name",
+		"signal.target.ancestors.interpreter.file.package.patch",
+		"signal.target.ancestors.interpreter.file.package.version",
 		"signal.target.ancestors.interpreter.file.path",
 		"signal.target.ancestors.interpreter.file.path.length",
 		"signal.target.ancestors.interpreter.file.rights",
@@ -11697,6 +13777,11 @@ func (e *Event) GetFields() []eval.Field {
 		"signal.target.file.mount_id",
 		"signal.target.file.name",
 		"signal.target.file.name.length",
+		"signal.target.file.package.major",
+		"signal.target.file.package.minor",
+		"signal.target.file.package.name",
+		"signal.target.file.package.patch",
+		"signal.target.file.package.version",
 		"signal.target.file.path",
 		"signal.target.file.path.length",
 		"signal.target.file.rights",
@@ -11719,6 +13804,11 @@ func (e *Event) GetFields() []eval.Field {
 		"signal.target.interpreter.file.mount_id",
 		"signal.target.interpreter.file.name",
 		"signal.target.interpreter.file.name.length",
+		"signal.target.interpreter.file.package.major",
+		"signal.target.interpreter.file.package.minor",
+		"signal.target.interpreter.file.package.name",
+		"signal.target.interpreter.file.package.patch",
+		"signal.target.interpreter.file.package.version",
 		"signal.target.interpreter.file.path",
 		"signal.target.interpreter.file.path.length",
 		"signal.target.interpreter.file.rights",
@@ -11756,6 +13846,11 @@ func (e *Event) GetFields() []eval.Field {
 		"signal.target.parent.file.mount_id",
 		"signal.target.parent.file.name",
 		"signal.target.parent.file.name.length",
+		"signal.target.parent.file.package.major",
+		"signal.target.parent.file.package.minor",
+		"signal.target.parent.file.package.name",
+		"signal.target.parent.file.package.patch",
+		"signal.target.parent.file.package.version",
 		"signal.target.parent.file.path",
 		"signal.target.parent.file.path.length",
 		"signal.target.parent.file.rights",
@@ -11778,6 +13873,11 @@ func (e *Event) GetFields() []eval.Field {
 		"signal.target.parent.interpreter.file.mount_id",
 		"signal.target.parent.interpreter.file.name",
 		"signal.target.parent.interpreter.file.name.length",
+		"signal.target.parent.interpreter.file.package.major",
+		"signal.target.parent.interpreter.file.package.minor",
+		"signal.target.parent.interpreter.file.package.name",
+		"signal.target.parent.interpreter.file.package.patch",
+		"signal.target.parent.interpreter.file.package.version",
 		"signal.target.parent.interpreter.file.path",
 		"signal.target.parent.interpreter.file.path.length",
 		"signal.target.parent.interpreter.file.rights",
@@ -11809,6 +13909,11 @@ func (e *Event) GetFields() []eval.Field {
 		"splice.file.mount_id",
 		"splice.file.name",
 		"splice.file.name.length",
+		"splice.file.package.major",
+		"splice.file.package.minor",
+		"splice.file.package.name",
+		"splice.file.package.patch",
+		"splice.file.package.version",
 		"splice.file.path",
 		"splice.file.path.length",
 		"splice.file.rights",
@@ -11828,6 +13933,11 @@ func (e *Event) GetFields() []eval.Field {
 		"unlink.file.mount_id",
 		"unlink.file.name",
 		"unlink.file.name.length",
+		"unlink.file.package.major",
+		"unlink.file.package.minor",
+		"unlink.file.package.name",
+		"unlink.file.package.patch",
+		"unlink.file.package.version",
 		"unlink.file.path",
 		"unlink.file.path.length",
 		"unlink.file.rights",
@@ -11848,6 +13958,11 @@ func (e *Event) GetFields() []eval.Field {
 		"utimes.file.mount_id",
 		"utimes.file.name",
 		"utimes.file.name.length",
+		"utimes.file.package.major",
+		"utimes.file.package.minor",
+		"utimes.file.package.name",
+		"utimes.file.package.patch",
+		"utimes.file.package.version",
 		"utimes.file.path",
 		"utimes.file.path.length",
 		"utimes.file.rights",
@@ -11920,6 +14035,16 @@ func (e *Event) GetFieldValue(field eval.Field) (interface{}, error) {
 		return e.Chmod.File.BasenameStr, nil
 	case "chmod.file.name.length":
 		return len(e.Chmod.File.BasenameStr), nil
+	case "chmod.file.package.major":
+		return e.Chmod.File.PkgMajor, nil
+	case "chmod.file.package.minor":
+		return e.Chmod.File.PkgMinor, nil
+	case "chmod.file.package.name":
+		return e.Chmod.File.PkgName, nil
+	case "chmod.file.package.patch":
+		return e.Chmod.File.PkgPatch, nil
+	case "chmod.file.package.version":
+		return e.Chmod.File.PkgVersion, nil
 	case "chmod.file.path":
 		return e.Chmod.File.PathnameStr, nil
 	case "chmod.file.path.length":
@@ -11962,6 +14087,16 @@ func (e *Event) GetFieldValue(field eval.Field) (interface{}, error) {
 		return e.Chown.File.BasenameStr, nil
 	case "chown.file.name.length":
 		return len(e.Chown.File.BasenameStr), nil
+	case "chown.file.package.major":
+		return e.Chown.File.PkgMajor, nil
+	case "chown.file.package.minor":
+		return e.Chown.File.PkgMinor, nil
+	case "chown.file.package.name":
+		return e.Chown.File.PkgName, nil
+	case "chown.file.package.patch":
+		return e.Chown.File.PkgPatch, nil
+	case "chown.file.package.version":
+		return e.Chown.File.PkgVersion, nil
 	case "chown.file.path":
 		return e.Chown.File.PathnameStr, nil
 	case "chown.file.path.length":
@@ -12052,6 +14187,16 @@ func (e *Event) GetFieldValue(field eval.Field) (interface{}, error) {
 		return e.Exec.Process.FileEvent.BasenameStr, nil
 	case "exec.file.name.length":
 		return len(e.Exec.Process.FileEvent.BasenameStr), nil
+	case "exec.file.package.major":
+		return e.Exec.Process.FileEvent.PkgMajor, nil
+	case "exec.file.package.minor":
+		return e.Exec.Process.FileEvent.PkgMinor, nil
+	case "exec.file.package.name":
+		return e.Exec.Process.FileEvent.PkgName, nil
+	case "exec.file.package.patch":
+		return e.Exec.Process.FileEvent.PkgPatch, nil
+	case "exec.file.package.version":
+		return e.Exec.Process.FileEvent.PkgVersion, nil
 	case "exec.file.path":
 		return e.Exec.Process.FileEvent.PathnameStr, nil
 	case "exec.file.path.length":
@@ -12096,6 +14241,16 @@ func (e *Event) GetFieldValue(field eval.Field) (interface{}, error) {
 		return e.Exec.Process.LinuxBinprm.FileEvent.BasenameStr, nil
 	case "exec.interpreter.file.name.length":
 		return len(e.Exec.Process.LinuxBinprm.FileEvent.BasenameStr), nil
+	case "exec.interpreter.file.package.major":
+		return e.Exec.Process.LinuxBinprm.FileEvent.PkgMajor, nil
+	case "exec.interpreter.file.package.minor":
+		return e.Exec.Process.LinuxBinprm.FileEvent.PkgMinor, nil
+	case "exec.interpreter.file.package.name":
+		return e.Exec.Process.LinuxBinprm.FileEvent.PkgName, nil
+	case "exec.interpreter.file.package.patch":
+		return e.Exec.Process.LinuxBinprm.FileEvent.PkgPatch, nil
+	case "exec.interpreter.file.package.version":
+		return e.Exec.Process.LinuxBinprm.FileEvent.PkgVersion, nil
 	case "exec.interpreter.file.path":
 		return e.Exec.Process.LinuxBinprm.FileEvent.PathnameStr, nil
 	case "exec.interpreter.file.path.length":
@@ -12186,6 +14341,16 @@ func (e *Event) GetFieldValue(field eval.Field) (interface{}, error) {
 		return e.Exit.Process.FileEvent.BasenameStr, nil
 	case "exit.file.name.length":
 		return len(e.Exit.Process.FileEvent.BasenameStr), nil
+	case "exit.file.package.major":
+		return e.Exit.Process.FileEvent.PkgMajor, nil
+	case "exit.file.package.minor":
+		return e.Exit.Process.FileEvent.PkgMinor, nil
+	case "exit.file.package.name":
+		return e.Exit.Process.FileEvent.PkgName, nil
+	case "exit.file.package.patch":
+		return e.Exit.Process.FileEvent.PkgPatch, nil
+	case "exit.file.package.version":
+		return e.Exit.Process.FileEvent.PkgVersion, nil
 	case "exit.file.path":
 		return e.Exit.Process.FileEvent.PathnameStr, nil
 	case "exit.file.path.length":
@@ -12230,6 +14395,16 @@ func (e *Event) GetFieldValue(field eval.Field) (interface{}, error) {
 		return e.Exit.Process.LinuxBinprm.FileEvent.BasenameStr, nil
 	case "exit.interpreter.file.name.length":
 		return len(e.Exit.Process.LinuxBinprm.FileEvent.BasenameStr), nil
+	case "exit.interpreter.file.package.major":
+		return e.Exit.Process.LinuxBinprm.FileEvent.PkgMajor, nil
+	case "exit.interpreter.file.package.minor":
+		return e.Exit.Process.LinuxBinprm.FileEvent.PkgMinor, nil
+	case "exit.interpreter.file.package.name":
+		return e.Exit.Process.LinuxBinprm.FileEvent.PkgName, nil
+	case "exit.interpreter.file.package.patch":
+		return e.Exit.Process.LinuxBinprm.FileEvent.PkgPatch, nil
+	case "exit.interpreter.file.package.version":
+		return e.Exit.Process.LinuxBinprm.FileEvent.PkgVersion, nil
 	case "exit.interpreter.file.path":
 		return e.Exit.Process.LinuxBinprm.FileEvent.PathnameStr, nil
 	case "exit.interpreter.file.path.length":
@@ -12280,6 +14455,16 @@ func (e *Event) GetFieldValue(field eval.Field) (interface{}, error) {
 		return e.Link.Target.BasenameStr, nil
 	case "link.file.destination.name.length":
 		return len(e.Link.Target.BasenameStr), nil
+	case "link.file.destination.package.major":
+		return e.Link.Target.PkgMajor, nil
+	case "link.file.destination.package.minor":
+		return e.Link.Target.PkgMinor, nil
+	case "link.file.destination.package.name":
+		return e.Link.Target.PkgName, nil
+	case "link.file.destination.package.patch":
+		return e.Link.Target.PkgPatch, nil
+	case "link.file.destination.package.version":
+		return e.Link.Target.PkgVersion, nil
 	case "link.file.destination.path":
 		return e.Link.Target.PathnameStr, nil
 	case "link.file.destination.path.length":
@@ -12310,6 +14495,16 @@ func (e *Event) GetFieldValue(field eval.Field) (interface{}, error) {
 		return e.Link.Source.BasenameStr, nil
 	case "link.file.name.length":
 		return len(e.Link.Source.BasenameStr), nil
+	case "link.file.package.major":
+		return e.Link.Source.PkgMajor, nil
+	case "link.file.package.minor":
+		return e.Link.Source.PkgMinor, nil
+	case "link.file.package.name":
+		return e.Link.Source.PkgName, nil
+	case "link.file.package.patch":
+		return e.Link.Source.PkgPatch, nil
+	case "link.file.package.version":
+		return e.Link.Source.PkgVersion, nil
 	case "link.file.path":
 		return e.Link.Source.PathnameStr, nil
 	case "link.file.path.length":
@@ -12344,6 +14539,16 @@ func (e *Event) GetFieldValue(field eval.Field) (interface{}, error) {
 		return e.LoadModule.File.BasenameStr, nil
 	case "load_module.file.name.length":
 		return len(e.LoadModule.File.BasenameStr), nil
+	case "load_module.file.package.major":
+		return e.LoadModule.File.PkgMajor, nil
+	case "load_module.file.package.minor":
+		return e.LoadModule.File.PkgMinor, nil
+	case "load_module.file.package.name":
+		return e.LoadModule.File.PkgName, nil
+	case "load_module.file.package.patch":
+		return e.LoadModule.File.PkgPatch, nil
+	case "load_module.file.package.version":
+		return e.LoadModule.File.PkgVersion, nil
 	case "load_module.file.path":
 		return e.LoadModule.File.PathnameStr, nil
 	case "load_module.file.path.length":
@@ -12386,6 +14591,16 @@ func (e *Event) GetFieldValue(field eval.Field) (interface{}, error) {
 		return e.Mkdir.File.BasenameStr, nil
 	case "mkdir.file.name.length":
 		return len(e.Mkdir.File.BasenameStr), nil
+	case "mkdir.file.package.major":
+		return e.Mkdir.File.PkgMajor, nil
+	case "mkdir.file.package.minor":
+		return e.Mkdir.File.PkgMinor, nil
+	case "mkdir.file.package.name":
+		return e.Mkdir.File.PkgName, nil
+	case "mkdir.file.package.patch":
+		return e.Mkdir.File.PkgPatch, nil
+	case "mkdir.file.package.version":
+		return e.Mkdir.File.PkgVersion, nil
 	case "mkdir.file.path":
 		return e.Mkdir.File.PathnameStr, nil
 	case "mkdir.file.path.length":
@@ -12420,6 +14635,16 @@ func (e *Event) GetFieldValue(field eval.Field) (interface{}, error) {
 		return e.MMap.File.BasenameStr, nil
 	case "mmap.file.name.length":
 		return len(e.MMap.File.BasenameStr), nil
+	case "mmap.file.package.major":
+		return e.MMap.File.PkgMajor, nil
+	case "mmap.file.package.minor":
+		return e.MMap.File.PkgMinor, nil
+	case "mmap.file.package.name":
+		return e.MMap.File.PkgName, nil
+	case "mmap.file.package.patch":
+		return e.MMap.File.PkgPatch, nil
+	case "mmap.file.package.version":
+		return e.MMap.File.PkgVersion, nil
 	case "mmap.file.path":
 		return e.MMap.File.PathnameStr, nil
 	case "mmap.file.path.length":
@@ -12484,6 +14709,16 @@ func (e *Event) GetFieldValue(field eval.Field) (interface{}, error) {
 		return e.Open.File.BasenameStr, nil
 	case "open.file.name.length":
 		return len(e.Open.File.BasenameStr), nil
+	case "open.file.package.major":
+		return e.Open.File.PkgMajor, nil
+	case "open.file.package.minor":
+		return e.Open.File.PkgMinor, nil
+	case "open.file.package.name":
+		return e.Open.File.PkgName, nil
+	case "open.file.package.patch":
+		return e.Open.File.PkgPatch, nil
+	case "open.file.package.version":
+		return e.Open.File.PkgVersion, nil
 	case "open.file.path":
 		return e.Open.File.PathnameStr, nil
 	case "open.file.path.length":
@@ -12858,6 +15093,66 @@ func (e *Event) GetFieldValue(field eval.Field) (interface{}, error) {
 			ptr = iterator.Next()
 		}
 		return values, nil
+	case "process.ancestors.file.package.major":
+		var values []int
+		ctx := eval.NewContext(unsafe.Pointer(e))
+		iterator := &ProcessAncestorsIterator{}
+		ptr := iterator.Front(ctx)
+		for ptr != nil {
+			element := (*ProcessCacheEntry)(ptr)
+			result := element.ProcessContext.Process.FileEvent.PkgMajor
+			values = append(values, result)
+			ptr = iterator.Next()
+		}
+		return values, nil
+	case "process.ancestors.file.package.minor":
+		var values []int
+		ctx := eval.NewContext(unsafe.Pointer(e))
+		iterator := &ProcessAncestorsIterator{}
+		ptr := iterator.Front(ctx)
+		for ptr != nil {
+			element := (*ProcessCacheEntry)(ptr)
+			result := element.ProcessContext.Process.FileEvent.PkgMinor
+			values = append(values, result)
+			ptr = iterator.Next()
+		}
+		return values, nil
+	case "process.ancestors.file.package.name":
+		var values []string
+		ctx := eval.NewContext(unsafe.Pointer(e))
+		iterator := &ProcessAncestorsIterator{}
+		ptr := iterator.Front(ctx)
+		for ptr != nil {
+			element := (*ProcessCacheEntry)(ptr)
+			result := element.ProcessContext.Process.FileEvent.PkgName
+			values = append(values, result)
+			ptr = iterator.Next()
+		}
+		return values, nil
+	case "process.ancestors.file.package.patch":
+		var values []int
+		ctx := eval.NewContext(unsafe.Pointer(e))
+		iterator := &ProcessAncestorsIterator{}
+		ptr := iterator.Front(ctx)
+		for ptr != nil {
+			element := (*ProcessCacheEntry)(ptr)
+			result := element.ProcessContext.Process.FileEvent.PkgPatch
+			values = append(values, result)
+			ptr = iterator.Next()
+		}
+		return values, nil
+	case "process.ancestors.file.package.version":
+		var values []string
+		ctx := eval.NewContext(unsafe.Pointer(e))
+		iterator := &ProcessAncestorsIterator{}
+		ptr := iterator.Front(ctx)
+		for ptr != nil {
+			element := (*ProcessCacheEntry)(ptr)
+			result := element.ProcessContext.Process.FileEvent.PkgVersion
+			values = append(values, result)
+			ptr = iterator.Next()
+		}
+		return values, nil
 	case "process.ancestors.file.path":
 		var values []string
 		ctx := eval.NewContext(unsafe.Pointer(e))
@@ -13122,6 +15417,66 @@ func (e *Event) GetFieldValue(field eval.Field) (interface{}, error) {
 			ptr = iterator.Next()
 		}
 		return values, nil
+	case "process.ancestors.interpreter.file.package.major":
+		var values []int
+		ctx := eval.NewContext(unsafe.Pointer(e))
+		iterator := &ProcessAncestorsIterator{}
+		ptr := iterator.Front(ctx)
+		for ptr != nil {
+			element := (*ProcessCacheEntry)(ptr)
+			result := element.ProcessContext.Process.LinuxBinprm.FileEvent.PkgMajor
+			values = append(values, result)
+			ptr = iterator.Next()
+		}
+		return values, nil
+	case "process.ancestors.interpreter.file.package.minor":
+		var values []int
+		ctx := eval.NewContext(unsafe.Pointer(e))
+		iterator := &ProcessAncestorsIterator{}
+		ptr := iterator.Front(ctx)
+		for ptr != nil {
+			element := (*ProcessCacheEntry)(ptr)
+			result := element.ProcessContext.Process.LinuxBinprm.FileEvent.PkgMinor
+			values = append(values, result)
+			ptr = iterator.Next()
+		}
+		return values, nil
+	case "process.ancestors.interpreter.file.package.name":
+		var values []string
+		ctx := eval.NewContext(unsafe.Pointer(e))
+		iterator := &ProcessAncestorsIterator{}
+		ptr := iterator.Front(ctx)
+		for ptr != nil {
+			element := (*ProcessCacheEntry)(ptr)
+			result := element.ProcessContext.Process.LinuxBinprm.FileEvent.PkgName
+			values = append(values, result)
+			ptr = iterator.Next()
+		}
+		return values, nil
+	case "process.ancestors.interpreter.file.package.patch":
+		var values []int
+		ctx := eval.NewContext(unsafe.Pointer(e))
+		iterator := &ProcessAncestorsIterator{}
+		ptr := iterator.Front(ctx)
+		for ptr != nil {
+			element := (*ProcessCacheEntry)(ptr)
+			result := element.ProcessContext.Process.LinuxBinprm.FileEvent.PkgPatch
+			values = append(values, result)
+			ptr = iterator.Next()
+		}
+		return values, nil
+	case "process.ancestors.interpreter.file.package.version":
+		var values []string
+		ctx := eval.NewContext(unsafe.Pointer(e))
+		iterator := &ProcessAncestorsIterator{}
+		ptr := iterator.Front(ctx)
+		for ptr != nil {
+			element := (*ProcessCacheEntry)(ptr)
+			result := element.ProcessContext.Process.LinuxBinprm.FileEvent.PkgVersion
+			values = append(values, result)
+			ptr = iterator.Next()
+		}
+		return values, nil
 	case "process.ancestors.interpreter.file.path":
 		var values []string
 		ctx := eval.NewContext(unsafe.Pointer(e))
@@ -13338,6 +15693,16 @@ func (e *Event) GetFieldValue(field eval.Field) (interface{}, error) {
 		return e.ProcessContext.Process.FileEvent.BasenameStr, nil
 	case "process.file.name.length":
 		return len(e.ProcessContext.Process.FileEvent.BasenameStr), nil
+	case "process.file.package.major":
+		return e.ProcessContext.Process.FileEvent.PkgMajor, nil
+	case "process.file.package.minor":
+		return e.ProcessContext.Process.FileEvent.PkgMinor, nil
+	case "process.file.package.name":
+		return e.ProcessContext.Process.FileEvent.PkgName, nil
+	case "process.file.package.patch":
+		return e.ProcessContext.Process.FileEvent.PkgPatch, nil
+	case "process.file.package.version":
+		return e.ProcessContext.Process.FileEvent.PkgVersion, nil
 	case "process.file.path":
 		return e.ProcessContext.Process.FileEvent.PathnameStr, nil
 	case "process.file.path.length":
@@ -13382,6 +15747,16 @@ func (e *Event) GetFieldValue(field eval.Field) (interface{}, error) {
 		return e.ProcessContext.Process.LinuxBinprm.FileEvent.BasenameStr, nil
 	case "process.interpreter.file.name.length":
 		return len(e.ProcessContext.Process.LinuxBinprm.FileEvent.BasenameStr), nil
+	case "process.interpreter.file.package.major":
+		return e.ProcessContext.Process.LinuxBinprm.FileEvent.PkgMajor, nil
+	case "process.interpreter.file.package.minor":
+		return e.ProcessContext.Process.LinuxBinprm.FileEvent.PkgMinor, nil
+	case "process.interpreter.file.package.name":
+		return e.ProcessContext.Process.LinuxBinprm.FileEvent.PkgName, nil
+	case "process.interpreter.file.package.patch":
+		return e.ProcessContext.Process.LinuxBinprm.FileEvent.PkgPatch, nil
+	case "process.interpreter.file.package.version":
+		return e.ProcessContext.Process.LinuxBinprm.FileEvent.PkgVersion, nil
 	case "process.interpreter.file.path":
 		return e.ProcessContext.Process.LinuxBinprm.FileEvent.PathnameStr, nil
 	case "process.interpreter.file.path.length":
@@ -13456,6 +15831,16 @@ func (e *Event) GetFieldValue(field eval.Field) (interface{}, error) {
 		return e.ProcessContext.Parent.FileEvent.BasenameStr, nil
 	case "process.parent.file.name.length":
 		return len(e.ProcessContext.Parent.FileEvent.BasenameStr), nil
+	case "process.parent.file.package.major":
+		return e.ProcessContext.Parent.FileEvent.PkgMajor, nil
+	case "process.parent.file.package.minor":
+		return e.ProcessContext.Parent.FileEvent.PkgMinor, nil
+	case "process.parent.file.package.name":
+		return e.ProcessContext.Parent.FileEvent.PkgName, nil
+	case "process.parent.file.package.patch":
+		return e.ProcessContext.Parent.FileEvent.PkgPatch, nil
+	case "process.parent.file.package.version":
+		return e.ProcessContext.Parent.FileEvent.PkgVersion, nil
 	case "process.parent.file.path":
 		return e.ProcessContext.Parent.FileEvent.PathnameStr, nil
 	case "process.parent.file.path.length":
@@ -13500,6 +15885,16 @@ func (e *Event) GetFieldValue(field eval.Field) (interface{}, error) {
 		return e.ProcessContext.Parent.LinuxBinprm.FileEvent.BasenameStr, nil
 	case "process.parent.interpreter.file.name.length":
 		return len(e.ProcessContext.Parent.LinuxBinprm.FileEvent.BasenameStr), nil
+	case "process.parent.interpreter.file.package.major":
+		return e.ProcessContext.Parent.LinuxBinprm.FileEvent.PkgMajor, nil
+	case "process.parent.interpreter.file.package.minor":
+		return e.ProcessContext.Parent.LinuxBinprm.FileEvent.PkgMinor, nil
+	case "process.parent.interpreter.file.package.name":
+		return e.ProcessContext.Parent.LinuxBinprm.FileEvent.PkgName, nil
+	case "process.parent.interpreter.file.package.patch":
+		return e.ProcessContext.Parent.LinuxBinprm.FileEvent.PkgPatch, nil
+	case "process.parent.interpreter.file.package.version":
+		return e.ProcessContext.Parent.LinuxBinprm.FileEvent.PkgVersion, nil
 	case "process.parent.interpreter.file.path":
 		return e.ProcessContext.Parent.LinuxBinprm.FileEvent.PathnameStr, nil
 	case "process.parent.interpreter.file.path.length":
@@ -13902,6 +16297,66 @@ func (e *Event) GetFieldValue(field eval.Field) (interface{}, error) {
 			ptr = iterator.Next()
 		}
 		return values, nil
+	case "ptrace.tracee.ancestors.file.package.major":
+		var values []int
+		ctx := eval.NewContext(unsafe.Pointer(e))
+		iterator := &ProcessAncestorsIterator{}
+		ptr := iterator.Front(ctx)
+		for ptr != nil {
+			element := (*ProcessCacheEntry)(ptr)
+			result := element.ProcessContext.Process.FileEvent.PkgMajor
+			values = append(values, result)
+			ptr = iterator.Next()
+		}
+		return values, nil
+	case "ptrace.tracee.ancestors.file.package.minor":
+		var values []int
+		ctx := eval.NewContext(unsafe.Pointer(e))
+		iterator := &ProcessAncestorsIterator{}
+		ptr := iterator.Front(ctx)
+		for ptr != nil {
+			element := (*ProcessCacheEntry)(ptr)
+			result := element.ProcessContext.Process.FileEvent.PkgMinor
+			values = append(values, result)
+			ptr = iterator.Next()
+		}
+		return values, nil
+	case "ptrace.tracee.ancestors.file.package.name":
+		var values []string
+		ctx := eval.NewContext(unsafe.Pointer(e))
+		iterator := &ProcessAncestorsIterator{}
+		ptr := iterator.Front(ctx)
+		for ptr != nil {
+			element := (*ProcessCacheEntry)(ptr)
+			result := element.ProcessContext.Process.FileEvent.PkgName
+			values = append(values, result)
+			ptr = iterator.Next()
+		}
+		return values, nil
+	case "ptrace.tracee.ancestors.file.package.patch":
+		var values []int
+		ctx := eval.NewContext(unsafe.Pointer(e))
+		iterator := &ProcessAncestorsIterator{}
+		ptr := iterator.Front(ctx)
+		for ptr != nil {
+			element := (*ProcessCacheEntry)(ptr)
+			result := element.ProcessContext.Process.FileEvent.PkgPatch
+			values = append(values, result)
+			ptr = iterator.Next()
+		}
+		return values, nil
+	case "ptrace.tracee.ancestors.file.package.version":
+		var values []string
+		ctx := eval.NewContext(unsafe.Pointer(e))
+		iterator := &ProcessAncestorsIterator{}
+		ptr := iterator.Front(ctx)
+		for ptr != nil {
+			element := (*ProcessCacheEntry)(ptr)
+			result := element.ProcessContext.Process.FileEvent.PkgVersion
+			values = append(values, result)
+			ptr = iterator.Next()
+		}
+		return values, nil
 	case "ptrace.tracee.ancestors.file.path":
 		var values []string
 		ctx := eval.NewContext(unsafe.Pointer(e))
@@ -14166,6 +16621,66 @@ func (e *Event) GetFieldValue(field eval.Field) (interface{}, error) {
 			ptr = iterator.Next()
 		}
 		return values, nil
+	case "ptrace.tracee.ancestors.interpreter.file.package.major":
+		var values []int
+		ctx := eval.NewContext(unsafe.Pointer(e))
+		iterator := &ProcessAncestorsIterator{}
+		ptr := iterator.Front(ctx)
+		for ptr != nil {
+			element := (*ProcessCacheEntry)(ptr)
+			result := element.ProcessContext.Process.LinuxBinprm.FileEvent.PkgMajor
+			values = append(values, result)
+			ptr = iterator.Next()
+		}
+		return values, nil
+	case "ptrace.tracee.ancestors.interpreter.file.package.minor":
+		var values []int
+		ctx := eval.NewContext(unsafe.Pointer(e))
+		iterator := &ProcessAncestorsIterator{}
+		ptr := iterator.Front(ctx)
+		for ptr != nil {
+			element := (*ProcessCacheEntry)(ptr)
+			result := element.ProcessContext.Process.LinuxBinprm.FileEvent.PkgMinor
+			values = append(values, result)
+			ptr = iterator.Next()
+		}
+		return values, nil
+	case "ptrace.tracee.ancestors.interpreter.file.package.name":
+		var values []string
+		ctx := eval.NewContext(unsafe.Pointer(e))
+		iterator := &ProcessAncestorsIterator{}
+		ptr := iterator.Front(ctx)
+		for ptr != nil {
+			element := (*ProcessCacheEntry)(ptr)
+			result := element.ProcessContext.Process.LinuxBinprm.FileEvent.PkgName
+			values = append(values, result)
+			ptr = iterator.Next()
+		}
+		return values, nil
+	case "ptrace.tracee.ancestors.interpreter.file.package.patch":
+		var values []int
+		ctx := eval.NewContext(unsafe.Pointer(e))
+		iterator := &ProcessAncestorsIterator{}
+		ptr := iterator.Front(ctx)
+		for ptr != nil {
+			element := (*ProcessCacheEntry)(ptr)
+			result := element.ProcessContext.Process.LinuxBinprm.FileEvent.PkgPatch
+			values = append(values, result)
+			ptr = iterator.Next()
+		}
+		return values, nil
+	case "ptrace.tracee.ancestors.interpreter.file.package.version":
+		var values []string
+		ctx := eval.NewContext(unsafe.Pointer(e))
+		iterator := &ProcessAncestorsIterator{}
+		ptr := iterator.Front(ctx)
+		for ptr != nil {
+			element := (*ProcessCacheEntry)(ptr)
+			result := element.ProcessContext.Process.LinuxBinprm.FileEvent.PkgVersion
+			values = append(values, result)
+			ptr = iterator.Next()
+		}
+		return values, nil
 	case "ptrace.tracee.ancestors.interpreter.file.path":
 		var values []string
 		ctx := eval.NewContext(unsafe.Pointer(e))
@@ -14382,6 +16897,16 @@ func (e *Event) GetFieldValue(field eval.Field) (interface{}, error) {
 		return e.PTrace.Tracee.Process.FileEvent.BasenameStr, nil
 	case "ptrace.tracee.file.name.length":
 		return len(e.PTrace.Tracee.Process.FileEvent.BasenameStr), nil
+	case "ptrace.tracee.file.package.major":
+		return e.PTrace.Tracee.Process.FileEvent.PkgMajor, nil
+	case "ptrace.tracee.file.package.minor":
+		return e.PTrace.Tracee.Process.FileEvent.PkgMinor, nil
+	case "ptrace.tracee.file.package.name":
+		return e.PTrace.Tracee.Process.FileEvent.PkgName, nil
+	case "ptrace.tracee.file.package.patch":
+		return e.PTrace.Tracee.Process.FileEvent.PkgPatch, nil
+	case "ptrace.tracee.file.package.version":
+		return e.PTrace.Tracee.Process.FileEvent.PkgVersion, nil
 	case "ptrace.tracee.file.path":
 		return e.PTrace.Tracee.Process.FileEvent.PathnameStr, nil
 	case "ptrace.tracee.file.path.length":
@@ -14426,6 +16951,16 @@ func (e *Event) GetFieldValue(field eval.Field) (interface{}, error) {
 		return e.PTrace.Tracee.Process.LinuxBinprm.FileEvent.BasenameStr, nil
 	case "ptrace.tracee.interpreter.file.name.length":
 		return len(e.PTrace.Tracee.Process.LinuxBinprm.FileEvent.BasenameStr), nil
+	case "ptrace.tracee.interpreter.file.package.major":
+		return e.PTrace.Tracee.Process.LinuxBinprm.FileEvent.PkgMajor, nil
+	case "ptrace.tracee.interpreter.file.package.minor":
+		return e.PTrace.Tracee.Process.LinuxBinprm.FileEvent.PkgMinor, nil
+	case "ptrace.tracee.interpreter.file.package.name":
+		return e.PTrace.Tracee.Process.LinuxBinprm.FileEvent.PkgName, nil
+	case "ptrace.tracee.interpreter.file.package.patch":
+		return e.PTrace.Tracee.Process.LinuxBinprm.FileEvent.PkgPatch, nil
+	case "ptrace.tracee.interpreter.file.package.version":
+		return e.PTrace.Tracee.Process.LinuxBinprm.FileEvent.PkgVersion, nil
 	case "ptrace.tracee.interpreter.file.path":
 		return e.PTrace.Tracee.Process.LinuxBinprm.FileEvent.PathnameStr, nil
 	case "ptrace.tracee.interpreter.file.path.length":
@@ -14500,6 +17035,16 @@ func (e *Event) GetFieldValue(field eval.Field) (interface{}, error) {
 		return e.PTrace.Tracee.Parent.FileEvent.BasenameStr, nil
 	case "ptrace.tracee.parent.file.name.length":
 		return len(e.PTrace.Tracee.Parent.FileEvent.BasenameStr), nil
+	case "ptrace.tracee.parent.file.package.major":
+		return e.PTrace.Tracee.Parent.FileEvent.PkgMajor, nil
+	case "ptrace.tracee.parent.file.package.minor":
+		return e.PTrace.Tracee.Parent.FileEvent.PkgMinor, nil
+	case "ptrace.tracee.parent.file.package.name":
+		return e.PTrace.Tracee.Parent.FileEvent.PkgName, nil
+	case "ptrace.tracee.parent.file.package.patch":
+		return e.PTrace.Tracee.Parent.FileEvent.PkgPatch, nil
+	case "ptrace.tracee.parent.file.package.version":
+		return e.PTrace.Tracee.Parent.FileEvent.PkgVersion, nil
 	case "ptrace.tracee.parent.file.path":
 		return e.PTrace.Tracee.Parent.FileEvent.PathnameStr, nil
 	case "ptrace.tracee.parent.file.path.length":
@@ -14544,6 +17089,16 @@ func (e *Event) GetFieldValue(field eval.Field) (interface{}, error) {
 		return e.PTrace.Tracee.Parent.LinuxBinprm.FileEvent.BasenameStr, nil
 	case "ptrace.tracee.parent.interpreter.file.name.length":
 		return len(e.PTrace.Tracee.Parent.LinuxBinprm.FileEvent.BasenameStr), nil
+	case "ptrace.tracee.parent.interpreter.file.package.major":
+		return e.PTrace.Tracee.Parent.LinuxBinprm.FileEvent.PkgMajor, nil
+	case "ptrace.tracee.parent.interpreter.file.package.minor":
+		return e.PTrace.Tracee.Parent.LinuxBinprm.FileEvent.PkgMinor, nil
+	case "ptrace.tracee.parent.interpreter.file.package.name":
+		return e.PTrace.Tracee.Parent.LinuxBinprm.FileEvent.PkgName, nil
+	case "ptrace.tracee.parent.interpreter.file.package.patch":
+		return e.PTrace.Tracee.Parent.LinuxBinprm.FileEvent.PkgPatch, nil
+	case "ptrace.tracee.parent.interpreter.file.package.version":
+		return e.PTrace.Tracee.Parent.LinuxBinprm.FileEvent.PkgVersion, nil
 	case "ptrace.tracee.parent.interpreter.file.path":
 		return e.PTrace.Tracee.Parent.LinuxBinprm.FileEvent.PathnameStr, nil
 	case "ptrace.tracee.parent.interpreter.file.path.length":
@@ -14608,6 +17163,16 @@ func (e *Event) GetFieldValue(field eval.Field) (interface{}, error) {
 		return e.RemoveXAttr.File.BasenameStr, nil
 	case "removexattr.file.name.length":
 		return len(e.RemoveXAttr.File.BasenameStr), nil
+	case "removexattr.file.package.major":
+		return e.RemoveXAttr.File.PkgMajor, nil
+	case "removexattr.file.package.minor":
+		return e.RemoveXAttr.File.PkgMinor, nil
+	case "removexattr.file.package.name":
+		return e.RemoveXAttr.File.PkgName, nil
+	case "removexattr.file.package.patch":
+		return e.RemoveXAttr.File.PkgPatch, nil
+	case "removexattr.file.package.version":
+		return e.RemoveXAttr.File.PkgVersion, nil
 	case "removexattr.file.path":
 		return e.RemoveXAttr.File.PathnameStr, nil
 	case "removexattr.file.path.length":
@@ -14644,6 +17209,16 @@ func (e *Event) GetFieldValue(field eval.Field) (interface{}, error) {
 		return e.Rename.New.BasenameStr, nil
 	case "rename.file.destination.name.length":
 		return len(e.Rename.New.BasenameStr), nil
+	case "rename.file.destination.package.major":
+		return e.Rename.New.PkgMajor, nil
+	case "rename.file.destination.package.minor":
+		return e.Rename.New.PkgMinor, nil
+	case "rename.file.destination.package.name":
+		return e.Rename.New.PkgName, nil
+	case "rename.file.destination.package.patch":
+		return e.Rename.New.PkgPatch, nil
+	case "rename.file.destination.package.version":
+		return e.Rename.New.PkgVersion, nil
 	case "rename.file.destination.path":
 		return e.Rename.New.PathnameStr, nil
 	case "rename.file.destination.path.length":
@@ -14674,6 +17249,16 @@ func (e *Event) GetFieldValue(field eval.Field) (interface{}, error) {
 		return e.Rename.Old.BasenameStr, nil
 	case "rename.file.name.length":
 		return len(e.Rename.Old.BasenameStr), nil
+	case "rename.file.package.major":
+		return e.Rename.Old.PkgMajor, nil
+	case "rename.file.package.minor":
+		return e.Rename.Old.PkgMinor, nil
+	case "rename.file.package.name":
+		return e.Rename.Old.PkgName, nil
+	case "rename.file.package.patch":
+		return e.Rename.Old.PkgPatch, nil
+	case "rename.file.package.version":
+		return e.Rename.Old.PkgVersion, nil
 	case "rename.file.path":
 		return e.Rename.Old.PathnameStr, nil
 	case "rename.file.path.length":
@@ -14708,6 +17293,16 @@ func (e *Event) GetFieldValue(field eval.Field) (interface{}, error) {
 		return e.Rmdir.File.BasenameStr, nil
 	case "rmdir.file.name.length":
 		return len(e.Rmdir.File.BasenameStr), nil
+	case "rmdir.file.package.major":
+		return e.Rmdir.File.PkgMajor, nil
+	case "rmdir.file.package.minor":
+		return e.Rmdir.File.PkgMinor, nil
+	case "rmdir.file.package.name":
+		return e.Rmdir.File.PkgName, nil
+	case "rmdir.file.package.patch":
+		return e.Rmdir.File.PkgPatch, nil
+	case "rmdir.file.package.version":
+		return e.Rmdir.File.PkgVersion, nil
 	case "rmdir.file.path":
 		return e.Rmdir.File.PathnameStr, nil
 	case "rmdir.file.path.length":
@@ -14778,6 +17373,16 @@ func (e *Event) GetFieldValue(field eval.Field) (interface{}, error) {
 		return e.SetXAttr.File.BasenameStr, nil
 	case "setxattr.file.name.length":
 		return len(e.SetXAttr.File.BasenameStr), nil
+	case "setxattr.file.package.major":
+		return e.SetXAttr.File.PkgMajor, nil
+	case "setxattr.file.package.minor":
+		return e.SetXAttr.File.PkgMinor, nil
+	case "setxattr.file.package.name":
+		return e.SetXAttr.File.PkgName, nil
+	case "setxattr.file.package.patch":
+		return e.SetXAttr.File.PkgPatch, nil
+	case "setxattr.file.package.version":
+		return e.SetXAttr.File.PkgVersion, nil
 	case "setxattr.file.path":
 		return e.SetXAttr.File.PathnameStr, nil
 	case "setxattr.file.path.length":
@@ -15154,6 +17759,66 @@ func (e *Event) GetFieldValue(field eval.Field) (interface{}, error) {
 			ptr = iterator.Next()
 		}
 		return values, nil
+	case "signal.target.ancestors.file.package.major":
+		var values []int
+		ctx := eval.NewContext(unsafe.Pointer(e))
+		iterator := &ProcessAncestorsIterator{}
+		ptr := iterator.Front(ctx)
+		for ptr != nil {
+			element := (*ProcessCacheEntry)(ptr)
+			result := element.ProcessContext.Process.FileEvent.PkgMajor
+			values = append(values, result)
+			ptr = iterator.Next()
+		}
+		return values, nil
+	case "signal.target.ancestors.file.package.minor":
+		var values []int
+		ctx := eval.NewContext(unsafe.Pointer(e))
+		iterator := &ProcessAncestorsIterator{}
+		ptr := iterator.Front(ctx)
+		for ptr != nil {
+			element := (*ProcessCacheEntry)(ptr)
+			result := element.ProcessContext.Process.FileEvent.PkgMinor
+			values = append(values, result)
+			ptr = iterator.Next()
+		}
+		return values, nil
+	case "signal.target.ancestors.file.package.name":
+		var values []string
+		ctx := eval.NewContext(unsafe.Pointer(e))
+		iterator := &ProcessAncestorsIterator{}
+		ptr := iterator.Front(ctx)
+		for ptr != nil {
+			element := (*ProcessCacheEntry)(ptr)
+			result := element.ProcessContext.Process.FileEvent.PkgName
+			values = append(values, result)
+			ptr = iterator.Next()
+		}
+		return values, nil
+	case "signal.target.ancestors.file.package.patch":
+		var values []int
+		ctx := eval.NewContext(unsafe.Pointer(e))
+		iterator := &ProcessAncestorsIterator{}
+		ptr := iterator.Front(ctx)
+		for ptr != nil {
+			element := (*ProcessCacheEntry)(ptr)
+			result := element.ProcessContext.Process.FileEvent.PkgPatch
+			values = append(values, result)
+			ptr = iterator.Next()
+		}
+		return values, nil
+	case "signal.target.ancestors.file.package.version":
+		var values []string
+		ctx := eval.NewContext(unsafe.Pointer(e))
+		iterator := &ProcessAncestorsIterator{}
+		ptr := iterator.Front(ctx)
+		for ptr != nil {
+			element := (*ProcessCacheEntry)(ptr)
+			result := element.ProcessContext.Process.FileEvent.PkgVersion
+			values = append(values, result)
+			ptr = iterator.Next()
+		}
+		return values, nil
 	case "signal.target.ancestors.file.path":
 		var values []string
 		ctx := eval.NewContext(unsafe.Pointer(e))
@@ -15418,6 +18083,66 @@ func (e *Event) GetFieldValue(field eval.Field) (interface{}, error) {
 			ptr = iterator.Next()
 		}
 		return values, nil
+	case "signal.target.ancestors.interpreter.file.package.major":
+		var values []int
+		ctx := eval.NewContext(unsafe.Pointer(e))
+		iterator := &ProcessAncestorsIterator{}
+		ptr := iterator.Front(ctx)
+		for ptr != nil {
+			element := (*ProcessCacheEntry)(ptr)
+			result := element.ProcessContext.Process.LinuxBinprm.FileEvent.PkgMajor
+			values = append(values, result)
+			ptr = iterator.Next()
+		}
+		return values, nil
+	case "signal.target.ancestors.interpreter.file.package.minor":
+		var values []int
+		ctx := eval.NewContext(unsafe.Pointer(e))
+		iterator := &ProcessAncestorsIterator{}
+		ptr := iterator.Front(ctx)
+		for ptr != nil {
+			element := (*ProcessCacheEntry)(ptr)
+			result := element.ProcessContext.Process.LinuxBinprm.FileEvent.PkgMinor
+			values = append(values, result)
+			ptr = iterator.Next()
+		}
+		return values, nil
+	case "signal.target.ancestors.interpreter.file.package.name":
+		var values []string
+		ctx := eval.NewContext(unsafe.Pointer(e))
+		iterator := &ProcessAncestorsIterator{}
+		ptr := iterator.Front(ctx)
+		for ptr != nil {
+			element := (*ProcessCacheEntry)(ptr)
+			result := element.ProcessContext.Process.LinuxBinprm.FileEvent.PkgName
+			values = append(values, result)
+			ptr = iterator.Next()
+		}
+		return values, nil
+	case "signal.target.ancestors.interpreter.file.package.patch":
+		var values []int
+		ctx := eval.NewContext(unsafe.Pointer(e))
+		iterator := &ProcessAncestorsIterator{}
+		ptr := iterator.Front(ctx)
+		for ptr != nil {
+			element := (*ProcessCacheEntry)(ptr)
+			result := element.ProcessContext.Process.LinuxBinprm.FileEvent.PkgPatch
+			values = append(values, result)
+			ptr = iterator.Next()
+		}
+		return values, nil
+	case "signal.target.ancestors.interpreter.file.package.version":
+		var values []string
+		ctx := eval.NewContext(unsafe.Pointer(e))
+		iterator := &ProcessAncestorsIterator{}
+		ptr := iterator.Front(ctx)
+		for ptr != nil {
+			element := (*ProcessCacheEntry)(ptr)
+			result := element.ProcessContext.Process.LinuxBinprm.FileEvent.PkgVersion
+			values = append(values, result)
+			ptr = iterator.Next()
+		}
+		return values, nil
 	case "signal.target.ancestors.interpreter.file.path":
 		var values []string
 		ctx := eval.NewContext(unsafe.Pointer(e))
@@ -15634,6 +18359,16 @@ func (e *Event) GetFieldValue(field eval.Field) (interface{}, error) {
 		return e.Signal.Target.Process.FileEvent.BasenameStr, nil
 	case "signal.target.file.name.length":
 		return len(e.Signal.Target.Process.FileEvent.BasenameStr), nil
+	case "signal.target.file.package.major":
+		return e.Signal.Target.Process.FileEvent.PkgMajor, nil
+	case "signal.target.file.package.minor":
+		return e.Signal.Target.Process.FileEvent.PkgMinor, nil
+	case "signal.target.file.package.name":
+		return e.Signal.Target.Process.FileEvent.PkgName, nil
+	case "signal.target.file.package.patch":
+		return e.Signal.Target.Process.FileEvent.PkgPatch, nil
+	case "signal.target.file.package.version":
+		return e.Signal.Target.Process.FileEvent.PkgVersion, nil
 	case "signal.target.file.path":
 		return e.Signal.Target.Process.FileEvent.PathnameStr, nil
 	case "signal.target.file.path.length":
@@ -15678,6 +18413,16 @@ func (e *Event) GetFieldValue(field eval.Field) (interface{}, error) {
 		return e.Signal.Target.Process.LinuxBinprm.FileEvent.BasenameStr, nil
 	case "signal.target.interpreter.file.name.length":
 		return len(e.Signal.Target.Process.LinuxBinprm.FileEvent.BasenameStr), nil
+	case "signal.target.interpreter.file.package.major":
+		return e.Signal.Target.Process.LinuxBinprm.FileEvent.PkgMajor, nil
+	case "signal.target.interpreter.file.package.minor":
+		return e.Signal.Target.Process.LinuxBinprm.FileEvent.PkgMinor, nil
+	case "signal.target.interpreter.file.package.name":
+		return e.Signal.Target.Process.LinuxBinprm.FileEvent.PkgName, nil
+	case "signal.target.interpreter.file.package.patch":
+		return e.Signal.Target.Process.LinuxBinprm.FileEvent.PkgPatch, nil
+	case "signal.target.interpreter.file.package.version":
+		return e.Signal.Target.Process.LinuxBinprm.FileEvent.PkgVersion, nil
 	case "signal.target.interpreter.file.path":
 		return e.Signal.Target.Process.LinuxBinprm.FileEvent.PathnameStr, nil
 	case "signal.target.interpreter.file.path.length":
@@ -15752,6 +18497,16 @@ func (e *Event) GetFieldValue(field eval.Field) (interface{}, error) {
 		return e.Signal.Target.Parent.FileEvent.BasenameStr, nil
 	case "signal.target.parent.file.name.length":
 		return len(e.Signal.Target.Parent.FileEvent.BasenameStr), nil
+	case "signal.target.parent.file.package.major":
+		return e.Signal.Target.Parent.FileEvent.PkgMajor, nil
+	case "signal.target.parent.file.package.minor":
+		return e.Signal.Target.Parent.FileEvent.PkgMinor, nil
+	case "signal.target.parent.file.package.name":
+		return e.Signal.Target.Parent.FileEvent.PkgName, nil
+	case "signal.target.parent.file.package.patch":
+		return e.Signal.Target.Parent.FileEvent.PkgPatch, nil
+	case "signal.target.parent.file.package.version":
+		return e.Signal.Target.Parent.FileEvent.PkgVersion, nil
 	case "signal.target.parent.file.path":
 		return e.Signal.Target.Parent.FileEvent.PathnameStr, nil
 	case "signal.target.parent.file.path.length":
@@ -15796,6 +18551,16 @@ func (e *Event) GetFieldValue(field eval.Field) (interface{}, error) {
 		return e.Signal.Target.Parent.LinuxBinprm.FileEvent.BasenameStr, nil
 	case "signal.target.parent.interpreter.file.name.length":
 		return len(e.Signal.Target.Parent.LinuxBinprm.FileEvent.BasenameStr), nil
+	case "signal.target.parent.interpreter.file.package.major":
+		return e.Signal.Target.Parent.LinuxBinprm.FileEvent.PkgMajor, nil
+	case "signal.target.parent.interpreter.file.package.minor":
+		return e.Signal.Target.Parent.LinuxBinprm.FileEvent.PkgMinor, nil
+	case "signal.target.parent.interpreter.file.package.name":
+		return e.Signal.Target.Parent.LinuxBinprm.FileEvent.PkgName, nil
+	case "signal.target.parent.interpreter.file.package.patch":
+		return e.Signal.Target.Parent.LinuxBinprm.FileEvent.PkgPatch, nil
+	case "signal.target.parent.interpreter.file.package.version":
+		return e.Signal.Target.Parent.LinuxBinprm.FileEvent.PkgVersion, nil
 	case "signal.target.parent.interpreter.file.path":
 		return e.Signal.Target.Parent.LinuxBinprm.FileEvent.PathnameStr, nil
 	case "signal.target.parent.interpreter.file.path.length":
@@ -15858,6 +18623,16 @@ func (e *Event) GetFieldValue(field eval.Field) (interface{}, error) {
 		return e.Splice.File.BasenameStr, nil
 	case "splice.file.name.length":
 		return len(e.Splice.File.BasenameStr), nil
+	case "splice.file.package.major":
+		return e.Splice.File.PkgMajor, nil
+	case "splice.file.package.minor":
+		return e.Splice.File.PkgMinor, nil
+	case "splice.file.package.name":
+		return e.Splice.File.PkgName, nil
+	case "splice.file.package.patch":
+		return e.Splice.File.PkgPatch, nil
+	case "splice.file.package.version":
+		return e.Splice.File.PkgVersion, nil
 	case "splice.file.path":
 		return e.Splice.File.PathnameStr, nil
 	case "splice.file.path.length":
@@ -15896,6 +18671,16 @@ func (e *Event) GetFieldValue(field eval.Field) (interface{}, error) {
 		return e.Unlink.File.BasenameStr, nil
 	case "unlink.file.name.length":
 		return len(e.Unlink.File.BasenameStr), nil
+	case "unlink.file.package.major":
+		return e.Unlink.File.PkgMajor, nil
+	case "unlink.file.package.minor":
+		return e.Unlink.File.PkgMinor, nil
+	case "unlink.file.package.name":
+		return e.Unlink.File.PkgName, nil
+	case "unlink.file.package.patch":
+		return e.Unlink.File.PkgPatch, nil
+	case "unlink.file.package.version":
+		return e.Unlink.File.PkgVersion, nil
 	case "unlink.file.path":
 		return e.Unlink.File.PathnameStr, nil
 	case "unlink.file.path.length":
@@ -15936,6 +18721,16 @@ func (e *Event) GetFieldValue(field eval.Field) (interface{}, error) {
 		return e.Utimes.File.BasenameStr, nil
 	case "utimes.file.name.length":
 		return len(e.Utimes.File.BasenameStr), nil
+	case "utimes.file.package.major":
+		return e.Utimes.File.PkgMajor, nil
+	case "utimes.file.package.minor":
+		return e.Utimes.File.PkgMinor, nil
+	case "utimes.file.package.name":
+		return e.Utimes.File.PkgName, nil
+	case "utimes.file.package.patch":
+		return e.Utimes.File.PkgPatch, nil
+	case "utimes.file.package.version":
+		return e.Utimes.File.PkgVersion, nil
 	case "utimes.file.path":
 		return e.Utimes.File.PathnameStr, nil
 	case "utimes.file.path.length":
@@ -16011,6 +18806,16 @@ func (e *Event) GetFieldEventType(field eval.Field) (eval.EventType, error) {
 		return "chmod", nil
 	case "chmod.file.name.length":
 		return "chmod", nil
+	case "chmod.file.package.major":
+		return "chmod", nil
+	case "chmod.file.package.minor":
+		return "chmod", nil
+	case "chmod.file.package.name":
+		return "chmod", nil
+	case "chmod.file.package.patch":
+		return "chmod", nil
+	case "chmod.file.package.version":
+		return "chmod", nil
 	case "chmod.file.path":
 		return "chmod", nil
 	case "chmod.file.path.length":
@@ -16052,6 +18857,16 @@ func (e *Event) GetFieldEventType(field eval.Field) (eval.EventType, error) {
 	case "chown.file.name":
 		return "chown", nil
 	case "chown.file.name.length":
+		return "chown", nil
+	case "chown.file.package.major":
+		return "chown", nil
+	case "chown.file.package.minor":
+		return "chown", nil
+	case "chown.file.package.name":
+		return "chown", nil
+	case "chown.file.package.patch":
+		return "chown", nil
+	case "chown.file.package.version":
 		return "chown", nil
 	case "chown.file.path":
 		return "chown", nil
@@ -16143,6 +18958,16 @@ func (e *Event) GetFieldEventType(field eval.Field) (eval.EventType, error) {
 		return "exec", nil
 	case "exec.file.name.length":
 		return "exec", nil
+	case "exec.file.package.major":
+		return "exec", nil
+	case "exec.file.package.minor":
+		return "exec", nil
+	case "exec.file.package.name":
+		return "exec", nil
+	case "exec.file.package.patch":
+		return "exec", nil
+	case "exec.file.package.version":
+		return "exec", nil
 	case "exec.file.path":
 		return "exec", nil
 	case "exec.file.path.length":
@@ -16186,6 +19011,16 @@ func (e *Event) GetFieldEventType(field eval.Field) (eval.EventType, error) {
 	case "exec.interpreter.file.name":
 		return "exec", nil
 	case "exec.interpreter.file.name.length":
+		return "exec", nil
+	case "exec.interpreter.file.package.major":
+		return "exec", nil
+	case "exec.interpreter.file.package.minor":
+		return "exec", nil
+	case "exec.interpreter.file.package.name":
+		return "exec", nil
+	case "exec.interpreter.file.package.patch":
+		return "exec", nil
+	case "exec.interpreter.file.package.version":
 		return "exec", nil
 	case "exec.interpreter.file.path":
 		return "exec", nil
@@ -16277,6 +19112,16 @@ func (e *Event) GetFieldEventType(field eval.Field) (eval.EventType, error) {
 		return "exit", nil
 	case "exit.file.name.length":
 		return "exit", nil
+	case "exit.file.package.major":
+		return "exit", nil
+	case "exit.file.package.minor":
+		return "exit", nil
+	case "exit.file.package.name":
+		return "exit", nil
+	case "exit.file.package.patch":
+		return "exit", nil
+	case "exit.file.package.version":
+		return "exit", nil
 	case "exit.file.path":
 		return "exit", nil
 	case "exit.file.path.length":
@@ -16320,6 +19165,16 @@ func (e *Event) GetFieldEventType(field eval.Field) (eval.EventType, error) {
 	case "exit.interpreter.file.name":
 		return "exit", nil
 	case "exit.interpreter.file.name.length":
+		return "exit", nil
+	case "exit.interpreter.file.package.major":
+		return "exit", nil
+	case "exit.interpreter.file.package.minor":
+		return "exit", nil
+	case "exit.interpreter.file.package.name":
+		return "exit", nil
+	case "exit.interpreter.file.package.patch":
+		return "exit", nil
+	case "exit.interpreter.file.package.version":
 		return "exit", nil
 	case "exit.interpreter.file.path":
 		return "exit", nil
@@ -16371,6 +19226,16 @@ func (e *Event) GetFieldEventType(field eval.Field) (eval.EventType, error) {
 		return "link", nil
 	case "link.file.destination.name.length":
 		return "link", nil
+	case "link.file.destination.package.major":
+		return "link", nil
+	case "link.file.destination.package.minor":
+		return "link", nil
+	case "link.file.destination.package.name":
+		return "link", nil
+	case "link.file.destination.package.patch":
+		return "link", nil
+	case "link.file.destination.package.version":
+		return "link", nil
 	case "link.file.destination.path":
 		return "link", nil
 	case "link.file.destination.path.length":
@@ -16400,6 +19265,16 @@ func (e *Event) GetFieldEventType(field eval.Field) (eval.EventType, error) {
 	case "link.file.name":
 		return "link", nil
 	case "link.file.name.length":
+		return "link", nil
+	case "link.file.package.major":
+		return "link", nil
+	case "link.file.package.minor":
+		return "link", nil
+	case "link.file.package.name":
+		return "link", nil
+	case "link.file.package.patch":
+		return "link", nil
+	case "link.file.package.version":
 		return "link", nil
 	case "link.file.path":
 		return "link", nil
@@ -16434,6 +19309,16 @@ func (e *Event) GetFieldEventType(field eval.Field) (eval.EventType, error) {
 	case "load_module.file.name":
 		return "load_module", nil
 	case "load_module.file.name.length":
+		return "load_module", nil
+	case "load_module.file.package.major":
+		return "load_module", nil
+	case "load_module.file.package.minor":
+		return "load_module", nil
+	case "load_module.file.package.name":
+		return "load_module", nil
+	case "load_module.file.package.patch":
+		return "load_module", nil
+	case "load_module.file.package.version":
 		return "load_module", nil
 	case "load_module.file.path":
 		return "load_module", nil
@@ -16477,6 +19362,16 @@ func (e *Event) GetFieldEventType(field eval.Field) (eval.EventType, error) {
 		return "mkdir", nil
 	case "mkdir.file.name.length":
 		return "mkdir", nil
+	case "mkdir.file.package.major":
+		return "mkdir", nil
+	case "mkdir.file.package.minor":
+		return "mkdir", nil
+	case "mkdir.file.package.name":
+		return "mkdir", nil
+	case "mkdir.file.package.patch":
+		return "mkdir", nil
+	case "mkdir.file.package.version":
+		return "mkdir", nil
 	case "mkdir.file.path":
 		return "mkdir", nil
 	case "mkdir.file.path.length":
@@ -16510,6 +19405,16 @@ func (e *Event) GetFieldEventType(field eval.Field) (eval.EventType, error) {
 	case "mmap.file.name":
 		return "mmap", nil
 	case "mmap.file.name.length":
+		return "mmap", nil
+	case "mmap.file.package.major":
+		return "mmap", nil
+	case "mmap.file.package.minor":
+		return "mmap", nil
+	case "mmap.file.package.name":
+		return "mmap", nil
+	case "mmap.file.package.patch":
+		return "mmap", nil
+	case "mmap.file.package.version":
 		return "mmap", nil
 	case "mmap.file.path":
 		return "mmap", nil
@@ -16574,6 +19479,16 @@ func (e *Event) GetFieldEventType(field eval.Field) (eval.EventType, error) {
 	case "open.file.name":
 		return "open", nil
 	case "open.file.name.length":
+		return "open", nil
+	case "open.file.package.major":
+		return "open", nil
+	case "open.file.package.minor":
+		return "open", nil
+	case "open.file.package.name":
+		return "open", nil
+	case "open.file.package.patch":
+		return "open", nil
+	case "open.file.package.version":
 		return "open", nil
 	case "open.file.path":
 		return "open", nil
@@ -16649,6 +19564,16 @@ func (e *Event) GetFieldEventType(field eval.Field) (eval.EventType, error) {
 		return "*", nil
 	case "process.ancestors.file.name.length":
 		return "*", nil
+	case "process.ancestors.file.package.major":
+		return "*", nil
+	case "process.ancestors.file.package.minor":
+		return "*", nil
+	case "process.ancestors.file.package.name":
+		return "*", nil
+	case "process.ancestors.file.package.patch":
+		return "*", nil
+	case "process.ancestors.file.package.version":
+		return "*", nil
 	case "process.ancestors.file.path":
 		return "*", nil
 	case "process.ancestors.file.path.length":
@@ -16692,6 +19617,16 @@ func (e *Event) GetFieldEventType(field eval.Field) (eval.EventType, error) {
 	case "process.ancestors.interpreter.file.name":
 		return "*", nil
 	case "process.ancestors.interpreter.file.name.length":
+		return "*", nil
+	case "process.ancestors.interpreter.file.package.major":
+		return "*", nil
+	case "process.ancestors.interpreter.file.package.minor":
+		return "*", nil
+	case "process.ancestors.interpreter.file.package.name":
+		return "*", nil
+	case "process.ancestors.interpreter.file.package.patch":
+		return "*", nil
+	case "process.ancestors.interpreter.file.package.version":
 		return "*", nil
 	case "process.ancestors.interpreter.file.path":
 		return "*", nil
@@ -16779,6 +19714,16 @@ func (e *Event) GetFieldEventType(field eval.Field) (eval.EventType, error) {
 		return "*", nil
 	case "process.file.name.length":
 		return "*", nil
+	case "process.file.package.major":
+		return "*", nil
+	case "process.file.package.minor":
+		return "*", nil
+	case "process.file.package.name":
+		return "*", nil
+	case "process.file.package.patch":
+		return "*", nil
+	case "process.file.package.version":
+		return "*", nil
 	case "process.file.path":
 		return "*", nil
 	case "process.file.path.length":
@@ -16822,6 +19767,16 @@ func (e *Event) GetFieldEventType(field eval.Field) (eval.EventType, error) {
 	case "process.interpreter.file.name":
 		return "*", nil
 	case "process.interpreter.file.name.length":
+		return "*", nil
+	case "process.interpreter.file.package.major":
+		return "*", nil
+	case "process.interpreter.file.package.minor":
+		return "*", nil
+	case "process.interpreter.file.package.name":
+		return "*", nil
+	case "process.interpreter.file.package.patch":
+		return "*", nil
+	case "process.interpreter.file.package.version":
 		return "*", nil
 	case "process.interpreter.file.path":
 		return "*", nil
@@ -16897,6 +19852,16 @@ func (e *Event) GetFieldEventType(field eval.Field) (eval.EventType, error) {
 		return "*", nil
 	case "process.parent.file.name.length":
 		return "*", nil
+	case "process.parent.file.package.major":
+		return "*", nil
+	case "process.parent.file.package.minor":
+		return "*", nil
+	case "process.parent.file.package.name":
+		return "*", nil
+	case "process.parent.file.package.patch":
+		return "*", nil
+	case "process.parent.file.package.version":
+		return "*", nil
 	case "process.parent.file.path":
 		return "*", nil
 	case "process.parent.file.path.length":
@@ -16940,6 +19905,16 @@ func (e *Event) GetFieldEventType(field eval.Field) (eval.EventType, error) {
 	case "process.parent.interpreter.file.name":
 		return "*", nil
 	case "process.parent.interpreter.file.name.length":
+		return "*", nil
+	case "process.parent.interpreter.file.package.major":
+		return "*", nil
+	case "process.parent.interpreter.file.package.minor":
+		return "*", nil
+	case "process.parent.interpreter.file.package.name":
+		return "*", nil
+	case "process.parent.interpreter.file.package.patch":
+		return "*", nil
+	case "process.parent.interpreter.file.package.version":
 		return "*", nil
 	case "process.parent.interpreter.file.path":
 		return "*", nil
@@ -17043,6 +20018,16 @@ func (e *Event) GetFieldEventType(field eval.Field) (eval.EventType, error) {
 		return "ptrace", nil
 	case "ptrace.tracee.ancestors.file.name.length":
 		return "ptrace", nil
+	case "ptrace.tracee.ancestors.file.package.major":
+		return "ptrace", nil
+	case "ptrace.tracee.ancestors.file.package.minor":
+		return "ptrace", nil
+	case "ptrace.tracee.ancestors.file.package.name":
+		return "ptrace", nil
+	case "ptrace.tracee.ancestors.file.package.patch":
+		return "ptrace", nil
+	case "ptrace.tracee.ancestors.file.package.version":
+		return "ptrace", nil
 	case "ptrace.tracee.ancestors.file.path":
 		return "ptrace", nil
 	case "ptrace.tracee.ancestors.file.path.length":
@@ -17086,6 +20071,16 @@ func (e *Event) GetFieldEventType(field eval.Field) (eval.EventType, error) {
 	case "ptrace.tracee.ancestors.interpreter.file.name":
 		return "ptrace", nil
 	case "ptrace.tracee.ancestors.interpreter.file.name.length":
+		return "ptrace", nil
+	case "ptrace.tracee.ancestors.interpreter.file.package.major":
+		return "ptrace", nil
+	case "ptrace.tracee.ancestors.interpreter.file.package.minor":
+		return "ptrace", nil
+	case "ptrace.tracee.ancestors.interpreter.file.package.name":
+		return "ptrace", nil
+	case "ptrace.tracee.ancestors.interpreter.file.package.patch":
+		return "ptrace", nil
+	case "ptrace.tracee.ancestors.interpreter.file.package.version":
 		return "ptrace", nil
 	case "ptrace.tracee.ancestors.interpreter.file.path":
 		return "ptrace", nil
@@ -17173,6 +20168,16 @@ func (e *Event) GetFieldEventType(field eval.Field) (eval.EventType, error) {
 		return "ptrace", nil
 	case "ptrace.tracee.file.name.length":
 		return "ptrace", nil
+	case "ptrace.tracee.file.package.major":
+		return "ptrace", nil
+	case "ptrace.tracee.file.package.minor":
+		return "ptrace", nil
+	case "ptrace.tracee.file.package.name":
+		return "ptrace", nil
+	case "ptrace.tracee.file.package.patch":
+		return "ptrace", nil
+	case "ptrace.tracee.file.package.version":
+		return "ptrace", nil
 	case "ptrace.tracee.file.path":
 		return "ptrace", nil
 	case "ptrace.tracee.file.path.length":
@@ -17216,6 +20221,16 @@ func (e *Event) GetFieldEventType(field eval.Field) (eval.EventType, error) {
 	case "ptrace.tracee.interpreter.file.name":
 		return "ptrace", nil
 	case "ptrace.tracee.interpreter.file.name.length":
+		return "ptrace", nil
+	case "ptrace.tracee.interpreter.file.package.major":
+		return "ptrace", nil
+	case "ptrace.tracee.interpreter.file.package.minor":
+		return "ptrace", nil
+	case "ptrace.tracee.interpreter.file.package.name":
+		return "ptrace", nil
+	case "ptrace.tracee.interpreter.file.package.patch":
+		return "ptrace", nil
+	case "ptrace.tracee.interpreter.file.package.version":
 		return "ptrace", nil
 	case "ptrace.tracee.interpreter.file.path":
 		return "ptrace", nil
@@ -17291,6 +20306,16 @@ func (e *Event) GetFieldEventType(field eval.Field) (eval.EventType, error) {
 		return "ptrace", nil
 	case "ptrace.tracee.parent.file.name.length":
 		return "ptrace", nil
+	case "ptrace.tracee.parent.file.package.major":
+		return "ptrace", nil
+	case "ptrace.tracee.parent.file.package.minor":
+		return "ptrace", nil
+	case "ptrace.tracee.parent.file.package.name":
+		return "ptrace", nil
+	case "ptrace.tracee.parent.file.package.patch":
+		return "ptrace", nil
+	case "ptrace.tracee.parent.file.package.version":
+		return "ptrace", nil
 	case "ptrace.tracee.parent.file.path":
 		return "ptrace", nil
 	case "ptrace.tracee.parent.file.path.length":
@@ -17334,6 +20359,16 @@ func (e *Event) GetFieldEventType(field eval.Field) (eval.EventType, error) {
 	case "ptrace.tracee.parent.interpreter.file.name":
 		return "ptrace", nil
 	case "ptrace.tracee.parent.interpreter.file.name.length":
+		return "ptrace", nil
+	case "ptrace.tracee.parent.interpreter.file.package.major":
+		return "ptrace", nil
+	case "ptrace.tracee.parent.interpreter.file.package.minor":
+		return "ptrace", nil
+	case "ptrace.tracee.parent.interpreter.file.package.name":
+		return "ptrace", nil
+	case "ptrace.tracee.parent.interpreter.file.package.patch":
+		return "ptrace", nil
+	case "ptrace.tracee.parent.interpreter.file.package.version":
 		return "ptrace", nil
 	case "ptrace.tracee.parent.interpreter.file.path":
 		return "ptrace", nil
@@ -17399,6 +20434,16 @@ func (e *Event) GetFieldEventType(field eval.Field) (eval.EventType, error) {
 		return "removexattr", nil
 	case "removexattr.file.name.length":
 		return "removexattr", nil
+	case "removexattr.file.package.major":
+		return "removexattr", nil
+	case "removexattr.file.package.minor":
+		return "removexattr", nil
+	case "removexattr.file.package.name":
+		return "removexattr", nil
+	case "removexattr.file.package.patch":
+		return "removexattr", nil
+	case "removexattr.file.package.version":
+		return "removexattr", nil
 	case "removexattr.file.path":
 		return "removexattr", nil
 	case "removexattr.file.path.length":
@@ -17435,6 +20480,16 @@ func (e *Event) GetFieldEventType(field eval.Field) (eval.EventType, error) {
 		return "rename", nil
 	case "rename.file.destination.name.length":
 		return "rename", nil
+	case "rename.file.destination.package.major":
+		return "rename", nil
+	case "rename.file.destination.package.minor":
+		return "rename", nil
+	case "rename.file.destination.package.name":
+		return "rename", nil
+	case "rename.file.destination.package.patch":
+		return "rename", nil
+	case "rename.file.destination.package.version":
+		return "rename", nil
 	case "rename.file.destination.path":
 		return "rename", nil
 	case "rename.file.destination.path.length":
@@ -17464,6 +20519,16 @@ func (e *Event) GetFieldEventType(field eval.Field) (eval.EventType, error) {
 	case "rename.file.name":
 		return "rename", nil
 	case "rename.file.name.length":
+		return "rename", nil
+	case "rename.file.package.major":
+		return "rename", nil
+	case "rename.file.package.minor":
+		return "rename", nil
+	case "rename.file.package.name":
+		return "rename", nil
+	case "rename.file.package.patch":
+		return "rename", nil
+	case "rename.file.package.version":
 		return "rename", nil
 	case "rename.file.path":
 		return "rename", nil
@@ -17498,6 +20563,16 @@ func (e *Event) GetFieldEventType(field eval.Field) (eval.EventType, error) {
 	case "rmdir.file.name":
 		return "rmdir", nil
 	case "rmdir.file.name.length":
+		return "rmdir", nil
+	case "rmdir.file.package.major":
+		return "rmdir", nil
+	case "rmdir.file.package.minor":
+		return "rmdir", nil
+	case "rmdir.file.package.name":
+		return "rmdir", nil
+	case "rmdir.file.package.patch":
+		return "rmdir", nil
+	case "rmdir.file.package.version":
 		return "rmdir", nil
 	case "rmdir.file.path":
 		return "rmdir", nil
@@ -17568,6 +20643,16 @@ func (e *Event) GetFieldEventType(field eval.Field) (eval.EventType, error) {
 	case "setxattr.file.name":
 		return "setxattr", nil
 	case "setxattr.file.name.length":
+		return "setxattr", nil
+	case "setxattr.file.package.major":
+		return "setxattr", nil
+	case "setxattr.file.package.minor":
+		return "setxattr", nil
+	case "setxattr.file.package.name":
+		return "setxattr", nil
+	case "setxattr.file.package.patch":
+		return "setxattr", nil
+	case "setxattr.file.package.version":
 		return "setxattr", nil
 	case "setxattr.file.path":
 		return "setxattr", nil
@@ -17645,6 +20730,16 @@ func (e *Event) GetFieldEventType(field eval.Field) (eval.EventType, error) {
 		return "signal", nil
 	case "signal.target.ancestors.file.name.length":
 		return "signal", nil
+	case "signal.target.ancestors.file.package.major":
+		return "signal", nil
+	case "signal.target.ancestors.file.package.minor":
+		return "signal", nil
+	case "signal.target.ancestors.file.package.name":
+		return "signal", nil
+	case "signal.target.ancestors.file.package.patch":
+		return "signal", nil
+	case "signal.target.ancestors.file.package.version":
+		return "signal", nil
 	case "signal.target.ancestors.file.path":
 		return "signal", nil
 	case "signal.target.ancestors.file.path.length":
@@ -17688,6 +20783,16 @@ func (e *Event) GetFieldEventType(field eval.Field) (eval.EventType, error) {
 	case "signal.target.ancestors.interpreter.file.name":
 		return "signal", nil
 	case "signal.target.ancestors.interpreter.file.name.length":
+		return "signal", nil
+	case "signal.target.ancestors.interpreter.file.package.major":
+		return "signal", nil
+	case "signal.target.ancestors.interpreter.file.package.minor":
+		return "signal", nil
+	case "signal.target.ancestors.interpreter.file.package.name":
+		return "signal", nil
+	case "signal.target.ancestors.interpreter.file.package.patch":
+		return "signal", nil
+	case "signal.target.ancestors.interpreter.file.package.version":
 		return "signal", nil
 	case "signal.target.ancestors.interpreter.file.path":
 		return "signal", nil
@@ -17775,6 +20880,16 @@ func (e *Event) GetFieldEventType(field eval.Field) (eval.EventType, error) {
 		return "signal", nil
 	case "signal.target.file.name.length":
 		return "signal", nil
+	case "signal.target.file.package.major":
+		return "signal", nil
+	case "signal.target.file.package.minor":
+		return "signal", nil
+	case "signal.target.file.package.name":
+		return "signal", nil
+	case "signal.target.file.package.patch":
+		return "signal", nil
+	case "signal.target.file.package.version":
+		return "signal", nil
 	case "signal.target.file.path":
 		return "signal", nil
 	case "signal.target.file.path.length":
@@ -17818,6 +20933,16 @@ func (e *Event) GetFieldEventType(field eval.Field) (eval.EventType, error) {
 	case "signal.target.interpreter.file.name":
 		return "signal", nil
 	case "signal.target.interpreter.file.name.length":
+		return "signal", nil
+	case "signal.target.interpreter.file.package.major":
+		return "signal", nil
+	case "signal.target.interpreter.file.package.minor":
+		return "signal", nil
+	case "signal.target.interpreter.file.package.name":
+		return "signal", nil
+	case "signal.target.interpreter.file.package.patch":
+		return "signal", nil
+	case "signal.target.interpreter.file.package.version":
 		return "signal", nil
 	case "signal.target.interpreter.file.path":
 		return "signal", nil
@@ -17893,6 +21018,16 @@ func (e *Event) GetFieldEventType(field eval.Field) (eval.EventType, error) {
 		return "signal", nil
 	case "signal.target.parent.file.name.length":
 		return "signal", nil
+	case "signal.target.parent.file.package.major":
+		return "signal", nil
+	case "signal.target.parent.file.package.minor":
+		return "signal", nil
+	case "signal.target.parent.file.package.name":
+		return "signal", nil
+	case "signal.target.parent.file.package.patch":
+		return "signal", nil
+	case "signal.target.parent.file.package.version":
+		return "signal", nil
 	case "signal.target.parent.file.path":
 		return "signal", nil
 	case "signal.target.parent.file.path.length":
@@ -17936,6 +21071,16 @@ func (e *Event) GetFieldEventType(field eval.Field) (eval.EventType, error) {
 	case "signal.target.parent.interpreter.file.name":
 		return "signal", nil
 	case "signal.target.parent.interpreter.file.name.length":
+		return "signal", nil
+	case "signal.target.parent.interpreter.file.package.major":
+		return "signal", nil
+	case "signal.target.parent.interpreter.file.package.minor":
+		return "signal", nil
+	case "signal.target.parent.interpreter.file.package.name":
+		return "signal", nil
+	case "signal.target.parent.interpreter.file.package.patch":
+		return "signal", nil
+	case "signal.target.parent.interpreter.file.package.version":
 		return "signal", nil
 	case "signal.target.parent.interpreter.file.path":
 		return "signal", nil
@@ -17999,6 +21144,16 @@ func (e *Event) GetFieldEventType(field eval.Field) (eval.EventType, error) {
 		return "splice", nil
 	case "splice.file.name.length":
 		return "splice", nil
+	case "splice.file.package.major":
+		return "splice", nil
+	case "splice.file.package.minor":
+		return "splice", nil
+	case "splice.file.package.name":
+		return "splice", nil
+	case "splice.file.package.patch":
+		return "splice", nil
+	case "splice.file.package.version":
+		return "splice", nil
 	case "splice.file.path":
 		return "splice", nil
 	case "splice.file.path.length":
@@ -18036,6 +21191,16 @@ func (e *Event) GetFieldEventType(field eval.Field) (eval.EventType, error) {
 	case "unlink.file.name":
 		return "unlink", nil
 	case "unlink.file.name.length":
+		return "unlink", nil
+	case "unlink.file.package.major":
+		return "unlink", nil
+	case "unlink.file.package.minor":
+		return "unlink", nil
+	case "unlink.file.package.name":
+		return "unlink", nil
+	case "unlink.file.package.patch":
+		return "unlink", nil
+	case "unlink.file.package.version":
 		return "unlink", nil
 	case "unlink.file.path":
 		return "unlink", nil
@@ -18076,6 +21241,16 @@ func (e *Event) GetFieldEventType(field eval.Field) (eval.EventType, error) {
 	case "utimes.file.name":
 		return "utimes", nil
 	case "utimes.file.name.length":
+		return "utimes", nil
+	case "utimes.file.package.major":
+		return "utimes", nil
+	case "utimes.file.package.minor":
+		return "utimes", nil
+	case "utimes.file.package.name":
+		return "utimes", nil
+	case "utimes.file.package.patch":
+		return "utimes", nil
+	case "utimes.file.package.version":
 		return "utimes", nil
 	case "utimes.file.path":
 		return "utimes", nil
@@ -18152,6 +21327,16 @@ func (e *Event) GetFieldType(field eval.Field) (reflect.Kind, error) {
 		return reflect.String, nil
 	case "chmod.file.name.length":
 		return reflect.Int, nil
+	case "chmod.file.package.major":
+		return reflect.Int, nil
+	case "chmod.file.package.minor":
+		return reflect.Int, nil
+	case "chmod.file.package.name":
+		return reflect.String, nil
+	case "chmod.file.package.patch":
+		return reflect.Int, nil
+	case "chmod.file.package.version":
+		return reflect.String, nil
 	case "chmod.file.path":
 		return reflect.String, nil
 	case "chmod.file.path.length":
@@ -18194,6 +21379,16 @@ func (e *Event) GetFieldType(field eval.Field) (reflect.Kind, error) {
 		return reflect.String, nil
 	case "chown.file.name.length":
 		return reflect.Int, nil
+	case "chown.file.package.major":
+		return reflect.Int, nil
+	case "chown.file.package.minor":
+		return reflect.Int, nil
+	case "chown.file.package.name":
+		return reflect.String, nil
+	case "chown.file.package.patch":
+		return reflect.Int, nil
+	case "chown.file.package.version":
+		return reflect.String, nil
 	case "chown.file.path":
 		return reflect.String, nil
 	case "chown.file.path.length":
@@ -18284,6 +21479,16 @@ func (e *Event) GetFieldType(field eval.Field) (reflect.Kind, error) {
 		return reflect.String, nil
 	case "exec.file.name.length":
 		return reflect.Int, nil
+	case "exec.file.package.major":
+		return reflect.Int, nil
+	case "exec.file.package.minor":
+		return reflect.Int, nil
+	case "exec.file.package.name":
+		return reflect.String, nil
+	case "exec.file.package.patch":
+		return reflect.Int, nil
+	case "exec.file.package.version":
+		return reflect.String, nil
 	case "exec.file.path":
 		return reflect.String, nil
 	case "exec.file.path.length":
@@ -18328,6 +21533,16 @@ func (e *Event) GetFieldType(field eval.Field) (reflect.Kind, error) {
 		return reflect.String, nil
 	case "exec.interpreter.file.name.length":
 		return reflect.Int, nil
+	case "exec.interpreter.file.package.major":
+		return reflect.Int, nil
+	case "exec.interpreter.file.package.minor":
+		return reflect.Int, nil
+	case "exec.interpreter.file.package.name":
+		return reflect.String, nil
+	case "exec.interpreter.file.package.patch":
+		return reflect.Int, nil
+	case "exec.interpreter.file.package.version":
+		return reflect.String, nil
 	case "exec.interpreter.file.path":
 		return reflect.String, nil
 	case "exec.interpreter.file.path.length":
@@ -18418,6 +21633,16 @@ func (e *Event) GetFieldType(field eval.Field) (reflect.Kind, error) {
 		return reflect.String, nil
 	case "exit.file.name.length":
 		return reflect.Int, nil
+	case "exit.file.package.major":
+		return reflect.Int, nil
+	case "exit.file.package.minor":
+		return reflect.Int, nil
+	case "exit.file.package.name":
+		return reflect.String, nil
+	case "exit.file.package.patch":
+		return reflect.Int, nil
+	case "exit.file.package.version":
+		return reflect.String, nil
 	case "exit.file.path":
 		return reflect.String, nil
 	case "exit.file.path.length":
@@ -18462,6 +21687,16 @@ func (e *Event) GetFieldType(field eval.Field) (reflect.Kind, error) {
 		return reflect.String, nil
 	case "exit.interpreter.file.name.length":
 		return reflect.Int, nil
+	case "exit.interpreter.file.package.major":
+		return reflect.Int, nil
+	case "exit.interpreter.file.package.minor":
+		return reflect.Int, nil
+	case "exit.interpreter.file.package.name":
+		return reflect.String, nil
+	case "exit.interpreter.file.package.patch":
+		return reflect.Int, nil
+	case "exit.interpreter.file.package.version":
+		return reflect.String, nil
 	case "exit.interpreter.file.path":
 		return reflect.String, nil
 	case "exit.interpreter.file.path.length":
@@ -18512,6 +21747,16 @@ func (e *Event) GetFieldType(field eval.Field) (reflect.Kind, error) {
 		return reflect.String, nil
 	case "link.file.destination.name.length":
 		return reflect.Int, nil
+	case "link.file.destination.package.major":
+		return reflect.Int, nil
+	case "link.file.destination.package.minor":
+		return reflect.Int, nil
+	case "link.file.destination.package.name":
+		return reflect.String, nil
+	case "link.file.destination.package.patch":
+		return reflect.Int, nil
+	case "link.file.destination.package.version":
+		return reflect.String, nil
 	case "link.file.destination.path":
 		return reflect.String, nil
 	case "link.file.destination.path.length":
@@ -18542,6 +21787,16 @@ func (e *Event) GetFieldType(field eval.Field) (reflect.Kind, error) {
 		return reflect.String, nil
 	case "link.file.name.length":
 		return reflect.Int, nil
+	case "link.file.package.major":
+		return reflect.Int, nil
+	case "link.file.package.minor":
+		return reflect.Int, nil
+	case "link.file.package.name":
+		return reflect.String, nil
+	case "link.file.package.patch":
+		return reflect.Int, nil
+	case "link.file.package.version":
+		return reflect.String, nil
 	case "link.file.path":
 		return reflect.String, nil
 	case "link.file.path.length":
@@ -18576,6 +21831,16 @@ func (e *Event) GetFieldType(field eval.Field) (reflect.Kind, error) {
 		return reflect.String, nil
 	case "load_module.file.name.length":
 		return reflect.Int, nil
+	case "load_module.file.package.major":
+		return reflect.Int, nil
+	case "load_module.file.package.minor":
+		return reflect.Int, nil
+	case "load_module.file.package.name":
+		return reflect.String, nil
+	case "load_module.file.package.patch":
+		return reflect.Int, nil
+	case "load_module.file.package.version":
+		return reflect.String, nil
 	case "load_module.file.path":
 		return reflect.String, nil
 	case "load_module.file.path.length":
@@ -18618,6 +21883,16 @@ func (e *Event) GetFieldType(field eval.Field) (reflect.Kind, error) {
 		return reflect.String, nil
 	case "mkdir.file.name.length":
 		return reflect.Int, nil
+	case "mkdir.file.package.major":
+		return reflect.Int, nil
+	case "mkdir.file.package.minor":
+		return reflect.Int, nil
+	case "mkdir.file.package.name":
+		return reflect.String, nil
+	case "mkdir.file.package.patch":
+		return reflect.Int, nil
+	case "mkdir.file.package.version":
+		return reflect.String, nil
 	case "mkdir.file.path":
 		return reflect.String, nil
 	case "mkdir.file.path.length":
@@ -18652,6 +21927,16 @@ func (e *Event) GetFieldType(field eval.Field) (reflect.Kind, error) {
 		return reflect.String, nil
 	case "mmap.file.name.length":
 		return reflect.Int, nil
+	case "mmap.file.package.major":
+		return reflect.Int, nil
+	case "mmap.file.package.minor":
+		return reflect.Int, nil
+	case "mmap.file.package.name":
+		return reflect.String, nil
+	case "mmap.file.package.patch":
+		return reflect.Int, nil
+	case "mmap.file.package.version":
+		return reflect.String, nil
 	case "mmap.file.path":
 		return reflect.String, nil
 	case "mmap.file.path.length":
@@ -18716,6 +22001,16 @@ func (e *Event) GetFieldType(field eval.Field) (reflect.Kind, error) {
 		return reflect.String, nil
 	case "open.file.name.length":
 		return reflect.Int, nil
+	case "open.file.package.major":
+		return reflect.Int, nil
+	case "open.file.package.minor":
+		return reflect.Int, nil
+	case "open.file.package.name":
+		return reflect.String, nil
+	case "open.file.package.patch":
+		return reflect.Int, nil
+	case "open.file.package.version":
+		return reflect.String, nil
 	case "open.file.path":
 		return reflect.String, nil
 	case "open.file.path.length":
@@ -18790,6 +22085,16 @@ func (e *Event) GetFieldType(field eval.Field) (reflect.Kind, error) {
 		return reflect.String, nil
 	case "process.ancestors.file.name.length":
 		return reflect.Int, nil
+	case "process.ancestors.file.package.major":
+		return reflect.Int, nil
+	case "process.ancestors.file.package.minor":
+		return reflect.Int, nil
+	case "process.ancestors.file.package.name":
+		return reflect.String, nil
+	case "process.ancestors.file.package.patch":
+		return reflect.Int, nil
+	case "process.ancestors.file.package.version":
+		return reflect.String, nil
 	case "process.ancestors.file.path":
 		return reflect.String, nil
 	case "process.ancestors.file.path.length":
@@ -18834,6 +22139,16 @@ func (e *Event) GetFieldType(field eval.Field) (reflect.Kind, error) {
 		return reflect.String, nil
 	case "process.ancestors.interpreter.file.name.length":
 		return reflect.Int, nil
+	case "process.ancestors.interpreter.file.package.major":
+		return reflect.Int, nil
+	case "process.ancestors.interpreter.file.package.minor":
+		return reflect.Int, nil
+	case "process.ancestors.interpreter.file.package.name":
+		return reflect.String, nil
+	case "process.ancestors.interpreter.file.package.patch":
+		return reflect.Int, nil
+	case "process.ancestors.interpreter.file.package.version":
+		return reflect.String, nil
 	case "process.ancestors.interpreter.file.path":
 		return reflect.String, nil
 	case "process.ancestors.interpreter.file.path.length":
@@ -18920,6 +22235,16 @@ func (e *Event) GetFieldType(field eval.Field) (reflect.Kind, error) {
 		return reflect.String, nil
 	case "process.file.name.length":
 		return reflect.Int, nil
+	case "process.file.package.major":
+		return reflect.Int, nil
+	case "process.file.package.minor":
+		return reflect.Int, nil
+	case "process.file.package.name":
+		return reflect.String, nil
+	case "process.file.package.patch":
+		return reflect.Int, nil
+	case "process.file.package.version":
+		return reflect.String, nil
 	case "process.file.path":
 		return reflect.String, nil
 	case "process.file.path.length":
@@ -18964,6 +22289,16 @@ func (e *Event) GetFieldType(field eval.Field) (reflect.Kind, error) {
 		return reflect.String, nil
 	case "process.interpreter.file.name.length":
 		return reflect.Int, nil
+	case "process.interpreter.file.package.major":
+		return reflect.Int, nil
+	case "process.interpreter.file.package.minor":
+		return reflect.Int, nil
+	case "process.interpreter.file.package.name":
+		return reflect.String, nil
+	case "process.interpreter.file.package.patch":
+		return reflect.Int, nil
+	case "process.interpreter.file.package.version":
+		return reflect.String, nil
 	case "process.interpreter.file.path":
 		return reflect.String, nil
 	case "process.interpreter.file.path.length":
@@ -19038,6 +22373,16 @@ func (e *Event) GetFieldType(field eval.Field) (reflect.Kind, error) {
 		return reflect.String, nil
 	case "process.parent.file.name.length":
 		return reflect.Int, nil
+	case "process.parent.file.package.major":
+		return reflect.Int, nil
+	case "process.parent.file.package.minor":
+		return reflect.Int, nil
+	case "process.parent.file.package.name":
+		return reflect.String, nil
+	case "process.parent.file.package.patch":
+		return reflect.Int, nil
+	case "process.parent.file.package.version":
+		return reflect.String, nil
 	case "process.parent.file.path":
 		return reflect.String, nil
 	case "process.parent.file.path.length":
@@ -19082,6 +22427,16 @@ func (e *Event) GetFieldType(field eval.Field) (reflect.Kind, error) {
 		return reflect.String, nil
 	case "process.parent.interpreter.file.name.length":
 		return reflect.Int, nil
+	case "process.parent.interpreter.file.package.major":
+		return reflect.Int, nil
+	case "process.parent.interpreter.file.package.minor":
+		return reflect.Int, nil
+	case "process.parent.interpreter.file.package.name":
+		return reflect.String, nil
+	case "process.parent.interpreter.file.package.patch":
+		return reflect.Int, nil
+	case "process.parent.interpreter.file.package.version":
+		return reflect.String, nil
 	case "process.parent.interpreter.file.path":
 		return reflect.String, nil
 	case "process.parent.interpreter.file.path.length":
@@ -19184,6 +22539,16 @@ func (e *Event) GetFieldType(field eval.Field) (reflect.Kind, error) {
 		return reflect.String, nil
 	case "ptrace.tracee.ancestors.file.name.length":
 		return reflect.Int, nil
+	case "ptrace.tracee.ancestors.file.package.major":
+		return reflect.Int, nil
+	case "ptrace.tracee.ancestors.file.package.minor":
+		return reflect.Int, nil
+	case "ptrace.tracee.ancestors.file.package.name":
+		return reflect.String, nil
+	case "ptrace.tracee.ancestors.file.package.patch":
+		return reflect.Int, nil
+	case "ptrace.tracee.ancestors.file.package.version":
+		return reflect.String, nil
 	case "ptrace.tracee.ancestors.file.path":
 		return reflect.String, nil
 	case "ptrace.tracee.ancestors.file.path.length":
@@ -19228,6 +22593,16 @@ func (e *Event) GetFieldType(field eval.Field) (reflect.Kind, error) {
 		return reflect.String, nil
 	case "ptrace.tracee.ancestors.interpreter.file.name.length":
 		return reflect.Int, nil
+	case "ptrace.tracee.ancestors.interpreter.file.package.major":
+		return reflect.Int, nil
+	case "ptrace.tracee.ancestors.interpreter.file.package.minor":
+		return reflect.Int, nil
+	case "ptrace.tracee.ancestors.interpreter.file.package.name":
+		return reflect.String, nil
+	case "ptrace.tracee.ancestors.interpreter.file.package.patch":
+		return reflect.Int, nil
+	case "ptrace.tracee.ancestors.interpreter.file.package.version":
+		return reflect.String, nil
 	case "ptrace.tracee.ancestors.interpreter.file.path":
 		return reflect.String, nil
 	case "ptrace.tracee.ancestors.interpreter.file.path.length":
@@ -19314,6 +22689,16 @@ func (e *Event) GetFieldType(field eval.Field) (reflect.Kind, error) {
 		return reflect.String, nil
 	case "ptrace.tracee.file.name.length":
 		return reflect.Int, nil
+	case "ptrace.tracee.file.package.major":
+		return reflect.Int, nil
+	case "ptrace.tracee.file.package.minor":
+		return reflect.Int, nil
+	case "ptrace.tracee.file.package.name":
+		return reflect.String, nil
+	case "ptrace.tracee.file.package.patch":
+		return reflect.Int, nil
+	case "ptrace.tracee.file.package.version":
+		return reflect.String, nil
 	case "ptrace.tracee.file.path":
 		return reflect.String, nil
 	case "ptrace.tracee.file.path.length":
@@ -19358,6 +22743,16 @@ func (e *Event) GetFieldType(field eval.Field) (reflect.Kind, error) {
 		return reflect.String, nil
 	case "ptrace.tracee.interpreter.file.name.length":
 		return reflect.Int, nil
+	case "ptrace.tracee.interpreter.file.package.major":
+		return reflect.Int, nil
+	case "ptrace.tracee.interpreter.file.package.minor":
+		return reflect.Int, nil
+	case "ptrace.tracee.interpreter.file.package.name":
+		return reflect.String, nil
+	case "ptrace.tracee.interpreter.file.package.patch":
+		return reflect.Int, nil
+	case "ptrace.tracee.interpreter.file.package.version":
+		return reflect.String, nil
 	case "ptrace.tracee.interpreter.file.path":
 		return reflect.String, nil
 	case "ptrace.tracee.interpreter.file.path.length":
@@ -19432,6 +22827,16 @@ func (e *Event) GetFieldType(field eval.Field) (reflect.Kind, error) {
 		return reflect.String, nil
 	case "ptrace.tracee.parent.file.name.length":
 		return reflect.Int, nil
+	case "ptrace.tracee.parent.file.package.major":
+		return reflect.Int, nil
+	case "ptrace.tracee.parent.file.package.minor":
+		return reflect.Int, nil
+	case "ptrace.tracee.parent.file.package.name":
+		return reflect.String, nil
+	case "ptrace.tracee.parent.file.package.patch":
+		return reflect.Int, nil
+	case "ptrace.tracee.parent.file.package.version":
+		return reflect.String, nil
 	case "ptrace.tracee.parent.file.path":
 		return reflect.String, nil
 	case "ptrace.tracee.parent.file.path.length":
@@ -19476,6 +22881,16 @@ func (e *Event) GetFieldType(field eval.Field) (reflect.Kind, error) {
 		return reflect.String, nil
 	case "ptrace.tracee.parent.interpreter.file.name.length":
 		return reflect.Int, nil
+	case "ptrace.tracee.parent.interpreter.file.package.major":
+		return reflect.Int, nil
+	case "ptrace.tracee.parent.interpreter.file.package.minor":
+		return reflect.Int, nil
+	case "ptrace.tracee.parent.interpreter.file.package.name":
+		return reflect.String, nil
+	case "ptrace.tracee.parent.interpreter.file.package.patch":
+		return reflect.Int, nil
+	case "ptrace.tracee.parent.interpreter.file.package.version":
+		return reflect.String, nil
 	case "ptrace.tracee.parent.interpreter.file.path":
 		return reflect.String, nil
 	case "ptrace.tracee.parent.interpreter.file.path.length":
@@ -19540,6 +22955,16 @@ func (e *Event) GetFieldType(field eval.Field) (reflect.Kind, error) {
 		return reflect.String, nil
 	case "removexattr.file.name.length":
 		return reflect.Int, nil
+	case "removexattr.file.package.major":
+		return reflect.Int, nil
+	case "removexattr.file.package.minor":
+		return reflect.Int, nil
+	case "removexattr.file.package.name":
+		return reflect.String, nil
+	case "removexattr.file.package.patch":
+		return reflect.Int, nil
+	case "removexattr.file.package.version":
+		return reflect.String, nil
 	case "removexattr.file.path":
 		return reflect.String, nil
 	case "removexattr.file.path.length":
@@ -19576,6 +23001,16 @@ func (e *Event) GetFieldType(field eval.Field) (reflect.Kind, error) {
 		return reflect.String, nil
 	case "rename.file.destination.name.length":
 		return reflect.Int, nil
+	case "rename.file.destination.package.major":
+		return reflect.Int, nil
+	case "rename.file.destination.package.minor":
+		return reflect.Int, nil
+	case "rename.file.destination.package.name":
+		return reflect.String, nil
+	case "rename.file.destination.package.patch":
+		return reflect.Int, nil
+	case "rename.file.destination.package.version":
+		return reflect.String, nil
 	case "rename.file.destination.path":
 		return reflect.String, nil
 	case "rename.file.destination.path.length":
@@ -19606,6 +23041,16 @@ func (e *Event) GetFieldType(field eval.Field) (reflect.Kind, error) {
 		return reflect.String, nil
 	case "rename.file.name.length":
 		return reflect.Int, nil
+	case "rename.file.package.major":
+		return reflect.Int, nil
+	case "rename.file.package.minor":
+		return reflect.Int, nil
+	case "rename.file.package.name":
+		return reflect.String, nil
+	case "rename.file.package.patch":
+		return reflect.Int, nil
+	case "rename.file.package.version":
+		return reflect.String, nil
 	case "rename.file.path":
 		return reflect.String, nil
 	case "rename.file.path.length":
@@ -19640,6 +23085,16 @@ func (e *Event) GetFieldType(field eval.Field) (reflect.Kind, error) {
 		return reflect.String, nil
 	case "rmdir.file.name.length":
 		return reflect.Int, nil
+	case "rmdir.file.package.major":
+		return reflect.Int, nil
+	case "rmdir.file.package.minor":
+		return reflect.Int, nil
+	case "rmdir.file.package.name":
+		return reflect.String, nil
+	case "rmdir.file.package.patch":
+		return reflect.Int, nil
+	case "rmdir.file.package.version":
+		return reflect.String, nil
 	case "rmdir.file.path":
 		return reflect.String, nil
 	case "rmdir.file.path.length":
@@ -19710,6 +23165,16 @@ func (e *Event) GetFieldType(field eval.Field) (reflect.Kind, error) {
 		return reflect.String, nil
 	case "setxattr.file.name.length":
 		return reflect.Int, nil
+	case "setxattr.file.package.major":
+		return reflect.Int, nil
+	case "setxattr.file.package.minor":
+		return reflect.Int, nil
+	case "setxattr.file.package.name":
+		return reflect.String, nil
+	case "setxattr.file.package.patch":
+		return reflect.Int, nil
+	case "setxattr.file.package.version":
+		return reflect.String, nil
 	case "setxattr.file.path":
 		return reflect.String, nil
 	case "setxattr.file.path.length":
@@ -19786,6 +23251,16 @@ func (e *Event) GetFieldType(field eval.Field) (reflect.Kind, error) {
 		return reflect.String, nil
 	case "signal.target.ancestors.file.name.length":
 		return reflect.Int, nil
+	case "signal.target.ancestors.file.package.major":
+		return reflect.Int, nil
+	case "signal.target.ancestors.file.package.minor":
+		return reflect.Int, nil
+	case "signal.target.ancestors.file.package.name":
+		return reflect.String, nil
+	case "signal.target.ancestors.file.package.patch":
+		return reflect.Int, nil
+	case "signal.target.ancestors.file.package.version":
+		return reflect.String, nil
 	case "signal.target.ancestors.file.path":
 		return reflect.String, nil
 	case "signal.target.ancestors.file.path.length":
@@ -19830,6 +23305,16 @@ func (e *Event) GetFieldType(field eval.Field) (reflect.Kind, error) {
 		return reflect.String, nil
 	case "signal.target.ancestors.interpreter.file.name.length":
 		return reflect.Int, nil
+	case "signal.target.ancestors.interpreter.file.package.major":
+		return reflect.Int, nil
+	case "signal.target.ancestors.interpreter.file.package.minor":
+		return reflect.Int, nil
+	case "signal.target.ancestors.interpreter.file.package.name":
+		return reflect.String, nil
+	case "signal.target.ancestors.interpreter.file.package.patch":
+		return reflect.Int, nil
+	case "signal.target.ancestors.interpreter.file.package.version":
+		return reflect.String, nil
 	case "signal.target.ancestors.interpreter.file.path":
 		return reflect.String, nil
 	case "signal.target.ancestors.interpreter.file.path.length":
@@ -19916,6 +23401,16 @@ func (e *Event) GetFieldType(field eval.Field) (reflect.Kind, error) {
 		return reflect.String, nil
 	case "signal.target.file.name.length":
 		return reflect.Int, nil
+	case "signal.target.file.package.major":
+		return reflect.Int, nil
+	case "signal.target.file.package.minor":
+		return reflect.Int, nil
+	case "signal.target.file.package.name":
+		return reflect.String, nil
+	case "signal.target.file.package.patch":
+		return reflect.Int, nil
+	case "signal.target.file.package.version":
+		return reflect.String, nil
 	case "signal.target.file.path":
 		return reflect.String, nil
 	case "signal.target.file.path.length":
@@ -19960,6 +23455,16 @@ func (e *Event) GetFieldType(field eval.Field) (reflect.Kind, error) {
 		return reflect.String, nil
 	case "signal.target.interpreter.file.name.length":
 		return reflect.Int, nil
+	case "signal.target.interpreter.file.package.major":
+		return reflect.Int, nil
+	case "signal.target.interpreter.file.package.minor":
+		return reflect.Int, nil
+	case "signal.target.interpreter.file.package.name":
+		return reflect.String, nil
+	case "signal.target.interpreter.file.package.patch":
+		return reflect.Int, nil
+	case "signal.target.interpreter.file.package.version":
+		return reflect.String, nil
 	case "signal.target.interpreter.file.path":
 		return reflect.String, nil
 	case "signal.target.interpreter.file.path.length":
@@ -20034,6 +23539,16 @@ func (e *Event) GetFieldType(field eval.Field) (reflect.Kind, error) {
 		return reflect.String, nil
 	case "signal.target.parent.file.name.length":
 		return reflect.Int, nil
+	case "signal.target.parent.file.package.major":
+		return reflect.Int, nil
+	case "signal.target.parent.file.package.minor":
+		return reflect.Int, nil
+	case "signal.target.parent.file.package.name":
+		return reflect.String, nil
+	case "signal.target.parent.file.package.patch":
+		return reflect.Int, nil
+	case "signal.target.parent.file.package.version":
+		return reflect.String, nil
 	case "signal.target.parent.file.path":
 		return reflect.String, nil
 	case "signal.target.parent.file.path.length":
@@ -20078,6 +23593,16 @@ func (e *Event) GetFieldType(field eval.Field) (reflect.Kind, error) {
 		return reflect.String, nil
 	case "signal.target.parent.interpreter.file.name.length":
 		return reflect.Int, nil
+	case "signal.target.parent.interpreter.file.package.major":
+		return reflect.Int, nil
+	case "signal.target.parent.interpreter.file.package.minor":
+		return reflect.Int, nil
+	case "signal.target.parent.interpreter.file.package.name":
+		return reflect.String, nil
+	case "signal.target.parent.interpreter.file.package.patch":
+		return reflect.Int, nil
+	case "signal.target.parent.interpreter.file.package.version":
+		return reflect.String, nil
 	case "signal.target.parent.interpreter.file.path":
 		return reflect.String, nil
 	case "signal.target.parent.interpreter.file.path.length":
@@ -20140,6 +23665,16 @@ func (e *Event) GetFieldType(field eval.Field) (reflect.Kind, error) {
 		return reflect.String, nil
 	case "splice.file.name.length":
 		return reflect.Int, nil
+	case "splice.file.package.major":
+		return reflect.Int, nil
+	case "splice.file.package.minor":
+		return reflect.Int, nil
+	case "splice.file.package.name":
+		return reflect.String, nil
+	case "splice.file.package.patch":
+		return reflect.Int, nil
+	case "splice.file.package.version":
+		return reflect.String, nil
 	case "splice.file.path":
 		return reflect.String, nil
 	case "splice.file.path.length":
@@ -20178,6 +23713,16 @@ func (e *Event) GetFieldType(field eval.Field) (reflect.Kind, error) {
 		return reflect.String, nil
 	case "unlink.file.name.length":
 		return reflect.Int, nil
+	case "unlink.file.package.major":
+		return reflect.Int, nil
+	case "unlink.file.package.minor":
+		return reflect.Int, nil
+	case "unlink.file.package.name":
+		return reflect.String, nil
+	case "unlink.file.package.patch":
+		return reflect.Int, nil
+	case "unlink.file.package.version":
+		return reflect.String, nil
 	case "unlink.file.path":
 		return reflect.String, nil
 	case "unlink.file.path.length":
@@ -20218,6 +23763,16 @@ func (e *Event) GetFieldType(field eval.Field) (reflect.Kind, error) {
 		return reflect.String, nil
 	case "utimes.file.name.length":
 		return reflect.Int, nil
+	case "utimes.file.package.major":
+		return reflect.Int, nil
+	case "utimes.file.package.minor":
+		return reflect.Int, nil
+	case "utimes.file.package.name":
+		return reflect.String, nil
+	case "utimes.file.package.patch":
+		return reflect.Int, nil
+	case "utimes.file.package.version":
+		return reflect.String, nil
 	case "utimes.file.path":
 		return reflect.String, nil
 	case "utimes.file.path.length":
@@ -20431,6 +23986,41 @@ func (e *Event) SetFieldValue(field eval.Field, value interface{}) error {
 		return nil
 	case "chmod.file.name.length":
 		return &eval.ErrFieldReadOnly{Field: "chmod.file.name.length"}
+	case "chmod.file.package.major":
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Chmod.File.PkgMajor"}
+		}
+		e.Chmod.File.PkgMajor = int(v)
+		return nil
+	case "chmod.file.package.minor":
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Chmod.File.PkgMinor"}
+		}
+		e.Chmod.File.PkgMinor = int(v)
+		return nil
+	case "chmod.file.package.name":
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Chmod.File.PkgName"}
+		}
+		e.Chmod.File.PkgName = str
+		return nil
+	case "chmod.file.package.patch":
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Chmod.File.PkgPatch"}
+		}
+		e.Chmod.File.PkgPatch = int(v)
+		return nil
+	case "chmod.file.package.version":
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Chmod.File.PkgVersion"}
+		}
+		e.Chmod.File.PkgVersion = str
+		return nil
 	case "chmod.file.path":
 		str, ok := value.(string)
 		if !ok {
@@ -20567,6 +24157,41 @@ func (e *Event) SetFieldValue(field eval.Field, value interface{}) error {
 		return nil
 	case "chown.file.name.length":
 		return &eval.ErrFieldReadOnly{Field: "chown.file.name.length"}
+	case "chown.file.package.major":
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Chown.File.PkgMajor"}
+		}
+		e.Chown.File.PkgMajor = int(v)
+		return nil
+	case "chown.file.package.minor":
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Chown.File.PkgMinor"}
+		}
+		e.Chown.File.PkgMinor = int(v)
+		return nil
+	case "chown.file.package.name":
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Chown.File.PkgName"}
+		}
+		e.Chown.File.PkgName = str
+		return nil
+	case "chown.file.package.patch":
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Chown.File.PkgPatch"}
+		}
+		e.Chown.File.PkgPatch = int(v)
+		return nil
+	case "chown.file.package.version":
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Chown.File.PkgVersion"}
+		}
+		e.Chown.File.PkgVersion = str
+		return nil
 	case "chown.file.path":
 		str, ok := value.(string)
 		if !ok {
@@ -20954,6 +24579,56 @@ func (e *Event) SetFieldValue(field eval.Field, value interface{}) error {
 			e.Exec.Process = &Process{}
 		}
 		return &eval.ErrFieldReadOnly{Field: "exec.file.name.length"}
+	case "exec.file.package.major":
+		if e.Exec.Process == nil {
+			e.Exec.Process = &Process{}
+		}
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Exec.Process.FileEvent.PkgMajor"}
+		}
+		e.Exec.Process.FileEvent.PkgMajor = int(v)
+		return nil
+	case "exec.file.package.minor":
+		if e.Exec.Process == nil {
+			e.Exec.Process = &Process{}
+		}
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Exec.Process.FileEvent.PkgMinor"}
+		}
+		e.Exec.Process.FileEvent.PkgMinor = int(v)
+		return nil
+	case "exec.file.package.name":
+		if e.Exec.Process == nil {
+			e.Exec.Process = &Process{}
+		}
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Exec.Process.FileEvent.PkgName"}
+		}
+		e.Exec.Process.FileEvent.PkgName = str
+		return nil
+	case "exec.file.package.patch":
+		if e.Exec.Process == nil {
+			e.Exec.Process = &Process{}
+		}
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Exec.Process.FileEvent.PkgPatch"}
+		}
+		e.Exec.Process.FileEvent.PkgPatch = int(v)
+		return nil
+	case "exec.file.package.version":
+		if e.Exec.Process == nil {
+			e.Exec.Process = &Process{}
+		}
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Exec.Process.FileEvent.PkgVersion"}
+		}
+		e.Exec.Process.FileEvent.PkgVersion = str
+		return nil
 	case "exec.file.path":
 		if e.Exec.Process == nil {
 			e.Exec.Process = &Process{}
@@ -21163,6 +24838,56 @@ func (e *Event) SetFieldValue(field eval.Field, value interface{}) error {
 			e.Exec.Process = &Process{}
 		}
 		return &eval.ErrFieldReadOnly{Field: "exec.interpreter.file.name.length"}
+	case "exec.interpreter.file.package.major":
+		if e.Exec.Process == nil {
+			e.Exec.Process = &Process{}
+		}
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Exec.Process.LinuxBinprm.FileEvent.PkgMajor"}
+		}
+		e.Exec.Process.LinuxBinprm.FileEvent.PkgMajor = int(v)
+		return nil
+	case "exec.interpreter.file.package.minor":
+		if e.Exec.Process == nil {
+			e.Exec.Process = &Process{}
+		}
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Exec.Process.LinuxBinprm.FileEvent.PkgMinor"}
+		}
+		e.Exec.Process.LinuxBinprm.FileEvent.PkgMinor = int(v)
+		return nil
+	case "exec.interpreter.file.package.name":
+		if e.Exec.Process == nil {
+			e.Exec.Process = &Process{}
+		}
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Exec.Process.LinuxBinprm.FileEvent.PkgName"}
+		}
+		e.Exec.Process.LinuxBinprm.FileEvent.PkgName = str
+		return nil
+	case "exec.interpreter.file.package.patch":
+		if e.Exec.Process == nil {
+			e.Exec.Process = &Process{}
+		}
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Exec.Process.LinuxBinprm.FileEvent.PkgPatch"}
+		}
+		e.Exec.Process.LinuxBinprm.FileEvent.PkgPatch = int(v)
+		return nil
+	case "exec.interpreter.file.package.version":
+		if e.Exec.Process == nil {
+			e.Exec.Process = &Process{}
+		}
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Exec.Process.LinuxBinprm.FileEvent.PkgVersion"}
+		}
+		e.Exec.Process.LinuxBinprm.FileEvent.PkgVersion = str
+		return nil
 	case "exec.interpreter.file.path":
 		if e.Exec.Process == nil {
 			e.Exec.Process = &Process{}
@@ -21592,6 +25317,56 @@ func (e *Event) SetFieldValue(field eval.Field, value interface{}) error {
 			e.Exit.Process = &Process{}
 		}
 		return &eval.ErrFieldReadOnly{Field: "exit.file.name.length"}
+	case "exit.file.package.major":
+		if e.Exit.Process == nil {
+			e.Exit.Process = &Process{}
+		}
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Exit.Process.FileEvent.PkgMajor"}
+		}
+		e.Exit.Process.FileEvent.PkgMajor = int(v)
+		return nil
+	case "exit.file.package.minor":
+		if e.Exit.Process == nil {
+			e.Exit.Process = &Process{}
+		}
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Exit.Process.FileEvent.PkgMinor"}
+		}
+		e.Exit.Process.FileEvent.PkgMinor = int(v)
+		return nil
+	case "exit.file.package.name":
+		if e.Exit.Process == nil {
+			e.Exit.Process = &Process{}
+		}
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Exit.Process.FileEvent.PkgName"}
+		}
+		e.Exit.Process.FileEvent.PkgName = str
+		return nil
+	case "exit.file.package.patch":
+		if e.Exit.Process == nil {
+			e.Exit.Process = &Process{}
+		}
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Exit.Process.FileEvent.PkgPatch"}
+		}
+		e.Exit.Process.FileEvent.PkgPatch = int(v)
+		return nil
+	case "exit.file.package.version":
+		if e.Exit.Process == nil {
+			e.Exit.Process = &Process{}
+		}
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Exit.Process.FileEvent.PkgVersion"}
+		}
+		e.Exit.Process.FileEvent.PkgVersion = str
+		return nil
 	case "exit.file.path":
 		if e.Exit.Process == nil {
 			e.Exit.Process = &Process{}
@@ -21801,6 +25576,56 @@ func (e *Event) SetFieldValue(field eval.Field, value interface{}) error {
 			e.Exit.Process = &Process{}
 		}
 		return &eval.ErrFieldReadOnly{Field: "exit.interpreter.file.name.length"}
+	case "exit.interpreter.file.package.major":
+		if e.Exit.Process == nil {
+			e.Exit.Process = &Process{}
+		}
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Exit.Process.LinuxBinprm.FileEvent.PkgMajor"}
+		}
+		e.Exit.Process.LinuxBinprm.FileEvent.PkgMajor = int(v)
+		return nil
+	case "exit.interpreter.file.package.minor":
+		if e.Exit.Process == nil {
+			e.Exit.Process = &Process{}
+		}
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Exit.Process.LinuxBinprm.FileEvent.PkgMinor"}
+		}
+		e.Exit.Process.LinuxBinprm.FileEvent.PkgMinor = int(v)
+		return nil
+	case "exit.interpreter.file.package.name":
+		if e.Exit.Process == nil {
+			e.Exit.Process = &Process{}
+		}
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Exit.Process.LinuxBinprm.FileEvent.PkgName"}
+		}
+		e.Exit.Process.LinuxBinprm.FileEvent.PkgName = str
+		return nil
+	case "exit.interpreter.file.package.patch":
+		if e.Exit.Process == nil {
+			e.Exit.Process = &Process{}
+		}
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Exit.Process.LinuxBinprm.FileEvent.PkgPatch"}
+		}
+		e.Exit.Process.LinuxBinprm.FileEvent.PkgPatch = int(v)
+		return nil
+	case "exit.interpreter.file.package.version":
+		if e.Exit.Process == nil {
+			e.Exit.Process = &Process{}
+		}
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Exit.Process.LinuxBinprm.FileEvent.PkgVersion"}
+		}
+		e.Exit.Process.LinuxBinprm.FileEvent.PkgVersion = str
+		return nil
 	case "exit.interpreter.file.path":
 		if e.Exit.Process == nil {
 			e.Exit.Process = &Process{}
@@ -22002,6 +25827,41 @@ func (e *Event) SetFieldValue(field eval.Field, value interface{}) error {
 		return nil
 	case "link.file.destination.name.length":
 		return &eval.ErrFieldReadOnly{Field: "link.file.destination.name.length"}
+	case "link.file.destination.package.major":
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Link.Target.PkgMajor"}
+		}
+		e.Link.Target.PkgMajor = int(v)
+		return nil
+	case "link.file.destination.package.minor":
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Link.Target.PkgMinor"}
+		}
+		e.Link.Target.PkgMinor = int(v)
+		return nil
+	case "link.file.destination.package.name":
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Link.Target.PkgName"}
+		}
+		e.Link.Target.PkgName = str
+		return nil
+	case "link.file.destination.package.patch":
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Link.Target.PkgPatch"}
+		}
+		e.Link.Target.PkgPatch = int(v)
+		return nil
+	case "link.file.destination.package.version":
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Link.Target.PkgVersion"}
+		}
+		e.Link.Target.PkgVersion = str
+		return nil
 	case "link.file.destination.path":
 		str, ok := value.(string)
 		if !ok {
@@ -22096,6 +25956,41 @@ func (e *Event) SetFieldValue(field eval.Field, value interface{}) error {
 		return nil
 	case "link.file.name.length":
 		return &eval.ErrFieldReadOnly{Field: "link.file.name.length"}
+	case "link.file.package.major":
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Link.Source.PkgMajor"}
+		}
+		e.Link.Source.PkgMajor = int(v)
+		return nil
+	case "link.file.package.minor":
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Link.Source.PkgMinor"}
+		}
+		e.Link.Source.PkgMinor = int(v)
+		return nil
+	case "link.file.package.name":
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Link.Source.PkgName"}
+		}
+		e.Link.Source.PkgName = str
+		return nil
+	case "link.file.package.patch":
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Link.Source.PkgPatch"}
+		}
+		e.Link.Source.PkgPatch = int(v)
+		return nil
+	case "link.file.package.version":
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Link.Source.PkgVersion"}
+		}
+		e.Link.Source.PkgVersion = str
+		return nil
 	case "link.file.path":
 		str, ok := value.(string)
 		if !ok {
@@ -22204,6 +26099,41 @@ func (e *Event) SetFieldValue(field eval.Field, value interface{}) error {
 		return nil
 	case "load_module.file.name.length":
 		return &eval.ErrFieldReadOnly{Field: "load_module.file.name.length"}
+	case "load_module.file.package.major":
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "LoadModule.File.PkgMajor"}
+		}
+		e.LoadModule.File.PkgMajor = int(v)
+		return nil
+	case "load_module.file.package.minor":
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "LoadModule.File.PkgMinor"}
+		}
+		e.LoadModule.File.PkgMinor = int(v)
+		return nil
+	case "load_module.file.package.name":
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "LoadModule.File.PkgName"}
+		}
+		e.LoadModule.File.PkgName = str
+		return nil
+	case "load_module.file.package.patch":
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "LoadModule.File.PkgPatch"}
+		}
+		e.LoadModule.File.PkgPatch = int(v)
+		return nil
+	case "load_module.file.package.version":
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "LoadModule.File.PkgVersion"}
+		}
+		e.LoadModule.File.PkgVersion = str
+		return nil
 	case "load_module.file.path":
 		str, ok := value.(string)
 		if !ok {
@@ -22339,6 +26269,41 @@ func (e *Event) SetFieldValue(field eval.Field, value interface{}) error {
 		return nil
 	case "mkdir.file.name.length":
 		return &eval.ErrFieldReadOnly{Field: "mkdir.file.name.length"}
+	case "mkdir.file.package.major":
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Mkdir.File.PkgMajor"}
+		}
+		e.Mkdir.File.PkgMajor = int(v)
+		return nil
+	case "mkdir.file.package.minor":
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Mkdir.File.PkgMinor"}
+		}
+		e.Mkdir.File.PkgMinor = int(v)
+		return nil
+	case "mkdir.file.package.name":
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Mkdir.File.PkgName"}
+		}
+		e.Mkdir.File.PkgName = str
+		return nil
+	case "mkdir.file.package.patch":
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Mkdir.File.PkgPatch"}
+		}
+		e.Mkdir.File.PkgPatch = int(v)
+		return nil
+	case "mkdir.file.package.version":
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Mkdir.File.PkgVersion"}
+		}
+		e.Mkdir.File.PkgVersion = str
+		return nil
 	case "mkdir.file.path":
 		str, ok := value.(string)
 		if !ok {
@@ -22447,6 +26412,41 @@ func (e *Event) SetFieldValue(field eval.Field, value interface{}) error {
 		return nil
 	case "mmap.file.name.length":
 		return &eval.ErrFieldReadOnly{Field: "mmap.file.name.length"}
+	case "mmap.file.package.major":
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "MMap.File.PkgMajor"}
+		}
+		e.MMap.File.PkgMajor = int(v)
+		return nil
+	case "mmap.file.package.minor":
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "MMap.File.PkgMinor"}
+		}
+		e.MMap.File.PkgMinor = int(v)
+		return nil
+	case "mmap.file.package.name":
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "MMap.File.PkgName"}
+		}
+		e.MMap.File.PkgName = str
+		return nil
+	case "mmap.file.package.patch":
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "MMap.File.PkgPatch"}
+		}
+		e.MMap.File.PkgPatch = int(v)
+		return nil
+	case "mmap.file.package.version":
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "MMap.File.PkgVersion"}
+		}
+		e.MMap.File.PkgVersion = str
+		return nil
 	case "mmap.file.path":
 		str, ok := value.(string)
 		if !ok {
@@ -22660,6 +26660,41 @@ func (e *Event) SetFieldValue(field eval.Field, value interface{}) error {
 		return nil
 	case "open.file.name.length":
 		return &eval.ErrFieldReadOnly{Field: "open.file.name.length"}
+	case "open.file.package.major":
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Open.File.PkgMajor"}
+		}
+		e.Open.File.PkgMajor = int(v)
+		return nil
+	case "open.file.package.minor":
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Open.File.PkgMinor"}
+		}
+		e.Open.File.PkgMinor = int(v)
+		return nil
+	case "open.file.package.name":
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Open.File.PkgName"}
+		}
+		e.Open.File.PkgName = str
+		return nil
+	case "open.file.package.patch":
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Open.File.PkgPatch"}
+		}
+		e.Open.File.PkgPatch = int(v)
+		return nil
+	case "open.file.package.version":
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Open.File.PkgVersion"}
+		}
+		e.Open.File.PkgVersion = str
+		return nil
 	case "open.file.path":
 		str, ok := value.(string)
 		if !ok {
@@ -23086,6 +27121,71 @@ func (e *Event) SetFieldValue(field eval.Field, value interface{}) error {
 			e.ProcessContext.Ancestor = &ProcessCacheEntry{}
 		}
 		return &eval.ErrFieldReadOnly{Field: "process.ancestors.file.name.length"}
+	case "process.ancestors.file.package.major":
+		if e.ProcessContext == nil {
+			e.ProcessContext = &ProcessContext{}
+		}
+		if e.ProcessContext.Ancestor == nil {
+			e.ProcessContext.Ancestor = &ProcessCacheEntry{}
+		}
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "ProcessContext.Ancestor.ProcessContext.Process.FileEvent.PkgMajor"}
+		}
+		e.ProcessContext.Ancestor.ProcessContext.Process.FileEvent.PkgMajor = int(v)
+		return nil
+	case "process.ancestors.file.package.minor":
+		if e.ProcessContext == nil {
+			e.ProcessContext = &ProcessContext{}
+		}
+		if e.ProcessContext.Ancestor == nil {
+			e.ProcessContext.Ancestor = &ProcessCacheEntry{}
+		}
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "ProcessContext.Ancestor.ProcessContext.Process.FileEvent.PkgMinor"}
+		}
+		e.ProcessContext.Ancestor.ProcessContext.Process.FileEvent.PkgMinor = int(v)
+		return nil
+	case "process.ancestors.file.package.name":
+		if e.ProcessContext == nil {
+			e.ProcessContext = &ProcessContext{}
+		}
+		if e.ProcessContext.Ancestor == nil {
+			e.ProcessContext.Ancestor = &ProcessCacheEntry{}
+		}
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "ProcessContext.Ancestor.ProcessContext.Process.FileEvent.PkgName"}
+		}
+		e.ProcessContext.Ancestor.ProcessContext.Process.FileEvent.PkgName = str
+		return nil
+	case "process.ancestors.file.package.patch":
+		if e.ProcessContext == nil {
+			e.ProcessContext = &ProcessContext{}
+		}
+		if e.ProcessContext.Ancestor == nil {
+			e.ProcessContext.Ancestor = &ProcessCacheEntry{}
+		}
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "ProcessContext.Ancestor.ProcessContext.Process.FileEvent.PkgPatch"}
+		}
+		e.ProcessContext.Ancestor.ProcessContext.Process.FileEvent.PkgPatch = int(v)
+		return nil
+	case "process.ancestors.file.package.version":
+		if e.ProcessContext == nil {
+			e.ProcessContext = &ProcessContext{}
+		}
+		if e.ProcessContext.Ancestor == nil {
+			e.ProcessContext.Ancestor = &ProcessCacheEntry{}
+		}
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "ProcessContext.Ancestor.ProcessContext.Process.FileEvent.PkgVersion"}
+		}
+		e.ProcessContext.Ancestor.ProcessContext.Process.FileEvent.PkgVersion = str
+		return nil
 	case "process.ancestors.file.path":
 		if e.ProcessContext == nil {
 			e.ProcessContext = &ProcessContext{}
@@ -23361,6 +27461,71 @@ func (e *Event) SetFieldValue(field eval.Field, value interface{}) error {
 			e.ProcessContext.Ancestor = &ProcessCacheEntry{}
 		}
 		return &eval.ErrFieldReadOnly{Field: "process.ancestors.interpreter.file.name.length"}
+	case "process.ancestors.interpreter.file.package.major":
+		if e.ProcessContext == nil {
+			e.ProcessContext = &ProcessContext{}
+		}
+		if e.ProcessContext.Ancestor == nil {
+			e.ProcessContext.Ancestor = &ProcessCacheEntry{}
+		}
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "ProcessContext.Ancestor.ProcessContext.Process.LinuxBinprm.FileEvent.PkgMajor"}
+		}
+		e.ProcessContext.Ancestor.ProcessContext.Process.LinuxBinprm.FileEvent.PkgMajor = int(v)
+		return nil
+	case "process.ancestors.interpreter.file.package.minor":
+		if e.ProcessContext == nil {
+			e.ProcessContext = &ProcessContext{}
+		}
+		if e.ProcessContext.Ancestor == nil {
+			e.ProcessContext.Ancestor = &ProcessCacheEntry{}
+		}
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "ProcessContext.Ancestor.ProcessContext.Process.LinuxBinprm.FileEvent.PkgMinor"}
+		}
+		e.ProcessContext.Ancestor.ProcessContext.Process.LinuxBinprm.FileEvent.PkgMinor = int(v)
+		return nil
+	case "process.ancestors.interpreter.file.package.name":
+		if e.ProcessContext == nil {
+			e.ProcessContext = &ProcessContext{}
+		}
+		if e.ProcessContext.Ancestor == nil {
+			e.ProcessContext.Ancestor = &ProcessCacheEntry{}
+		}
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "ProcessContext.Ancestor.ProcessContext.Process.LinuxBinprm.FileEvent.PkgName"}
+		}
+		e.ProcessContext.Ancestor.ProcessContext.Process.LinuxBinprm.FileEvent.PkgName = str
+		return nil
+	case "process.ancestors.interpreter.file.package.patch":
+		if e.ProcessContext == nil {
+			e.ProcessContext = &ProcessContext{}
+		}
+		if e.ProcessContext.Ancestor == nil {
+			e.ProcessContext.Ancestor = &ProcessCacheEntry{}
+		}
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "ProcessContext.Ancestor.ProcessContext.Process.LinuxBinprm.FileEvent.PkgPatch"}
+		}
+		e.ProcessContext.Ancestor.ProcessContext.Process.LinuxBinprm.FileEvent.PkgPatch = int(v)
+		return nil
+	case "process.ancestors.interpreter.file.package.version":
+		if e.ProcessContext == nil {
+			e.ProcessContext = &ProcessContext{}
+		}
+		if e.ProcessContext.Ancestor == nil {
+			e.ProcessContext.Ancestor = &ProcessCacheEntry{}
+		}
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "ProcessContext.Ancestor.ProcessContext.Process.LinuxBinprm.FileEvent.PkgVersion"}
+		}
+		e.ProcessContext.Ancestor.ProcessContext.Process.LinuxBinprm.FileEvent.PkgVersion = str
+		return nil
 	case "process.ancestors.interpreter.file.path":
 		if e.ProcessContext == nil {
 			e.ProcessContext = &ProcessContext{}
@@ -23815,6 +27980,56 @@ func (e *Event) SetFieldValue(field eval.Field, value interface{}) error {
 			e.ProcessContext = &ProcessContext{}
 		}
 		return &eval.ErrFieldReadOnly{Field: "process.file.name.length"}
+	case "process.file.package.major":
+		if e.ProcessContext == nil {
+			e.ProcessContext = &ProcessContext{}
+		}
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "ProcessContext.Process.FileEvent.PkgMajor"}
+		}
+		e.ProcessContext.Process.FileEvent.PkgMajor = int(v)
+		return nil
+	case "process.file.package.minor":
+		if e.ProcessContext == nil {
+			e.ProcessContext = &ProcessContext{}
+		}
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "ProcessContext.Process.FileEvent.PkgMinor"}
+		}
+		e.ProcessContext.Process.FileEvent.PkgMinor = int(v)
+		return nil
+	case "process.file.package.name":
+		if e.ProcessContext == nil {
+			e.ProcessContext = &ProcessContext{}
+		}
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "ProcessContext.Process.FileEvent.PkgName"}
+		}
+		e.ProcessContext.Process.FileEvent.PkgName = str
+		return nil
+	case "process.file.package.patch":
+		if e.ProcessContext == nil {
+			e.ProcessContext = &ProcessContext{}
+		}
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "ProcessContext.Process.FileEvent.PkgPatch"}
+		}
+		e.ProcessContext.Process.FileEvent.PkgPatch = int(v)
+		return nil
+	case "process.file.package.version":
+		if e.ProcessContext == nil {
+			e.ProcessContext = &ProcessContext{}
+		}
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "ProcessContext.Process.FileEvent.PkgVersion"}
+		}
+		e.ProcessContext.Process.FileEvent.PkgVersion = str
+		return nil
 	case "process.file.path":
 		if e.ProcessContext == nil {
 			e.ProcessContext = &ProcessContext{}
@@ -24024,6 +28239,56 @@ func (e *Event) SetFieldValue(field eval.Field, value interface{}) error {
 			e.ProcessContext = &ProcessContext{}
 		}
 		return &eval.ErrFieldReadOnly{Field: "process.interpreter.file.name.length"}
+	case "process.interpreter.file.package.major":
+		if e.ProcessContext == nil {
+			e.ProcessContext = &ProcessContext{}
+		}
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "ProcessContext.Process.LinuxBinprm.FileEvent.PkgMajor"}
+		}
+		e.ProcessContext.Process.LinuxBinprm.FileEvent.PkgMajor = int(v)
+		return nil
+	case "process.interpreter.file.package.minor":
+		if e.ProcessContext == nil {
+			e.ProcessContext = &ProcessContext{}
+		}
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "ProcessContext.Process.LinuxBinprm.FileEvent.PkgMinor"}
+		}
+		e.ProcessContext.Process.LinuxBinprm.FileEvent.PkgMinor = int(v)
+		return nil
+	case "process.interpreter.file.package.name":
+		if e.ProcessContext == nil {
+			e.ProcessContext = &ProcessContext{}
+		}
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "ProcessContext.Process.LinuxBinprm.FileEvent.PkgName"}
+		}
+		e.ProcessContext.Process.LinuxBinprm.FileEvent.PkgName = str
+		return nil
+	case "process.interpreter.file.package.patch":
+		if e.ProcessContext == nil {
+			e.ProcessContext = &ProcessContext{}
+		}
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "ProcessContext.Process.LinuxBinprm.FileEvent.PkgPatch"}
+		}
+		e.ProcessContext.Process.LinuxBinprm.FileEvent.PkgPatch = int(v)
+		return nil
+	case "process.interpreter.file.package.version":
+		if e.ProcessContext == nil {
+			e.ProcessContext = &ProcessContext{}
+		}
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "ProcessContext.Process.LinuxBinprm.FileEvent.PkgVersion"}
+		}
+		e.ProcessContext.Process.LinuxBinprm.FileEvent.PkgVersion = str
+		return nil
 	case "process.interpreter.file.path":
 		if e.ProcessContext == nil {
 			e.ProcessContext = &ProcessContext{}
@@ -24469,6 +28734,71 @@ func (e *Event) SetFieldValue(field eval.Field, value interface{}) error {
 			e.ProcessContext.Parent = &Process{}
 		}
 		return &eval.ErrFieldReadOnly{Field: "process.parent.file.name.length"}
+	case "process.parent.file.package.major":
+		if e.ProcessContext == nil {
+			e.ProcessContext = &ProcessContext{}
+		}
+		if e.ProcessContext.Parent == nil {
+			e.ProcessContext.Parent = &Process{}
+		}
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "ProcessContext.Parent.FileEvent.PkgMajor"}
+		}
+		e.ProcessContext.Parent.FileEvent.PkgMajor = int(v)
+		return nil
+	case "process.parent.file.package.minor":
+		if e.ProcessContext == nil {
+			e.ProcessContext = &ProcessContext{}
+		}
+		if e.ProcessContext.Parent == nil {
+			e.ProcessContext.Parent = &Process{}
+		}
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "ProcessContext.Parent.FileEvent.PkgMinor"}
+		}
+		e.ProcessContext.Parent.FileEvent.PkgMinor = int(v)
+		return nil
+	case "process.parent.file.package.name":
+		if e.ProcessContext == nil {
+			e.ProcessContext = &ProcessContext{}
+		}
+		if e.ProcessContext.Parent == nil {
+			e.ProcessContext.Parent = &Process{}
+		}
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "ProcessContext.Parent.FileEvent.PkgName"}
+		}
+		e.ProcessContext.Parent.FileEvent.PkgName = str
+		return nil
+	case "process.parent.file.package.patch":
+		if e.ProcessContext == nil {
+			e.ProcessContext = &ProcessContext{}
+		}
+		if e.ProcessContext.Parent == nil {
+			e.ProcessContext.Parent = &Process{}
+		}
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "ProcessContext.Parent.FileEvent.PkgPatch"}
+		}
+		e.ProcessContext.Parent.FileEvent.PkgPatch = int(v)
+		return nil
+	case "process.parent.file.package.version":
+		if e.ProcessContext == nil {
+			e.ProcessContext = &ProcessContext{}
+		}
+		if e.ProcessContext.Parent == nil {
+			e.ProcessContext.Parent = &Process{}
+		}
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "ProcessContext.Parent.FileEvent.PkgVersion"}
+		}
+		e.ProcessContext.Parent.FileEvent.PkgVersion = str
+		return nil
 	case "process.parent.file.path":
 		if e.ProcessContext == nil {
 			e.ProcessContext = &ProcessContext{}
@@ -24744,6 +29074,71 @@ func (e *Event) SetFieldValue(field eval.Field, value interface{}) error {
 			e.ProcessContext.Parent = &Process{}
 		}
 		return &eval.ErrFieldReadOnly{Field: "process.parent.interpreter.file.name.length"}
+	case "process.parent.interpreter.file.package.major":
+		if e.ProcessContext == nil {
+			e.ProcessContext = &ProcessContext{}
+		}
+		if e.ProcessContext.Parent == nil {
+			e.ProcessContext.Parent = &Process{}
+		}
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "ProcessContext.Parent.LinuxBinprm.FileEvent.PkgMajor"}
+		}
+		e.ProcessContext.Parent.LinuxBinprm.FileEvent.PkgMajor = int(v)
+		return nil
+	case "process.parent.interpreter.file.package.minor":
+		if e.ProcessContext == nil {
+			e.ProcessContext = &ProcessContext{}
+		}
+		if e.ProcessContext.Parent == nil {
+			e.ProcessContext.Parent = &Process{}
+		}
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "ProcessContext.Parent.LinuxBinprm.FileEvent.PkgMinor"}
+		}
+		e.ProcessContext.Parent.LinuxBinprm.FileEvent.PkgMinor = int(v)
+		return nil
+	case "process.parent.interpreter.file.package.name":
+		if e.ProcessContext == nil {
+			e.ProcessContext = &ProcessContext{}
+		}
+		if e.ProcessContext.Parent == nil {
+			e.ProcessContext.Parent = &Process{}
+		}
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "ProcessContext.Parent.LinuxBinprm.FileEvent.PkgName"}
+		}
+		e.ProcessContext.Parent.LinuxBinprm.FileEvent.PkgName = str
+		return nil
+	case "process.parent.interpreter.file.package.patch":
+		if e.ProcessContext == nil {
+			e.ProcessContext = &ProcessContext{}
+		}
+		if e.ProcessContext.Parent == nil {
+			e.ProcessContext.Parent = &Process{}
+		}
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "ProcessContext.Parent.LinuxBinprm.FileEvent.PkgPatch"}
+		}
+		e.ProcessContext.Parent.LinuxBinprm.FileEvent.PkgPatch = int(v)
+		return nil
+	case "process.parent.interpreter.file.package.version":
+		if e.ProcessContext == nil {
+			e.ProcessContext = &ProcessContext{}
+		}
+		if e.ProcessContext.Parent == nil {
+			e.ProcessContext.Parent = &Process{}
+		}
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "ProcessContext.Parent.LinuxBinprm.FileEvent.PkgVersion"}
+		}
+		e.ProcessContext.Parent.LinuxBinprm.FileEvent.PkgVersion = str
+		return nil
 	case "process.parent.interpreter.file.path":
 		if e.ProcessContext == nil {
 			e.ProcessContext = &ProcessContext{}
@@ -25362,6 +29757,71 @@ func (e *Event) SetFieldValue(field eval.Field, value interface{}) error {
 			e.PTrace.Tracee.Ancestor = &ProcessCacheEntry{}
 		}
 		return &eval.ErrFieldReadOnly{Field: "ptrace.tracee.ancestors.file.name.length"}
+	case "ptrace.tracee.ancestors.file.package.major":
+		if e.PTrace.Tracee == nil {
+			e.PTrace.Tracee = &ProcessContext{}
+		}
+		if e.PTrace.Tracee.Ancestor == nil {
+			e.PTrace.Tracee.Ancestor = &ProcessCacheEntry{}
+		}
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "PTrace.Tracee.Ancestor.ProcessContext.Process.FileEvent.PkgMajor"}
+		}
+		e.PTrace.Tracee.Ancestor.ProcessContext.Process.FileEvent.PkgMajor = int(v)
+		return nil
+	case "ptrace.tracee.ancestors.file.package.minor":
+		if e.PTrace.Tracee == nil {
+			e.PTrace.Tracee = &ProcessContext{}
+		}
+		if e.PTrace.Tracee.Ancestor == nil {
+			e.PTrace.Tracee.Ancestor = &ProcessCacheEntry{}
+		}
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "PTrace.Tracee.Ancestor.ProcessContext.Process.FileEvent.PkgMinor"}
+		}
+		e.PTrace.Tracee.Ancestor.ProcessContext.Process.FileEvent.PkgMinor = int(v)
+		return nil
+	case "ptrace.tracee.ancestors.file.package.name":
+		if e.PTrace.Tracee == nil {
+			e.PTrace.Tracee = &ProcessContext{}
+		}
+		if e.PTrace.Tracee.Ancestor == nil {
+			e.PTrace.Tracee.Ancestor = &ProcessCacheEntry{}
+		}
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "PTrace.Tracee.Ancestor.ProcessContext.Process.FileEvent.PkgName"}
+		}
+		e.PTrace.Tracee.Ancestor.ProcessContext.Process.FileEvent.PkgName = str
+		return nil
+	case "ptrace.tracee.ancestors.file.package.patch":
+		if e.PTrace.Tracee == nil {
+			e.PTrace.Tracee = &ProcessContext{}
+		}
+		if e.PTrace.Tracee.Ancestor == nil {
+			e.PTrace.Tracee.Ancestor = &ProcessCacheEntry{}
+		}
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "PTrace.Tracee.Ancestor.ProcessContext.Process.FileEvent.PkgPatch"}
+		}
+		e.PTrace.Tracee.Ancestor.ProcessContext.Process.FileEvent.PkgPatch = int(v)
+		return nil
+	case "ptrace.tracee.ancestors.file.package.version":
+		if e.PTrace.Tracee == nil {
+			e.PTrace.Tracee = &ProcessContext{}
+		}
+		if e.PTrace.Tracee.Ancestor == nil {
+			e.PTrace.Tracee.Ancestor = &ProcessCacheEntry{}
+		}
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "PTrace.Tracee.Ancestor.ProcessContext.Process.FileEvent.PkgVersion"}
+		}
+		e.PTrace.Tracee.Ancestor.ProcessContext.Process.FileEvent.PkgVersion = str
+		return nil
 	case "ptrace.tracee.ancestors.file.path":
 		if e.PTrace.Tracee == nil {
 			e.PTrace.Tracee = &ProcessContext{}
@@ -25637,6 +30097,71 @@ func (e *Event) SetFieldValue(field eval.Field, value interface{}) error {
 			e.PTrace.Tracee.Ancestor = &ProcessCacheEntry{}
 		}
 		return &eval.ErrFieldReadOnly{Field: "ptrace.tracee.ancestors.interpreter.file.name.length"}
+	case "ptrace.tracee.ancestors.interpreter.file.package.major":
+		if e.PTrace.Tracee == nil {
+			e.PTrace.Tracee = &ProcessContext{}
+		}
+		if e.PTrace.Tracee.Ancestor == nil {
+			e.PTrace.Tracee.Ancestor = &ProcessCacheEntry{}
+		}
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "PTrace.Tracee.Ancestor.ProcessContext.Process.LinuxBinprm.FileEvent.PkgMajor"}
+		}
+		e.PTrace.Tracee.Ancestor.ProcessContext.Process.LinuxBinprm.FileEvent.PkgMajor = int(v)
+		return nil
+	case "ptrace.tracee.ancestors.interpreter.file.package.minor":
+		if e.PTrace.Tracee == nil {
+			e.PTrace.Tracee = &ProcessContext{}
+		}
+		if e.PTrace.Tracee.Ancestor == nil {
+			e.PTrace.Tracee.Ancestor = &ProcessCacheEntry{}
+		}
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "PTrace.Tracee.Ancestor.ProcessContext.Process.LinuxBinprm.FileEvent.PkgMinor"}
+		}
+		e.PTrace.Tracee.Ancestor.ProcessContext.Process.LinuxBinprm.FileEvent.PkgMinor = int(v)
+		return nil
+	case "ptrace.tracee.ancestors.interpreter.file.package.name":
+		if e.PTrace.Tracee == nil {
+			e.PTrace.Tracee = &ProcessContext{}
+		}
+		if e.PTrace.Tracee.Ancestor == nil {
+			e.PTrace.Tracee.Ancestor = &ProcessCacheEntry{}
+		}
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "PTrace.Tracee.Ancestor.ProcessContext.Process.LinuxBinprm.FileEvent.PkgName"}
+		}
+		e.PTrace.Tracee.Ancestor.ProcessContext.Process.LinuxBinprm.FileEvent.PkgName = str
+		return nil
+	case "ptrace.tracee.ancestors.interpreter.file.package.patch":
+		if e.PTrace.Tracee == nil {
+			e.PTrace.Tracee = &ProcessContext{}
+		}
+		if e.PTrace.Tracee.Ancestor == nil {
+			e.PTrace.Tracee.Ancestor = &ProcessCacheEntry{}
+		}
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "PTrace.Tracee.Ancestor.ProcessContext.Process.LinuxBinprm.FileEvent.PkgPatch"}
+		}
+		e.PTrace.Tracee.Ancestor.ProcessContext.Process.LinuxBinprm.FileEvent.PkgPatch = int(v)
+		return nil
+	case "ptrace.tracee.ancestors.interpreter.file.package.version":
+		if e.PTrace.Tracee == nil {
+			e.PTrace.Tracee = &ProcessContext{}
+		}
+		if e.PTrace.Tracee.Ancestor == nil {
+			e.PTrace.Tracee.Ancestor = &ProcessCacheEntry{}
+		}
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "PTrace.Tracee.Ancestor.ProcessContext.Process.LinuxBinprm.FileEvent.PkgVersion"}
+		}
+		e.PTrace.Tracee.Ancestor.ProcessContext.Process.LinuxBinprm.FileEvent.PkgVersion = str
+		return nil
 	case "ptrace.tracee.ancestors.interpreter.file.path":
 		if e.PTrace.Tracee == nil {
 			e.PTrace.Tracee = &ProcessContext{}
@@ -26091,6 +30616,56 @@ func (e *Event) SetFieldValue(field eval.Field, value interface{}) error {
 			e.PTrace.Tracee = &ProcessContext{}
 		}
 		return &eval.ErrFieldReadOnly{Field: "ptrace.tracee.file.name.length"}
+	case "ptrace.tracee.file.package.major":
+		if e.PTrace.Tracee == nil {
+			e.PTrace.Tracee = &ProcessContext{}
+		}
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "PTrace.Tracee.Process.FileEvent.PkgMajor"}
+		}
+		e.PTrace.Tracee.Process.FileEvent.PkgMajor = int(v)
+		return nil
+	case "ptrace.tracee.file.package.minor":
+		if e.PTrace.Tracee == nil {
+			e.PTrace.Tracee = &ProcessContext{}
+		}
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "PTrace.Tracee.Process.FileEvent.PkgMinor"}
+		}
+		e.PTrace.Tracee.Process.FileEvent.PkgMinor = int(v)
+		return nil
+	case "ptrace.tracee.file.package.name":
+		if e.PTrace.Tracee == nil {
+			e.PTrace.Tracee = &ProcessContext{}
+		}
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "PTrace.Tracee.Process.FileEvent.PkgName"}
+		}
+		e.PTrace.Tracee.Process.FileEvent.PkgName = str
+		return nil
+	case "ptrace.tracee.file.package.patch":
+		if e.PTrace.Tracee == nil {
+			e.PTrace.Tracee = &ProcessContext{}
+		}
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "PTrace.Tracee.Process.FileEvent.PkgPatch"}
+		}
+		e.PTrace.Tracee.Process.FileEvent.PkgPatch = int(v)
+		return nil
+	case "ptrace.tracee.file.package.version":
+		if e.PTrace.Tracee == nil {
+			e.PTrace.Tracee = &ProcessContext{}
+		}
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "PTrace.Tracee.Process.FileEvent.PkgVersion"}
+		}
+		e.PTrace.Tracee.Process.FileEvent.PkgVersion = str
+		return nil
 	case "ptrace.tracee.file.path":
 		if e.PTrace.Tracee == nil {
 			e.PTrace.Tracee = &ProcessContext{}
@@ -26300,6 +30875,56 @@ func (e *Event) SetFieldValue(field eval.Field, value interface{}) error {
 			e.PTrace.Tracee = &ProcessContext{}
 		}
 		return &eval.ErrFieldReadOnly{Field: "ptrace.tracee.interpreter.file.name.length"}
+	case "ptrace.tracee.interpreter.file.package.major":
+		if e.PTrace.Tracee == nil {
+			e.PTrace.Tracee = &ProcessContext{}
+		}
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "PTrace.Tracee.Process.LinuxBinprm.FileEvent.PkgMajor"}
+		}
+		e.PTrace.Tracee.Process.LinuxBinprm.FileEvent.PkgMajor = int(v)
+		return nil
+	case "ptrace.tracee.interpreter.file.package.minor":
+		if e.PTrace.Tracee == nil {
+			e.PTrace.Tracee = &ProcessContext{}
+		}
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "PTrace.Tracee.Process.LinuxBinprm.FileEvent.PkgMinor"}
+		}
+		e.PTrace.Tracee.Process.LinuxBinprm.FileEvent.PkgMinor = int(v)
+		return nil
+	case "ptrace.tracee.interpreter.file.package.name":
+		if e.PTrace.Tracee == nil {
+			e.PTrace.Tracee = &ProcessContext{}
+		}
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "PTrace.Tracee.Process.LinuxBinprm.FileEvent.PkgName"}
+		}
+		e.PTrace.Tracee.Process.LinuxBinprm.FileEvent.PkgName = str
+		return nil
+	case "ptrace.tracee.interpreter.file.package.patch":
+		if e.PTrace.Tracee == nil {
+			e.PTrace.Tracee = &ProcessContext{}
+		}
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "PTrace.Tracee.Process.LinuxBinprm.FileEvent.PkgPatch"}
+		}
+		e.PTrace.Tracee.Process.LinuxBinprm.FileEvent.PkgPatch = int(v)
+		return nil
+	case "ptrace.tracee.interpreter.file.package.version":
+		if e.PTrace.Tracee == nil {
+			e.PTrace.Tracee = &ProcessContext{}
+		}
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "PTrace.Tracee.Process.LinuxBinprm.FileEvent.PkgVersion"}
+		}
+		e.PTrace.Tracee.Process.LinuxBinprm.FileEvent.PkgVersion = str
+		return nil
 	case "ptrace.tracee.interpreter.file.path":
 		if e.PTrace.Tracee == nil {
 			e.PTrace.Tracee = &ProcessContext{}
@@ -26745,6 +31370,71 @@ func (e *Event) SetFieldValue(field eval.Field, value interface{}) error {
 			e.PTrace.Tracee.Parent = &Process{}
 		}
 		return &eval.ErrFieldReadOnly{Field: "ptrace.tracee.parent.file.name.length"}
+	case "ptrace.tracee.parent.file.package.major":
+		if e.PTrace.Tracee == nil {
+			e.PTrace.Tracee = &ProcessContext{}
+		}
+		if e.PTrace.Tracee.Parent == nil {
+			e.PTrace.Tracee.Parent = &Process{}
+		}
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "PTrace.Tracee.Parent.FileEvent.PkgMajor"}
+		}
+		e.PTrace.Tracee.Parent.FileEvent.PkgMajor = int(v)
+		return nil
+	case "ptrace.tracee.parent.file.package.minor":
+		if e.PTrace.Tracee == nil {
+			e.PTrace.Tracee = &ProcessContext{}
+		}
+		if e.PTrace.Tracee.Parent == nil {
+			e.PTrace.Tracee.Parent = &Process{}
+		}
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "PTrace.Tracee.Parent.FileEvent.PkgMinor"}
+		}
+		e.PTrace.Tracee.Parent.FileEvent.PkgMinor = int(v)
+		return nil
+	case "ptrace.tracee.parent.file.package.name":
+		if e.PTrace.Tracee == nil {
+			e.PTrace.Tracee = &ProcessContext{}
+		}
+		if e.PTrace.Tracee.Parent == nil {
+			e.PTrace.Tracee.Parent = &Process{}
+		}
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "PTrace.Tracee.Parent.FileEvent.PkgName"}
+		}
+		e.PTrace.Tracee.Parent.FileEvent.PkgName = str
+		return nil
+	case "ptrace.tracee.parent.file.package.patch":
+		if e.PTrace.Tracee == nil {
+			e.PTrace.Tracee = &ProcessContext{}
+		}
+		if e.PTrace.Tracee.Parent == nil {
+			e.PTrace.Tracee.Parent = &Process{}
+		}
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "PTrace.Tracee.Parent.FileEvent.PkgPatch"}
+		}
+		e.PTrace.Tracee.Parent.FileEvent.PkgPatch = int(v)
+		return nil
+	case "ptrace.tracee.parent.file.package.version":
+		if e.PTrace.Tracee == nil {
+			e.PTrace.Tracee = &ProcessContext{}
+		}
+		if e.PTrace.Tracee.Parent == nil {
+			e.PTrace.Tracee.Parent = &Process{}
+		}
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "PTrace.Tracee.Parent.FileEvent.PkgVersion"}
+		}
+		e.PTrace.Tracee.Parent.FileEvent.PkgVersion = str
+		return nil
 	case "ptrace.tracee.parent.file.path":
 		if e.PTrace.Tracee == nil {
 			e.PTrace.Tracee = &ProcessContext{}
@@ -27020,6 +31710,71 @@ func (e *Event) SetFieldValue(field eval.Field, value interface{}) error {
 			e.PTrace.Tracee.Parent = &Process{}
 		}
 		return &eval.ErrFieldReadOnly{Field: "ptrace.tracee.parent.interpreter.file.name.length"}
+	case "ptrace.tracee.parent.interpreter.file.package.major":
+		if e.PTrace.Tracee == nil {
+			e.PTrace.Tracee = &ProcessContext{}
+		}
+		if e.PTrace.Tracee.Parent == nil {
+			e.PTrace.Tracee.Parent = &Process{}
+		}
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "PTrace.Tracee.Parent.LinuxBinprm.FileEvent.PkgMajor"}
+		}
+		e.PTrace.Tracee.Parent.LinuxBinprm.FileEvent.PkgMajor = int(v)
+		return nil
+	case "ptrace.tracee.parent.interpreter.file.package.minor":
+		if e.PTrace.Tracee == nil {
+			e.PTrace.Tracee = &ProcessContext{}
+		}
+		if e.PTrace.Tracee.Parent == nil {
+			e.PTrace.Tracee.Parent = &Process{}
+		}
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "PTrace.Tracee.Parent.LinuxBinprm.FileEvent.PkgMinor"}
+		}
+		e.PTrace.Tracee.Parent.LinuxBinprm.FileEvent.PkgMinor = int(v)
+		return nil
+	case "ptrace.tracee.parent.interpreter.file.package.name":
+		if e.PTrace.Tracee == nil {
+			e.PTrace.Tracee = &ProcessContext{}
+		}
+		if e.PTrace.Tracee.Parent == nil {
+			e.PTrace.Tracee.Parent = &Process{}
+		}
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "PTrace.Tracee.Parent.LinuxBinprm.FileEvent.PkgName"}
+		}
+		e.PTrace.Tracee.Parent.LinuxBinprm.FileEvent.PkgName = str
+		return nil
+	case "ptrace.tracee.parent.interpreter.file.package.patch":
+		if e.PTrace.Tracee == nil {
+			e.PTrace.Tracee = &ProcessContext{}
+		}
+		if e.PTrace.Tracee.Parent == nil {
+			e.PTrace.Tracee.Parent = &Process{}
+		}
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "PTrace.Tracee.Parent.LinuxBinprm.FileEvent.PkgPatch"}
+		}
+		e.PTrace.Tracee.Parent.LinuxBinprm.FileEvent.PkgPatch = int(v)
+		return nil
+	case "ptrace.tracee.parent.interpreter.file.package.version":
+		if e.PTrace.Tracee == nil {
+			e.PTrace.Tracee = &ProcessContext{}
+		}
+		if e.PTrace.Tracee.Parent == nil {
+			e.PTrace.Tracee.Parent = &Process{}
+		}
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "PTrace.Tracee.Parent.LinuxBinprm.FileEvent.PkgVersion"}
+		}
+		e.PTrace.Tracee.Parent.LinuxBinprm.FileEvent.PkgVersion = str
+		return nil
 	case "ptrace.tracee.parent.interpreter.file.path":
 		if e.PTrace.Tracee == nil {
 			e.PTrace.Tracee = &ProcessContext{}
@@ -27327,6 +32082,41 @@ func (e *Event) SetFieldValue(field eval.Field, value interface{}) error {
 		return nil
 	case "removexattr.file.name.length":
 		return &eval.ErrFieldReadOnly{Field: "removexattr.file.name.length"}
+	case "removexattr.file.package.major":
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "RemoveXAttr.File.PkgMajor"}
+		}
+		e.RemoveXAttr.File.PkgMajor = int(v)
+		return nil
+	case "removexattr.file.package.minor":
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "RemoveXAttr.File.PkgMinor"}
+		}
+		e.RemoveXAttr.File.PkgMinor = int(v)
+		return nil
+	case "removexattr.file.package.name":
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "RemoveXAttr.File.PkgName"}
+		}
+		e.RemoveXAttr.File.PkgName = str
+		return nil
+	case "removexattr.file.package.patch":
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "RemoveXAttr.File.PkgPatch"}
+		}
+		e.RemoveXAttr.File.PkgPatch = int(v)
+		return nil
+	case "removexattr.file.package.version":
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "RemoveXAttr.File.PkgVersion"}
+		}
+		e.RemoveXAttr.File.PkgVersion = str
+		return nil
 	case "removexattr.file.path":
 		str, ok := value.(string)
 		if !ok {
@@ -27442,6 +32232,41 @@ func (e *Event) SetFieldValue(field eval.Field, value interface{}) error {
 		return nil
 	case "rename.file.destination.name.length":
 		return &eval.ErrFieldReadOnly{Field: "rename.file.destination.name.length"}
+	case "rename.file.destination.package.major":
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Rename.New.PkgMajor"}
+		}
+		e.Rename.New.PkgMajor = int(v)
+		return nil
+	case "rename.file.destination.package.minor":
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Rename.New.PkgMinor"}
+		}
+		e.Rename.New.PkgMinor = int(v)
+		return nil
+	case "rename.file.destination.package.name":
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Rename.New.PkgName"}
+		}
+		e.Rename.New.PkgName = str
+		return nil
+	case "rename.file.destination.package.patch":
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Rename.New.PkgPatch"}
+		}
+		e.Rename.New.PkgPatch = int(v)
+		return nil
+	case "rename.file.destination.package.version":
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Rename.New.PkgVersion"}
+		}
+		e.Rename.New.PkgVersion = str
+		return nil
 	case "rename.file.destination.path":
 		str, ok := value.(string)
 		if !ok {
@@ -27536,6 +32361,41 @@ func (e *Event) SetFieldValue(field eval.Field, value interface{}) error {
 		return nil
 	case "rename.file.name.length":
 		return &eval.ErrFieldReadOnly{Field: "rename.file.name.length"}
+	case "rename.file.package.major":
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Rename.Old.PkgMajor"}
+		}
+		e.Rename.Old.PkgMajor = int(v)
+		return nil
+	case "rename.file.package.minor":
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Rename.Old.PkgMinor"}
+		}
+		e.Rename.Old.PkgMinor = int(v)
+		return nil
+	case "rename.file.package.name":
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Rename.Old.PkgName"}
+		}
+		e.Rename.Old.PkgName = str
+		return nil
+	case "rename.file.package.patch":
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Rename.Old.PkgPatch"}
+		}
+		e.Rename.Old.PkgPatch = int(v)
+		return nil
+	case "rename.file.package.version":
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Rename.Old.PkgVersion"}
+		}
+		e.Rename.Old.PkgVersion = str
+		return nil
 	case "rename.file.path":
 		str, ok := value.(string)
 		if !ok {
@@ -27644,6 +32504,41 @@ func (e *Event) SetFieldValue(field eval.Field, value interface{}) error {
 		return nil
 	case "rmdir.file.name.length":
 		return &eval.ErrFieldReadOnly{Field: "rmdir.file.name.length"}
+	case "rmdir.file.package.major":
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Rmdir.File.PkgMajor"}
+		}
+		e.Rmdir.File.PkgMajor = int(v)
+		return nil
+	case "rmdir.file.package.minor":
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Rmdir.File.PkgMinor"}
+		}
+		e.Rmdir.File.PkgMinor = int(v)
+		return nil
+	case "rmdir.file.package.name":
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Rmdir.File.PkgName"}
+		}
+		e.Rmdir.File.PkgName = str
+		return nil
+	case "rmdir.file.package.patch":
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Rmdir.File.PkgPatch"}
+		}
+		e.Rmdir.File.PkgPatch = int(v)
+		return nil
+	case "rmdir.file.package.version":
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Rmdir.File.PkgVersion"}
+		}
+		e.Rmdir.File.PkgVersion = str
+		return nil
 	case "rmdir.file.path":
 		str, ok := value.(string)
 		if !ok {
@@ -27877,6 +32772,41 @@ func (e *Event) SetFieldValue(field eval.Field, value interface{}) error {
 		return nil
 	case "setxattr.file.name.length":
 		return &eval.ErrFieldReadOnly{Field: "setxattr.file.name.length"}
+	case "setxattr.file.package.major":
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "SetXAttr.File.PkgMajor"}
+		}
+		e.SetXAttr.File.PkgMajor = int(v)
+		return nil
+	case "setxattr.file.package.minor":
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "SetXAttr.File.PkgMinor"}
+		}
+		e.SetXAttr.File.PkgMinor = int(v)
+		return nil
+	case "setxattr.file.package.name":
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "SetXAttr.File.PkgName"}
+		}
+		e.SetXAttr.File.PkgName = str
+		return nil
+	case "setxattr.file.package.patch":
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "SetXAttr.File.PkgPatch"}
+		}
+		e.SetXAttr.File.PkgPatch = int(v)
+		return nil
+	case "setxattr.file.package.version":
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "SetXAttr.File.PkgVersion"}
+		}
+		e.SetXAttr.File.PkgVersion = str
+		return nil
 	case "setxattr.file.path":
 		str, ok := value.(string)
 		if !ok {
@@ -28310,6 +33240,71 @@ func (e *Event) SetFieldValue(field eval.Field, value interface{}) error {
 			e.Signal.Target.Ancestor = &ProcessCacheEntry{}
 		}
 		return &eval.ErrFieldReadOnly{Field: "signal.target.ancestors.file.name.length"}
+	case "signal.target.ancestors.file.package.major":
+		if e.Signal.Target == nil {
+			e.Signal.Target = &ProcessContext{}
+		}
+		if e.Signal.Target.Ancestor == nil {
+			e.Signal.Target.Ancestor = &ProcessCacheEntry{}
+		}
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Signal.Target.Ancestor.ProcessContext.Process.FileEvent.PkgMajor"}
+		}
+		e.Signal.Target.Ancestor.ProcessContext.Process.FileEvent.PkgMajor = int(v)
+		return nil
+	case "signal.target.ancestors.file.package.minor":
+		if e.Signal.Target == nil {
+			e.Signal.Target = &ProcessContext{}
+		}
+		if e.Signal.Target.Ancestor == nil {
+			e.Signal.Target.Ancestor = &ProcessCacheEntry{}
+		}
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Signal.Target.Ancestor.ProcessContext.Process.FileEvent.PkgMinor"}
+		}
+		e.Signal.Target.Ancestor.ProcessContext.Process.FileEvent.PkgMinor = int(v)
+		return nil
+	case "signal.target.ancestors.file.package.name":
+		if e.Signal.Target == nil {
+			e.Signal.Target = &ProcessContext{}
+		}
+		if e.Signal.Target.Ancestor == nil {
+			e.Signal.Target.Ancestor = &ProcessCacheEntry{}
+		}
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Signal.Target.Ancestor.ProcessContext.Process.FileEvent.PkgName"}
+		}
+		e.Signal.Target.Ancestor.ProcessContext.Process.FileEvent.PkgName = str
+		return nil
+	case "signal.target.ancestors.file.package.patch":
+		if e.Signal.Target == nil {
+			e.Signal.Target = &ProcessContext{}
+		}
+		if e.Signal.Target.Ancestor == nil {
+			e.Signal.Target.Ancestor = &ProcessCacheEntry{}
+		}
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Signal.Target.Ancestor.ProcessContext.Process.FileEvent.PkgPatch"}
+		}
+		e.Signal.Target.Ancestor.ProcessContext.Process.FileEvent.PkgPatch = int(v)
+		return nil
+	case "signal.target.ancestors.file.package.version":
+		if e.Signal.Target == nil {
+			e.Signal.Target = &ProcessContext{}
+		}
+		if e.Signal.Target.Ancestor == nil {
+			e.Signal.Target.Ancestor = &ProcessCacheEntry{}
+		}
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Signal.Target.Ancestor.ProcessContext.Process.FileEvent.PkgVersion"}
+		}
+		e.Signal.Target.Ancestor.ProcessContext.Process.FileEvent.PkgVersion = str
+		return nil
 	case "signal.target.ancestors.file.path":
 		if e.Signal.Target == nil {
 			e.Signal.Target = &ProcessContext{}
@@ -28585,6 +33580,71 @@ func (e *Event) SetFieldValue(field eval.Field, value interface{}) error {
 			e.Signal.Target.Ancestor = &ProcessCacheEntry{}
 		}
 		return &eval.ErrFieldReadOnly{Field: "signal.target.ancestors.interpreter.file.name.length"}
+	case "signal.target.ancestors.interpreter.file.package.major":
+		if e.Signal.Target == nil {
+			e.Signal.Target = &ProcessContext{}
+		}
+		if e.Signal.Target.Ancestor == nil {
+			e.Signal.Target.Ancestor = &ProcessCacheEntry{}
+		}
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Signal.Target.Ancestor.ProcessContext.Process.LinuxBinprm.FileEvent.PkgMajor"}
+		}
+		e.Signal.Target.Ancestor.ProcessContext.Process.LinuxBinprm.FileEvent.PkgMajor = int(v)
+		return nil
+	case "signal.target.ancestors.interpreter.file.package.minor":
+		if e.Signal.Target == nil {
+			e.Signal.Target = &ProcessContext{}
+		}
+		if e.Signal.Target.Ancestor == nil {
+			e.Signal.Target.Ancestor = &ProcessCacheEntry{}
+		}
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Signal.Target.Ancestor.ProcessContext.Process.LinuxBinprm.FileEvent.PkgMinor"}
+		}
+		e.Signal.Target.Ancestor.ProcessContext.Process.LinuxBinprm.FileEvent.PkgMinor = int(v)
+		return nil
+	case "signal.target.ancestors.interpreter.file.package.name":
+		if e.Signal.Target == nil {
+			e.Signal.Target = &ProcessContext{}
+		}
+		if e.Signal.Target.Ancestor == nil {
+			e.Signal.Target.Ancestor = &ProcessCacheEntry{}
+		}
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Signal.Target.Ancestor.ProcessContext.Process.LinuxBinprm.FileEvent.PkgName"}
+		}
+		e.Signal.Target.Ancestor.ProcessContext.Process.LinuxBinprm.FileEvent.PkgName = str
+		return nil
+	case "signal.target.ancestors.interpreter.file.package.patch":
+		if e.Signal.Target == nil {
+			e.Signal.Target = &ProcessContext{}
+		}
+		if e.Signal.Target.Ancestor == nil {
+			e.Signal.Target.Ancestor = &ProcessCacheEntry{}
+		}
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Signal.Target.Ancestor.ProcessContext.Process.LinuxBinprm.FileEvent.PkgPatch"}
+		}
+		e.Signal.Target.Ancestor.ProcessContext.Process.LinuxBinprm.FileEvent.PkgPatch = int(v)
+		return nil
+	case "signal.target.ancestors.interpreter.file.package.version":
+		if e.Signal.Target == nil {
+			e.Signal.Target = &ProcessContext{}
+		}
+		if e.Signal.Target.Ancestor == nil {
+			e.Signal.Target.Ancestor = &ProcessCacheEntry{}
+		}
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Signal.Target.Ancestor.ProcessContext.Process.LinuxBinprm.FileEvent.PkgVersion"}
+		}
+		e.Signal.Target.Ancestor.ProcessContext.Process.LinuxBinprm.FileEvent.PkgVersion = str
+		return nil
 	case "signal.target.ancestors.interpreter.file.path":
 		if e.Signal.Target == nil {
 			e.Signal.Target = &ProcessContext{}
@@ -29039,6 +34099,56 @@ func (e *Event) SetFieldValue(field eval.Field, value interface{}) error {
 			e.Signal.Target = &ProcessContext{}
 		}
 		return &eval.ErrFieldReadOnly{Field: "signal.target.file.name.length"}
+	case "signal.target.file.package.major":
+		if e.Signal.Target == nil {
+			e.Signal.Target = &ProcessContext{}
+		}
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Signal.Target.Process.FileEvent.PkgMajor"}
+		}
+		e.Signal.Target.Process.FileEvent.PkgMajor = int(v)
+		return nil
+	case "signal.target.file.package.minor":
+		if e.Signal.Target == nil {
+			e.Signal.Target = &ProcessContext{}
+		}
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Signal.Target.Process.FileEvent.PkgMinor"}
+		}
+		e.Signal.Target.Process.FileEvent.PkgMinor = int(v)
+		return nil
+	case "signal.target.file.package.name":
+		if e.Signal.Target == nil {
+			e.Signal.Target = &ProcessContext{}
+		}
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Signal.Target.Process.FileEvent.PkgName"}
+		}
+		e.Signal.Target.Process.FileEvent.PkgName = str
+		return nil
+	case "signal.target.file.package.patch":
+		if e.Signal.Target == nil {
+			e.Signal.Target = &ProcessContext{}
+		}
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Signal.Target.Process.FileEvent.PkgPatch"}
+		}
+		e.Signal.Target.Process.FileEvent.PkgPatch = int(v)
+		return nil
+	case "signal.target.file.package.version":
+		if e.Signal.Target == nil {
+			e.Signal.Target = &ProcessContext{}
+		}
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Signal.Target.Process.FileEvent.PkgVersion"}
+		}
+		e.Signal.Target.Process.FileEvent.PkgVersion = str
+		return nil
 	case "signal.target.file.path":
 		if e.Signal.Target == nil {
 			e.Signal.Target = &ProcessContext{}
@@ -29248,6 +34358,56 @@ func (e *Event) SetFieldValue(field eval.Field, value interface{}) error {
 			e.Signal.Target = &ProcessContext{}
 		}
 		return &eval.ErrFieldReadOnly{Field: "signal.target.interpreter.file.name.length"}
+	case "signal.target.interpreter.file.package.major":
+		if e.Signal.Target == nil {
+			e.Signal.Target = &ProcessContext{}
+		}
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Signal.Target.Process.LinuxBinprm.FileEvent.PkgMajor"}
+		}
+		e.Signal.Target.Process.LinuxBinprm.FileEvent.PkgMajor = int(v)
+		return nil
+	case "signal.target.interpreter.file.package.minor":
+		if e.Signal.Target == nil {
+			e.Signal.Target = &ProcessContext{}
+		}
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Signal.Target.Process.LinuxBinprm.FileEvent.PkgMinor"}
+		}
+		e.Signal.Target.Process.LinuxBinprm.FileEvent.PkgMinor = int(v)
+		return nil
+	case "signal.target.interpreter.file.package.name":
+		if e.Signal.Target == nil {
+			e.Signal.Target = &ProcessContext{}
+		}
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Signal.Target.Process.LinuxBinprm.FileEvent.PkgName"}
+		}
+		e.Signal.Target.Process.LinuxBinprm.FileEvent.PkgName = str
+		return nil
+	case "signal.target.interpreter.file.package.patch":
+		if e.Signal.Target == nil {
+			e.Signal.Target = &ProcessContext{}
+		}
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Signal.Target.Process.LinuxBinprm.FileEvent.PkgPatch"}
+		}
+		e.Signal.Target.Process.LinuxBinprm.FileEvent.PkgPatch = int(v)
+		return nil
+	case "signal.target.interpreter.file.package.version":
+		if e.Signal.Target == nil {
+			e.Signal.Target = &ProcessContext{}
+		}
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Signal.Target.Process.LinuxBinprm.FileEvent.PkgVersion"}
+		}
+		e.Signal.Target.Process.LinuxBinprm.FileEvent.PkgVersion = str
+		return nil
 	case "signal.target.interpreter.file.path":
 		if e.Signal.Target == nil {
 			e.Signal.Target = &ProcessContext{}
@@ -29693,6 +34853,71 @@ func (e *Event) SetFieldValue(field eval.Field, value interface{}) error {
 			e.Signal.Target.Parent = &Process{}
 		}
 		return &eval.ErrFieldReadOnly{Field: "signal.target.parent.file.name.length"}
+	case "signal.target.parent.file.package.major":
+		if e.Signal.Target == nil {
+			e.Signal.Target = &ProcessContext{}
+		}
+		if e.Signal.Target.Parent == nil {
+			e.Signal.Target.Parent = &Process{}
+		}
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Signal.Target.Parent.FileEvent.PkgMajor"}
+		}
+		e.Signal.Target.Parent.FileEvent.PkgMajor = int(v)
+		return nil
+	case "signal.target.parent.file.package.minor":
+		if e.Signal.Target == nil {
+			e.Signal.Target = &ProcessContext{}
+		}
+		if e.Signal.Target.Parent == nil {
+			e.Signal.Target.Parent = &Process{}
+		}
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Signal.Target.Parent.FileEvent.PkgMinor"}
+		}
+		e.Signal.Target.Parent.FileEvent.PkgMinor = int(v)
+		return nil
+	case "signal.target.parent.file.package.name":
+		if e.Signal.Target == nil {
+			e.Signal.Target = &ProcessContext{}
+		}
+		if e.Signal.Target.Parent == nil {
+			e.Signal.Target.Parent = &Process{}
+		}
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Signal.Target.Parent.FileEvent.PkgName"}
+		}
+		e.Signal.Target.Parent.FileEvent.PkgName = str
+		return nil
+	case "signal.target.parent.file.package.patch":
+		if e.Signal.Target == nil {
+			e.Signal.Target = &ProcessContext{}
+		}
+		if e.Signal.Target.Parent == nil {
+			e.Signal.Target.Parent = &Process{}
+		}
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Signal.Target.Parent.FileEvent.PkgPatch"}
+		}
+		e.Signal.Target.Parent.FileEvent.PkgPatch = int(v)
+		return nil
+	case "signal.target.parent.file.package.version":
+		if e.Signal.Target == nil {
+			e.Signal.Target = &ProcessContext{}
+		}
+		if e.Signal.Target.Parent == nil {
+			e.Signal.Target.Parent = &Process{}
+		}
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Signal.Target.Parent.FileEvent.PkgVersion"}
+		}
+		e.Signal.Target.Parent.FileEvent.PkgVersion = str
+		return nil
 	case "signal.target.parent.file.path":
 		if e.Signal.Target == nil {
 			e.Signal.Target = &ProcessContext{}
@@ -29968,6 +35193,71 @@ func (e *Event) SetFieldValue(field eval.Field, value interface{}) error {
 			e.Signal.Target.Parent = &Process{}
 		}
 		return &eval.ErrFieldReadOnly{Field: "signal.target.parent.interpreter.file.name.length"}
+	case "signal.target.parent.interpreter.file.package.major":
+		if e.Signal.Target == nil {
+			e.Signal.Target = &ProcessContext{}
+		}
+		if e.Signal.Target.Parent == nil {
+			e.Signal.Target.Parent = &Process{}
+		}
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Signal.Target.Parent.LinuxBinprm.FileEvent.PkgMajor"}
+		}
+		e.Signal.Target.Parent.LinuxBinprm.FileEvent.PkgMajor = int(v)
+		return nil
+	case "signal.target.parent.interpreter.file.package.minor":
+		if e.Signal.Target == nil {
+			e.Signal.Target = &ProcessContext{}
+		}
+		if e.Signal.Target.Parent == nil {
+			e.Signal.Target.Parent = &Process{}
+		}
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Signal.Target.Parent.LinuxBinprm.FileEvent.PkgMinor"}
+		}
+		e.Signal.Target.Parent.LinuxBinprm.FileEvent.PkgMinor = int(v)
+		return nil
+	case "signal.target.parent.interpreter.file.package.name":
+		if e.Signal.Target == nil {
+			e.Signal.Target = &ProcessContext{}
+		}
+		if e.Signal.Target.Parent == nil {
+			e.Signal.Target.Parent = &Process{}
+		}
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Signal.Target.Parent.LinuxBinprm.FileEvent.PkgName"}
+		}
+		e.Signal.Target.Parent.LinuxBinprm.FileEvent.PkgName = str
+		return nil
+	case "signal.target.parent.interpreter.file.package.patch":
+		if e.Signal.Target == nil {
+			e.Signal.Target = &ProcessContext{}
+		}
+		if e.Signal.Target.Parent == nil {
+			e.Signal.Target.Parent = &Process{}
+		}
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Signal.Target.Parent.LinuxBinprm.FileEvent.PkgPatch"}
+		}
+		e.Signal.Target.Parent.LinuxBinprm.FileEvent.PkgPatch = int(v)
+		return nil
+	case "signal.target.parent.interpreter.file.package.version":
+		if e.Signal.Target == nil {
+			e.Signal.Target = &ProcessContext{}
+		}
+		if e.Signal.Target.Parent == nil {
+			e.Signal.Target.Parent = &Process{}
+		}
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Signal.Target.Parent.LinuxBinprm.FileEvent.PkgVersion"}
+		}
+		e.Signal.Target.Parent.LinuxBinprm.FileEvent.PkgVersion = str
+		return nil
 	case "signal.target.parent.interpreter.file.path":
 		if e.Signal.Target == nil {
 			e.Signal.Target = &ProcessContext{}
@@ -30268,6 +35558,41 @@ func (e *Event) SetFieldValue(field eval.Field, value interface{}) error {
 		return nil
 	case "splice.file.name.length":
 		return &eval.ErrFieldReadOnly{Field: "splice.file.name.length"}
+	case "splice.file.package.major":
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Splice.File.PkgMajor"}
+		}
+		e.Splice.File.PkgMajor = int(v)
+		return nil
+	case "splice.file.package.minor":
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Splice.File.PkgMinor"}
+		}
+		e.Splice.File.PkgMinor = int(v)
+		return nil
+	case "splice.file.package.name":
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Splice.File.PkgName"}
+		}
+		e.Splice.File.PkgName = str
+		return nil
+	case "splice.file.package.patch":
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Splice.File.PkgPatch"}
+		}
+		e.Splice.File.PkgPatch = int(v)
+		return nil
+	case "splice.file.package.version":
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Splice.File.PkgVersion"}
+		}
+		e.Splice.File.PkgVersion = str
+		return nil
 	case "splice.file.path":
 		str, ok := value.(string)
 		if !ok {
@@ -30390,6 +35715,41 @@ func (e *Event) SetFieldValue(field eval.Field, value interface{}) error {
 		return nil
 	case "unlink.file.name.length":
 		return &eval.ErrFieldReadOnly{Field: "unlink.file.name.length"}
+	case "unlink.file.package.major":
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Unlink.File.PkgMajor"}
+		}
+		e.Unlink.File.PkgMajor = int(v)
+		return nil
+	case "unlink.file.package.minor":
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Unlink.File.PkgMinor"}
+		}
+		e.Unlink.File.PkgMinor = int(v)
+		return nil
+	case "unlink.file.package.name":
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Unlink.File.PkgName"}
+		}
+		e.Unlink.File.PkgName = str
+		return nil
+	case "unlink.file.package.patch":
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Unlink.File.PkgPatch"}
+		}
+		e.Unlink.File.PkgPatch = int(v)
+		return nil
+	case "unlink.file.package.version":
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Unlink.File.PkgVersion"}
+		}
+		e.Unlink.File.PkgVersion = str
+		return nil
 	case "unlink.file.path":
 		str, ok := value.(string)
 		if !ok {
@@ -30519,6 +35879,41 @@ func (e *Event) SetFieldValue(field eval.Field, value interface{}) error {
 		return nil
 	case "utimes.file.name.length":
 		return &eval.ErrFieldReadOnly{Field: "utimes.file.name.length"}
+	case "utimes.file.package.major":
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Utimes.File.PkgMajor"}
+		}
+		e.Utimes.File.PkgMajor = int(v)
+		return nil
+	case "utimes.file.package.minor":
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Utimes.File.PkgMinor"}
+		}
+		e.Utimes.File.PkgMinor = int(v)
+		return nil
+	case "utimes.file.package.name":
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Utimes.File.PkgName"}
+		}
+		e.Utimes.File.PkgName = str
+		return nil
+	case "utimes.file.package.patch":
+		v, ok := value.(int)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Utimes.File.PkgPatch"}
+		}
+		e.Utimes.File.PkgPatch = int(v)
+		return nil
+	case "utimes.file.package.version":
+		str, ok := value.(string)
+		if !ok {
+			return &eval.ErrValueTypeMismatch{Field: "Utimes.File.PkgVersion"}
+		}
+		e.Utimes.File.PkgVersion = str
+		return nil
 	case "utimes.file.path":
 		str, ok := value.(string)
 		if !ok {
