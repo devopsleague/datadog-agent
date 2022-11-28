@@ -139,6 +139,46 @@ func (ev *Event) ResolveFileFilesystem(f *model.FileEvent) string {
 	return f.Filesystem
 }
 
+// ResolvePackageName resolves the name of the package providing this file
+func (ev *Event) ResolvePackageName(f *model.FileEvent) string {
+	if f.PkgName == "" {
+		// Do the resolution and set package name
+	}
+	return f.PkgName
+}
+
+// ResolvePackageVersion resolves the version of the package providing this file
+func (ev *Event) ResolvePackageVersion(f *model.FileEvent) string {
+	if f.PkgVersion == "" {
+		// Do the resolution and set package name
+	}
+	return f.PkgVersion
+}
+
+// ResolvePackageMajor resolves the major version of the package providing this file
+func (ev *Event) ResolvePackageMajor(f *model.FileEvent) int {
+	if f.PkgMajor == 0 {
+		// Do the resolution and set package name
+	}
+	return f.PkgMajor
+}
+
+// ResolvePackageMinor resolves the filesystem a file resides in
+func (ev *Event) ResolvePackageMinor(f *model.FileEvent) int {
+	if f.PkgMinor == 0 {
+		// Do the resolution and set package minor
+	}
+	return f.PkgMinor
+}
+
+// ResolvePackagePatch resolves the filesystem a file resides in
+func (ev *Event) ResolvePackagePatch(f *model.FileEvent) int {
+	if f.PkgPatch == 0 {
+		// Do the resolution and set package patch
+	}
+	return f.PkgPatch
+}
+
 // ResolveFileFieldsInUpperLayer resolves whether the file is in an upper layer
 func (ev *Event) ResolveFileFieldsInUpperLayer(f *model.FileFields) bool {
 	return f.GetInUpperLayer()
