@@ -10,12 +10,15 @@ package probe
 
 import (
 	"context"
+	"errors"
 	"fmt"
+	"os"
 	"strings"
 	"sync"
 	"time"
 
-	trivyTypes "github.com/aquasecurity/trivy/pkg/fanal/types"
+	"github.com/aquasecurity/trivy/pkg/commands/artifact"
+	"github.com/aquasecurity/trivy/pkg/flag"
 	trivyReport "github.com/aquasecurity/trivy/pkg/types"
 	"go.uber.org/atomic"
 
@@ -28,9 +31,15 @@ import (
 // SBOMSource defines is the default log source for the SBOM events
 const SBOMSource = "runtime-security-agent"
 
+type Package struct {
+	name    string
+	version string
+}
+
 type SBOM struct {
 	sync.RWMutex
 	trivyReport.Report
+	files map[string]*Package
 
 	Host             string
 	Source           string
@@ -87,7 +96,7 @@ func NewSBOMResolver(p *Probe) (*SBOMResolver, error) {
 		probe:                       p,
 		workloads:                   make(map[string]*SBOM),
 		queuedWorkloadsInitCounters: make(map[string]*atomic.Uint64),
-		workloadAnalysisQueue:       make(chan workloadAnalysisRequest, 1000),
+		workloadAnalysisQueue:       make(chan workloadAnalysisRequest, 100),
 	}
 	resolver.prepareContextTags()
 	return resolver, nil
@@ -120,38 +129,93 @@ func (r *SBOMResolver) prepareContextTags() {
 
 // Start starts the goroutine of the SBOM resolver
 func (r *SBOMResolver) Start(ctx context.Context) {
-	ctx, cancel := context.WithCancel(ctx)
-	defer cancel()
+	go func() {
+		ctx, cancel := context.WithCancel(ctx)
+		defer cancel()
 
-	senderTick := time.NewTimer(1 * time.Minute)
-	defer senderTick.Stop()
+		senderTick := time.NewTimer(1 * time.Minute)
+		defer senderTick.Stop()
 
-	for {
-		select {
-		case <-ctx.Done():
-			return
-		case req := <-r.workloadAnalysisQueue:
-			if err := r.analyzeWorkload(req); err != nil {
-				seclog.Errorf("couldn't analyze workload [%s]: %v", req.containerID, err)
-			}
-		case <-senderTick.C:
-			if err := r.SendAvailableSBOMs(); err != nil {
-				seclog.Errorf("couldn't send SBOMs: %w", err)
+		for {
+			seclog.Infof("Workload analysis main loop")
+			select {
+			case <-ctx.Done():
+				return
+			case req := <-r.workloadAnalysisQueue:
+				seclog.Infof("Pop workload analysis")
+				if err := r.analyzeWorkload(req); err != nil {
+					seclog.Errorf("couldn't analyze workload [%s]: %v", req.containerID, err)
+				}
+			case <-senderTick.C:
+				if err := r.SendAvailableSBOMs(); err != nil {
+					seclog.Errorf("couldn't send SBOMs: %w",err)
+				}
 			}
 		}
-	}
+	}()
 }
 
 // generateSBOM calls Trivy to generate the SBOM of a workload
 func (r *SBOMResolver) generateSBOM(root string, containerID string) (*SBOM, error) {
-	// TODO: call "trivy fs" on "root"
+	seclog.Infof("Generating SBOM for %s", root)
+
+	reportFlagGroup := flag.NewReportFlagGroup()
+	fsFlags := &flag.Flags{
+		ReportFlagGroup: reportFlagGroup,
+		ScanFlagGroup:   flag.NewScanFlagGroup()}
+	globalFlags := flag.NewGlobalFlagGroup()
+
+	opts, err := fsFlags.ToOptions("", []string{root}, globalFlags, os.Stdout)
+	if err != nil {
+		return nil, err
+	}
+
+	opts.Format = "table"
+	opts.Timeout = 60 * time.Second
+	opts.ListAllPkgs = true
+
+	ctx, cancel := context.WithTimeout(context.Background(), opts.Timeout)
+	defer cancel()
+
+	defer func() {
+		if errors.Is(err, context.DeadlineExceeded) {
+			seclog.Warnf("Increase --timeout value")
+		}
+	}()
+
+	runner, err := artifact.NewRunner(ctx, opts)
+	if err != nil {
+		if errors.Is(err, artifact.SkipScan) {
+			return nil, nil
+		}
+		return nil, fmt.Errorf("init error: %w", err)
+	}
+	defer runner.Close(ctx)
+
+	report, err := runner.ScanRootfs(ctx, opts)
+	if err != nil {
+		return nil, fmt.Errorf("rootfs scan error: %w", err)
+	}
+
+	report, err = runner.Filter(ctx, opts, report)
+	if err != nil {
+		return nil, fmt.Errorf("filter error: %w", err)
+	}
+
+	if err = runner.Report(opts, report); err != nil {
+		return nil, fmt.Errorf("report error: %w", err)
+	}
 	output := &SBOM{
 		ReferenceCounter: atomic.NewUint64(0),
 		Host:             r.hostname,
 		Source:           r.source,
 		ContainerID:      containerID,
 		doNotSendBefore:  time.Now().Add(5 * time.Minute),
+		Report:           report,
 	}
+
+	seclog.Infof("Successfully generated SBOM for %s", root)
+
 	return output, nil
 }
 
@@ -160,6 +224,20 @@ func (r *SBOMResolver) analyzeWorkload(req workloadAnalysisRequest) error {
 	sbom, err := r.generateSBOM(req.root, req.containerID)
 	if err != nil {
 		return err
+	}
+
+	sbom.files = make(map[string]*Package)
+	for _, result := range sbom.Report.Results {
+		for _, resultPkg := range result.Packages {
+			pkg := &Package{
+				name:    resultPkg.Name,
+				version: resultPkg.Version,
+			}
+			for _, file := range resultPkg.SystemInstalledFiles {
+				seclog.Infof("Indexing %s as %+v", file, pkg)
+				sbom.files[file] = pkg
+			}
+		}
 	}
 
 	// add reference counter value
@@ -181,6 +259,7 @@ func (r *SBOMResolver) analyzeWorkload(req workloadAnalysisRequest) error {
 		sbom.ReferenceCounter.Add(existingSBOM.ReferenceCounter.Load())
 	}
 
+	seclog.Infof("Storing sbom for %s", req.containerID)
 	// replace existing SBOM with new one
 	r.workloads[req.containerID] = sbom
 	return nil
@@ -195,31 +274,29 @@ func (r *SBOMResolver) RefreshSBOM(process *model.ProcessCacheEntry) {
 
 // ResolvePackage returns the Package that owns the provided file. Make sure the internal fields of "file" are properly
 // resolved.
-func (r *SBOMResolver) ResolvePackage(containerID string, file *model.FileEvent) *trivyTypes.Package {
+func (r *SBOMResolver) ResolvePackage(containerID string, file *model.FileEvent) *Package {
 	r.workloadsLock.RLock()
 	sbom, ok := r.workloads[containerID]
 	r.workloadsLock.RUnlock()
 	if !ok {
+		seclog.Infof("Failed to find sbom for %s", containerID)
 		return nil
 	}
 
+	seclog.Infof("Resolving %s for container %s", file.PathnameStr, containerID)
+
 	sbom.RLock()
 	defer sbom.RUnlock()
-	// Look for the provided file in all the packages of the workload
-	for _, result := range sbom.Results {
-		for _, pkg := range result.Packages {
-			// TODO iterate over the list of files in the package
-			if pkg.FilePath == file.PathnameStr {
-				return &pkg
-			}
-		}
-	}
-	return nil
+
+	seclog.Infof("Returning %s", sbom.files[file.PathnameStr])
+	return sbom.files[file.PathnameStr]
 }
 
 // queueWorkloadAnalysis (thread unsafe) queues a workload for analysis or increment the reference counter of the
 // SBOM of a queued analysis.
 func (r *SBOMResolver) queueWorkloadAnalysis(process *model.ProcessCacheEntry) {
+	seclog.Infof("Queuing workload analysis for %s", process.ContainerID)
+
 	// check if this workload is already queued
 	r.queuedWorkloadsInitCountersLock.Lock()
 	defer r.queuedWorkloadsInitCountersLock.Unlock()
@@ -236,15 +313,21 @@ func (r *SBOMResolver) queueWorkloadAnalysis(process *model.ProcessCacheEntry) {
 		containerID: process.ContainerID,
 		root:        utils.ProcRootPath(int32(process.Pid)),
 	}
+
 	select {
 	case r.workloadAnalysisQueue <- req:
+		seclog.Infof("Queued workload analysis for %s", process.ContainerID)
 	default:
+		seclog.Infof("Dropped workload analysis for %s", process.ContainerID)
 	}
-	return
 }
 
 // Retain increments the reference counter of the SBOM of a workload
 func (r *SBOMResolver) Retain(process *model.ProcessCacheEntry) {
+	if process.ContainerID == "" {
+		return
+	}
+
 	r.workloadsLock.Lock()
 	defer r.workloadsLock.Unlock()
 

@@ -633,6 +633,7 @@ func NewAPIServer(cfg *config.Config, probe *sprobe.Probe, client statsd.ClientI
 		msgs:                 make(chan *api.SecurityEventMessage, cfg.EventServerBurst*3),
 		processMsgs:          make(chan *api.SecurityProcessEventMessage, cfg.EventServerBurst*3),
 		activityDumps:        make(chan *api.ActivityDumpStreamMessage, model.MaxTracedCgroupsCount*2),
+		sbomMsgs:             make(chan *api.SBOMMessage, 10),
 		expiredEvents:        make(map[rules.RuleID]*atomic.Int64),
 		expiredProcessEvents: atomic.NewInt64(0),
 		expiredDumps:         atomic.NewInt64(0),

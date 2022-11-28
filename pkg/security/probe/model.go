@@ -142,7 +142,10 @@ func (ev *Event) ResolveFileFilesystem(f *model.FileEvent) string {
 // ResolvePackageName resolves the name of the package providing this file
 func (ev *Event) ResolvePackageName(f *model.FileEvent) string {
 	if f.PkgName == "" {
-		// Do the resolution and set package name
+		if pkg := ev.resolvers.SBOMResolver.ResolvePackage(ev.ProcessCacheEntry.ContainerID, f); pkg != nil {
+			f.PkgName = pkg.name
+			f.PkgVersion = pkg.version
+		}
 	}
 	return f.PkgName
 }
@@ -150,7 +153,10 @@ func (ev *Event) ResolvePackageName(f *model.FileEvent) string {
 // ResolvePackageVersion resolves the version of the package providing this file
 func (ev *Event) ResolvePackageVersion(f *model.FileEvent) string {
 	if f.PkgVersion == "" {
-		// Do the resolution and set package name
+		if pkg := ev.resolvers.SBOMResolver.ResolvePackage(ev.ProcessCacheEntry.ContainerID, f); pkg != nil {
+			f.PkgName = pkg.name
+			f.PkgVersion = pkg.version
+		}
 	}
 	return f.PkgVersion
 }
