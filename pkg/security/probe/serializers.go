@@ -62,6 +62,10 @@ type FileSerializer struct {
 	Mtime *utils.EasyjsonTime `json:"modification_time,omitempty"`
 	// File change time
 	Ctime *utils.EasyjsonTime `json:"change_time,omitempty"`
+	// System package name
+	PackageName string `json:"package_name,omitempty"`
+	// System package version
+	PackageVersion string `json:"package_version,omitempty"`
 }
 
 // UserContextSerializer serializes a user context to JSON
@@ -547,6 +551,8 @@ func newFileSerializer(fe *model.FileEvent, e *Event, forceInode ...uint64) *Fil
 		Mtime:               getTimeIfNotZero(time.Unix(0, int64(fe.MTime))),
 		Ctime:               getTimeIfNotZero(time.Unix(0, int64(fe.CTime))),
 		InUpperLayer:        getInUpperLayer(e.resolvers, &fe.FileFields),
+		PackageName:         e.ResolvePackageName(fe),
+		PackageVersion:      e.ResolvePackageVersion(fe),
 	}
 }
 
