@@ -9,87 +9,144 @@
 package probe
 
 import (
+	"fmt"
+	"time"
+
 	"github.com/CycloneDX/cyclonedx-go"
-	"github.com/aquasecurity/trivy/pkg/fanal/types"
+	trivyMarshaler "github.com/aquasecurity/trivy/pkg/sbom/cyclonedx"
+	types "github.com/aquasecurity/trivy/pkg/types"
+	"github.com/golang/protobuf/ptypes/timestamp"
 
 	"github.com/DataDog/datadog-agent/pkg/security/api"
-	cdx "github.com/DataDog/datadog-agent/pkg/security/api/cyclonedx"
+	ddCycloneDXProto "github.com/DataDog/datadog-agent/pkg/security/api/cyclonedx"
+	"github.com/DataDog/datadog-agent/pkg/security/seclog"
 )
 
 // ToSBOMMessage returns an *api.SBOMMessage instance from an SBOM instance
 func (s *SBOM) ToSBOMMessage() (*api.SBOMMessage, error) {
+	cycloneDXBOM, err := reportToDDCycloneDXProto(s.report)
+	if err != nil {
+		return nil, err
+	}
+
 	msg := &api.SBOMMessage{
 		Host:        s.Host,
 		Service:     s.Service,
 		Source:      s.Source,
 		Tags:        make([]string, len(s.Tags)),
-		BOM:         cycloneDXToProto(s.report.CycloneDX),
+		BOM:         cycloneDXBOM,
 		ContainerID: s.ContainerID,
 	}
 	copy(msg.Tags, s.Tags)
 	return msg, nil
 }
 
-func cycloneDXToProto(sbom *types.CycloneDX) *cdx.Bom {
-	if sbom == nil {
+func reportToDDCycloneDXProto(report types.Report) (*ddCycloneDXProto.Bom, error) {
+	marshaler := trivyMarshaler.NewMarshaler("")
+	cycloneDXBom, err := marshaler.Marshal(report)
+	if err != nil {
+		return nil, fmt.Errorf("couldn't marshal report: %w", err)
+	}
+	return cycloneDXBomToProto(cycloneDXBom), nil
+}
+
+func cycloneDXBomToProto(bom *cyclonedx.BOM) *ddCycloneDXProto.Bom {
+	if bom == nil {
 		return nil
 	}
 
-	cycloneDXProto := &cdx.Bom{
-		SpecVersion:  sbom.SpecVersion,
-		Version:      int32(sbom.Version),
-		SerialNumber: sbom.SerialNumber,
-		Metadata:     cycloneDXMetadataToProto(sbom.Metadata),
-		Components:   make([]*cdx.Component, len(sbom.Components)),
+	cycloneDXProto := &ddCycloneDXProto.Bom{
+		SpecVersion:  bom.SpecVersion,
+		Version:      int32(bom.Version),
+		SerialNumber: bom.SerialNumber,
 	}
 
-	for _, elem := range sbom.Components {
-		cycloneDXProto.Components = append(cycloneDXProto.Components, cycloneDXComponentToProto(elem))
+	if bom.Metadata != nil {
+		cycloneDXProto.Metadata = cycloneDXMetadataToProto(*bom.Metadata)
+	}
+
+	if bom.Components != nil {
+		cycloneDXProto.Components = make([]*ddCycloneDXProto.Component, 0, len(*bom.Components))
+		for _, elem := range *bom.Components {
+			cycloneDXProto.Components = append(cycloneDXProto.Components, cycloneDXComponentToProto(elem))
+		}
+	}
+
+	if bom.Services != nil {
+		// TODO
+	}
+
+	if bom.ExternalReferences != nil {
+		// TODO
+	}
+
+	if bom.Dependencies != nil {
+		// TODO
+	}
+
+	if bom.Compositions != nil {
+		// TODO
+	}
+
+	if bom.Properties != nil {
+		// TODO
+	}
+
+	if bom.Properties != nil {
+		// TODO
+	}
+
+	if bom.Vulnerabilities != nil {
+		// TODO
 	}
 	return cycloneDXProto
 }
 
-func componentTypeToClassification(componentType types.ComponentType) cdx.Classification {
+func cycloneDXComponentTypeToProto(componentType cyclonedx.ComponentType) ddCycloneDXProto.Classification {
 	switch componentType {
-	case types.ComponentType(cyclonedx.ComponentTypeApplication):
-		return cdx.Classification_CLASSIFICATION_APPLICATION
-	case types.ComponentType(cyclonedx.ComponentTypeFramework):
-		return cdx.Classification_CLASSIFICATION_FRAMEWORK
-	case types.ComponentType(cyclonedx.ComponentTypeLibrary):
-		return cdx.Classification_CLASSIFICATION_LIBRARY
-	case types.ComponentType(cyclonedx.ComponentTypeOS):
-		return cdx.Classification_CLASSIFICATION_OPERATING_SYSTEM
-	case types.ComponentType(cyclonedx.ComponentTypeDevice):
-		return cdx.Classification_CLASSIFICATION_DEVICE
-	case types.ComponentType(cyclonedx.ComponentTypeFile):
-		return cdx.Classification_CLASSIFICATION_FILE
-	case types.ComponentType(cyclonedx.ComponentTypeContainer):
-		return cdx.Classification_CLASSIFICATION_CONTAINER
-	case types.ComponentType(cyclonedx.ComponentTypeFirmware):
-		return cdx.Classification_CLASSIFICATION_FIRMWARE
+	case cyclonedx.ComponentTypeApplication:
+		return ddCycloneDXProto.Classification_CLASSIFICATION_APPLICATION
+	case cyclonedx.ComponentTypeFramework:
+		return ddCycloneDXProto.Classification_CLASSIFICATION_FRAMEWORK
+	case cyclonedx.ComponentTypeLibrary:
+		return ddCycloneDXProto.Classification_CLASSIFICATION_LIBRARY
+	case cyclonedx.ComponentTypeOS:
+		return ddCycloneDXProto.Classification_CLASSIFICATION_OPERATING_SYSTEM
+	case cyclonedx.ComponentTypeDevice:
+		return ddCycloneDXProto.Classification_CLASSIFICATION_DEVICE
+	case cyclonedx.ComponentTypeFile:
+		return ddCycloneDXProto.Classification_CLASSIFICATION_FILE
+	case cyclonedx.ComponentTypeContainer:
+		return ddCycloneDXProto.Classification_CLASSIFICATION_CONTAINER
+	case cyclonedx.ComponentTypeFirmware:
+		return ddCycloneDXProto.Classification_CLASSIFICATION_FIRMWARE
 	default:
-		return cdx.Classification_CLASSIFICATION_NULL
+		return ddCycloneDXProto.Classification_CLASSIFICATION_NULL
 	}
 }
 
-func cycloneDXComponentToProto(elem types.Component) *cdx.Component {
-	return &cdx.Component{
+func cycloneDXComponentToProto(elem cyclonedx.Component) *ddCycloneDXProto.Component {
+	return &ddCycloneDXProto.Component{
 		BomRef:   elem.BOMRef,
 		MimeType: elem.MIMEType,
-		Type:     componentTypeToClassification(elem.Type),
+		Type:     cycloneDXComponentTypeToProto(elem.Type),
 		Name:     elem.Name,
 		Version:  elem.Version,
 		Purl:     elem.PackageURL,
 	}
 }
 
-func cycloneDXMetadataToProto(metadata types.Metadata) *cdx.Metadata {
-	return &cdx.Metadata{
-		// TODO: add Timestamp
-		// Timestamp: &timestamp.Timestamp{
-		// 	Seconds: 0,
-		// 	Nanos:   0,
-		// },
-		Component: cycloneDXComponentToProto(metadata.Component),
+func cycloneDXMetadataToProto(metadata cyclonedx.Metadata) *ddCycloneDXProto.Metadata {
+	parsedTime, err := time.Parse("2006-01-02T15:04:05+00:00", metadata.Timestamp)
+	if err != nil {
+		seclog.Errorf("couldn't parse the exact timestamp, falling back to time.Now()")
+		parsedTime = time.Now()
+	}
+
+	return &ddCycloneDXProto.Metadata{
+		Timestamp: &timestamp.Timestamp{
+			Seconds: parsedTime.Unix(),
+		},
+		Component: cycloneDXComponentToProto(*metadata.Component),
 	}
 }

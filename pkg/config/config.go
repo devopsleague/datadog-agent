@@ -1164,6 +1164,7 @@ func InitConfig(config Config) {
 	config.BindEnv("runtime_security_config.event_stream.buffer_size")
 	config.BindEnvAndSetDefault("runtime_security_config.envs_with_value", []string{"LD_PRELOAD", "LD_LIBRARY_PATH", "PATH", "HISTSIZE", "HISTFILESIZE"})
 	config.BindEnvAndSetDefault("runtime_security_config.sbom.remote_storage.compression", false)
+	bindEnvAndSetLogsConfigKeys(config, "runtime_security_config.sbom.remote_storage.endpoints.")
 
 	// Serverless Agent
 	config.SetDefault("serverless.enabled", false)

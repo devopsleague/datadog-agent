@@ -11,7 +11,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"strings"
 	"sync"
 	"time"
 
@@ -220,7 +219,7 @@ func (rsa *RuntimeSecurityAgent) StartSBOMListener() {
 			if err == io.EOF || msg == nil {
 				break
 			}
-			log.Tracef("Got SBOM for [%s]", strings.Join(msg.GetTags(), ", "))
+			log.Infof("Got SBOM for '%s'", msg.GetContainerID())
 
 			rsa.sbomReceived.Inc()
 
@@ -258,7 +257,9 @@ func (rsa *RuntimeSecurityAgent) DispatchActivityDump(msg *api.ActivityDumpStrea
 
 // DispatchSBOM forwards an SBOM message to the backend
 func (rsa *RuntimeSecurityAgent) DispatchSBOM(msg *api.SBOMMessage) {
-	// TODO send to the backend
+	if err := rsa.sbomRemoteStorage.SendSBOM(msg); err != nil {
+		log.Errorf("couldn't sent SBOM: %v", err)
+	}
 }
 
 // GetStatus returns the current status on the agent

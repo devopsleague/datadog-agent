@@ -14,7 +14,6 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"strings"
 
 	"github.com/golang/protobuf/proto"
 
@@ -48,7 +47,7 @@ func NewSBOMRemoteStorage(enableCompression bool) (*SBOMRemoteStorage, error) {
 		return nil, fmt.Errorf("couldn't generate storage endpoints: %w", err)
 	}
 	for _, endpoint := range endpoints.GetReliableEndpoints() {
-		storage.urls = append(storage.urls, getEndpointURL(endpoint, ""))
+		storage.urls = append(storage.urls, getEndpointURL(endpoint, "api/v2/sbom"))
 		storage.apiKeys = append(storage.apiKeys, endpoint.APIKey)
 	}
 
@@ -119,7 +118,7 @@ func (storage *SBOMRemoteStorage) SendSBOM(sbom *api.SBOMMessage) error {
 		if err = storage.sendToEndpoint(url, storage.apiKeys[i], body); err != nil {
 			seclog.Warnf("couldn't sent SBOM to [%s, body size: %d]: %v", url, body.Len(), err)
 		} else {
-			seclog.Infof("SBOM for [%s] successfully sent to [%s]", strings.Join(sbom.GetTags(), ", "), url)
+			seclog.Infof("SBOM for '%s' successfully sent to [%s]", sbom.GetContainerID(), url)
 		}
 	}
 
