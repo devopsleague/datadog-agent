@@ -189,6 +189,7 @@ message SBOMMessage {
     string Source = 3;
     repeated string Tags = 4;
     cyclonedx.v1_4.Bom BOM = 5;
+    string ContainerID = 6;
 }
 
 service SecurityModule {

@@ -19,11 +19,12 @@ import (
 // ToSBOMMessage returns an *api.SBOMMessage instance from an SBOM instance
 func (s *SBOM) ToSBOMMessage() (*api.SBOMMessage, error) {
 	msg := &api.SBOMMessage{
-		Host:    s.Host,
-		Service: s.Service,
-		Source:  s.Source,
-		Tags:    make([]string, len(s.Tags)),
-		BOM:     cycloneDXToProto(s.report.CycloneDX),
+		Host:        s.Host,
+		Service:     s.Service,
+		Source:      s.Source,
+		Tags:        make([]string, len(s.Tags)),
+		BOM:         cycloneDXToProto(s.report.CycloneDX),
+		ContainerID: s.ContainerID,
 	}
 	copy(msg.Tags, s.Tags)
 	return msg, nil
