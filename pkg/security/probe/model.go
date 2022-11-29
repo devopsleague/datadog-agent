@@ -73,7 +73,6 @@ type Event struct {
 	resolvers           *Resolvers
 	pathResolutionError error
 	scrubber            *pconfig.DataScrubber
-	tcResolver          *resolvers.TCResolver
 }
 
 // Retain the event
@@ -557,14 +556,14 @@ func bestGuessServiceTag(serviceValues []string) string {
 
 // ResolveNetworkDeviceIfName returns the network iterface name from the network context
 func (ev *Event) ResolveNetworkDeviceIfName(device *model.NetworkDeviceContext) string {
-	if len(device.IfName) == 0 && ev.tcResolver != nil {
+	if len(device.IfName) == 0 && ev.resolvers.TCResolver != nil {
 		key := resolvers.NetDeviceKey{
 			NetNS:            device.NetNS,
 			IfIndex:          device.IfIndex,
 			NetworkDirection: manager.Egress,
 		}
 
-		tcProbe := ev.tcResolver.GetTCProbeForKey(key)
+		tcProbe := ev.resolvers.TCResolver.GetTCProbeForKey(key)
 		if tcProbe != nil {
 			device.IfName = tcProbe.IfName
 		}
@@ -574,11 +573,10 @@ func (ev *Event) ResolveNetworkDeviceIfName(device *model.NetworkDeviceContext) 
 }
 
 // NewEvent returns a new event
-func NewEvent(resolvers *Resolvers, scrubber *pconfig.DataScrubber, tcResolver *resolvers.TCResolver) *Event {
+func NewEvent(resolvers *Resolvers, scrubber *pconfig.DataScrubber) *Event {
 	return &Event{
-		Event:      model.Event{},
-		resolvers:  resolvers,
-		scrubber:   scrubber,
-		tcResolver: tcResolver,
+		Event:     model.Event{},
+		resolvers: resolvers,
+		scrubber:  scrubber,
 	}
 }
