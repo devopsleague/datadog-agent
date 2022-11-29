@@ -546,6 +546,9 @@ func (p *ProcessResolver) insertEntry(entry, prev *model.ProcessCacheEntry) {
 
 	p.addedEntries.Inc()
 	p.cacheSize.Inc()
+
+	// Retain SBOM, we have a new process in the SBOM workload
+	p.resolvers.SBOMResolver.Retain(entry)
 }
 
 func (p *ProcessResolver) insertForkEntry(entry *model.ProcessCacheEntry) {
@@ -574,9 +577,6 @@ func (p *ProcessResolver) insertExecEntry(entry *model.ProcessCacheEntry) {
 	}
 
 	p.insertEntry(entry, prev)
-
-	// Retain SBOM, we have a new process in the SBOM workload
-	p.resolvers.SBOMResolver.Retain(entry)
 }
 
 func (p *ProcessResolver) deleteEntry(pid uint32, exitTime time.Time) {

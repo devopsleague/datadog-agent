@@ -20,6 +20,7 @@ import (
 	"github.com/aquasecurity/trivy/pkg/commands/artifact"
 	"github.com/aquasecurity/trivy/pkg/flag"
 	trivyReport "github.com/aquasecurity/trivy/pkg/types"
+	"github.com/hashicorp/golang-lru/v2/simplelru"
 	"go.uber.org/atomic"
 
 	coreconfig "github.com/DataDog/datadog-agent/pkg/config"
@@ -38,8 +39,9 @@ type Package struct {
 
 type SBOM struct {
 	sync.RWMutex
-	trivyReport.Report
-	files map[string]*Package
+
+	report trivyReport.Report
+	files  map[string]*Package
 
 	Host             string
 	Source           string
@@ -49,8 +51,31 @@ type SBOM struct {
 	ReferenceCounter *atomic.Uint64
 
 	sbomResolver    *SBOMResolver
+	shouldScan      bool
+	rootCandidates  *simplelru.LRU[uint32, string]
 	doNotSendBefore time.Time
 	sent            bool
+}
+
+// NewSBOM returns a new empty instance of SBOM
+func NewSBOM(r *SBOMResolver, process *model.ProcessCacheEntry) (*SBOM, error) {
+	lru, err := simplelru.NewLRU(1000, func(key uint32, value string) {})
+	if err != nil {
+		return nil, fmt.Errorf("couldn't create new SBOM: %w", err)
+	}
+	lru.Add(process.Pid, utils.ProcRootPath(int32(process.Pid)))
+
+	return &SBOM{
+		files:            make(map[string]*Package),
+		Host:             r.hostname,
+		Source:           r.source,
+		ContainerID:      process.ContainerID,
+		ReferenceCounter: atomic.NewUint64(1),
+		sbomResolver:     r,
+		shouldScan:       true,
+		rootCandidates:   lru,
+		doNotSendBefore:  time.Now().Add(5 * time.Minute),
+	}, nil
 }
 
 // resolveTags thread unsafe version of ResolveTags
@@ -79,11 +104,6 @@ type SBOMResolver struct {
 	workloads     map[string]*SBOM
 	probe         *Probe
 
-	// Queued workload analysis
-	queuedWorkloadsInitCountersLock sync.RWMutex
-	queuedWorkloadsInitCounters     map[string]*atomic.Uint64
-	workloadAnalysisQueue           chan workloadAnalysisRequest
-
 	// context tags and attributes
 	hostname    string
 	source      string
@@ -93,10 +113,8 @@ type SBOMResolver struct {
 // NewSBOMResolver returns a new instance of SBOMResolver
 func NewSBOMResolver(p *Probe) (*SBOMResolver, error) {
 	resolver := &SBOMResolver{
-		probe:                       p,
-		workloads:                   make(map[string]*SBOM),
-		queuedWorkloadsInitCounters: make(map[string]*atomic.Uint64),
-		workloadAnalysisQueue:       make(chan workloadAnalysisRequest, 100),
+		probe:     p,
+		workloads: make(map[string]*SBOM),
 	}
 	resolver.prepareContextTags()
 	return resolver, nil
@@ -133,22 +151,21 @@ func (r *SBOMResolver) Start(ctx context.Context) {
 		ctx, cancel := context.WithCancel(ctx)
 		defer cancel()
 
+		scannerTick := time.NewTimer(10 * time.Second)
+		defer scannerTick.Stop()
+
 		senderTick := time.NewTimer(1 * time.Minute)
 		defer senderTick.Stop()
 
 		for {
-			seclog.Infof("Workload analysis main loop")
 			select {
 			case <-ctx.Done():
 				return
-			case req := <-r.workloadAnalysisQueue:
-				seclog.Infof("Pop workload analysis")
-				if err := r.analyzeWorkload(req); err != nil {
-					seclog.Errorf("couldn't analyze workload [%s]: %v", req.containerID, err)
-				}
+			case <-scannerTick.C:
+				r.AnalyzeWorkloads()
 			case <-senderTick.C:
 				if err := r.SendAvailableSBOMs(); err != nil {
-					seclog.Errorf("couldn't send SBOMs: %w",err)
+					seclog.Errorf("couldn't send SBOMs: %w", err)
 				}
 			}
 		}
@@ -156,8 +173,8 @@ func (r *SBOMResolver) Start(ctx context.Context) {
 }
 
 // generateSBOM calls Trivy to generate the SBOM of a workload
-func (r *SBOMResolver) generateSBOM(root string, containerID string) (*SBOM, error) {
-	seclog.Infof("Generating SBOM for %s", root)
+func (r *SBOMResolver) generateSBOM(root string, workload *SBOM) error {
+	seclog.Infof("generating SBOM for %s", root)
 
 	reportFlagGroup := flag.NewReportFlagGroup()
 	fsFlags := &flag.Flags{
@@ -167,7 +184,7 @@ func (r *SBOMResolver) generateSBOM(root string, containerID string) (*SBOM, err
 
 	opts, err := fsFlags.ToOptions("", []string{root}, globalFlags, os.Stdout)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	opts.Format = "table"
@@ -179,97 +196,125 @@ func (r *SBOMResolver) generateSBOM(root string, containerID string) (*SBOM, err
 
 	defer func() {
 		if errors.Is(err, context.DeadlineExceeded) {
-			seclog.Warnf("Increase --timeout value")
+			seclog.Warnf("increase --timeout value")
 		}
 	}()
 
 	runner, err := artifact.NewRunner(ctx, opts)
 	if err != nil {
 		if errors.Is(err, artifact.SkipScan) {
-			return nil, nil
+			return nil
 		}
-		return nil, fmt.Errorf("init error: %w", err)
+		return fmt.Errorf("init error: %w", err)
 	}
 	defer runner.Close(ctx)
 
 	report, err := runner.ScanRootfs(ctx, opts)
 	if err != nil {
-		return nil, fmt.Errorf("rootfs scan error: %w", err)
+		return fmt.Errorf("rootfs scan error: %w", err)
 	}
 
 	report, err = runner.Filter(ctx, opts, report)
 	if err != nil {
-		return nil, fmt.Errorf("filter error: %w", err)
+		return fmt.Errorf("filter error: %w", err)
 	}
 
 	if err = runner.Report(opts, report); err != nil {
-		return nil, fmt.Errorf("report error: %w", err)
-	}
-	output := &SBOM{
-		ReferenceCounter: atomic.NewUint64(0),
-		Host:             r.hostname,
-		Source:           r.source,
-		ContainerID:      containerID,
-		doNotSendBefore:  time.Now().Add(5 * time.Minute),
-		Report:           report,
+		return fmt.Errorf("report error: %w", err)
 	}
 
-	seclog.Infof("Successfully generated SBOM for %s", root)
+	workload.report = report
+	workload.shouldScan = false
+	workload.rootCandidates.Purge()
 
-	return output, nil
+	seclog.Infof("successfully generated SBOM for %s", root)
+
+	return nil
+}
+
+// AnalyzeWorkloads iterates through the list of active workloads and scan the workloads when applicable
+func (r *SBOMResolver) AnalyzeWorkloads() {
+	workloadsToScan := r.listWorkloadsToScan()
+
+	for _, workload := range workloadsToScan {
+		if err := r.analyzeWorkload(workload); err != nil {
+			seclog.Errorf("couldn't scan '%s': %w", workload.ContainerID, err)
+		}
+	}
+}
+
+func (r *SBOMResolver) listWorkloadsToScan() []*SBOM {
+	r.workloadsLock.Lock()
+	defer r.workloadsLock.Unlock()
+
+	var out []*SBOM
+	for _, workload := range r.workloads {
+		workload.Lock()
+		if workload.shouldScan {
+			out = append(out, workload)
+		}
+		workload.Unlock()
+	}
+	return out
 }
 
 // analyzeWorkload generates the SBOM of the provided workload and send it to the security agent
-func (r *SBOMResolver) analyzeWorkload(req workloadAnalysisRequest) error {
-	sbom, err := r.generateSBOM(req.root, req.containerID)
-	if err != nil {
-		return err
+func (r *SBOMResolver) analyzeWorkload(workload *SBOM) error {
+	seclog.Infof("analyzing workload '%s': %v", workload.ContainerID, workload.rootCandidates.Keys())
+	var lastErr error
+	for _, rootCandidateKey := range workload.rootCandidates.Keys() {
+		rootCandidate, ok := workload.rootCandidates.Peek(rootCandidateKey)
+		if !ok {
+			continue
+		}
+		lastErr = r.generateSBOM(rootCandidate, workload)
+		if lastErr == nil {
+			break
+		} else {
+			seclog.Errorf("couldn't generate SBOM: %v", lastErr)
+		}
+	}
+	if lastErr != nil {
+		return lastErr
+	}
+	if workload.shouldScan {
+		return fmt.Errorf("couldn't generate workload: all root candidates failed")
 	}
 
-	sbom.files = make(map[string]*Package)
-	for _, result := range sbom.Report.Results {
+	// build file cache
+	for _, result := range workload.report.Results {
 		for _, resultPkg := range result.Packages {
 			pkg := &Package{
 				name:    resultPkg.Name,
 				version: resultPkg.Version,
 			}
 			for _, file := range resultPkg.SystemInstalledFiles {
-				seclog.Infof("Indexing %s as %+v", file, pkg)
-				sbom.files[file] = pkg
+				seclog.Infof("indexing %s as %+v", file, pkg)
+				workload.files[file] = pkg
 			}
 		}
 	}
 
-	// add reference counter value
-	r.queuedWorkloadsInitCountersLock.Lock()
-	defer r.queuedWorkloadsInitCountersLock.Unlock()
-	counter, ok := r.queuedWorkloadsInitCounters[req.containerID]
-	if ok {
-		sbom.ReferenceCounter.Add(counter.Load())
-	} else {
-		sbom.ReferenceCounter.Add(1)
-	}
-
-	r.workloadsLock.Lock()
-	defer r.workloadsLock.Unlock()
-
-	// check if a SBOM already exists to transfer reference counter values
-	existingSBOM, ok := r.workloads[req.containerID]
-	if ok {
-		sbom.ReferenceCounter.Add(existingSBOM.ReferenceCounter.Load())
-	}
-
-	seclog.Infof("Storing sbom for %s", req.containerID)
-	// replace existing SBOM with new one
-	r.workloads[req.containerID] = sbom
+	seclog.Infof("new sbom generated for '%s'", workload.ContainerID)
 	return nil
 }
 
 // RefreshSBOM analyzes the file system of a workload to refresh its SBOM.
-func (r *SBOMResolver) RefreshSBOM(process *model.ProcessCacheEntry) {
+func (r *SBOMResolver) RefreshSBOM(process *model.ProcessCacheEntry) error {
 	r.workloadsLock.Lock()
 	defer r.workloadsLock.Unlock()
-	r.queueWorkloadAnalysis(process)
+	workload, ok := r.workloads[process.ContainerID]
+	if ok {
+		if !workload.shouldScan {
+			// purge old root candidates
+			workload.rootCandidates.Purge()
+		}
+		workload.shouldScan = true
+		workload.rootCandidates.Add(process.Pid, utils.ProcRootPath(int32(process.Pid)))
+	} else {
+		return r.newWorkloadEntry(process)
+	}
+	return nil
 }
 
 // ResolvePackage returns the Package that owns the provided file. Make sure the internal fields of "file" are properly
@@ -279,67 +324,55 @@ func (r *SBOMResolver) ResolvePackage(containerID string, file *model.FileEvent)
 	sbom, ok := r.workloads[containerID]
 	r.workloadsLock.RUnlock()
 	if !ok {
-		seclog.Infof("Failed to find sbom for %s", containerID)
 		return nil
 	}
 
-	seclog.Infof("Resolving %s for container %s", file.PathnameStr, containerID)
+	seclog.Tracef("resolving %s for container %s", file.PathnameStr, containerID)
 
 	sbom.RLock()
 	defer sbom.RUnlock()
 
-	seclog.Infof("Returning %s", sbom.files[file.PathnameStr])
+	seclog.Tracef("returning %v", sbom.files[file.PathnameStr])
 	return sbom.files[file.PathnameStr]
 }
 
-// queueWorkloadAnalysis (thread unsafe) queues a workload for analysis or increment the reference counter of the
-// SBOM of a queued analysis.
-func (r *SBOMResolver) queueWorkloadAnalysis(process *model.ProcessCacheEntry) {
-	seclog.Infof("Queuing workload analysis for %s", process.ContainerID)
-
-	// check if this workload is already queued
-	r.queuedWorkloadsInitCountersLock.Lock()
-	defer r.queuedWorkloadsInitCountersLock.Unlock()
-
-	counter, ok := r.queuedWorkloadsInitCounters[process.ContainerID]
-	if ok {
-		counter.Add(1)
-		return
+// newWorkloadEntry (thread unsafe) creates a new SBOM entry for the workload designated by the provided process cache
+// entry
+func (r *SBOMResolver) newWorkloadEntry(process *model.ProcessCacheEntry) error {
+	workload, err := NewSBOM(r, process)
+	if err != nil {
+		return err
 	}
-
-	// queue analysis request
-	r.queuedWorkloadsInitCounters[process.ContainerID] = atomic.NewUint64(1)
-	req := workloadAnalysisRequest{
-		containerID: process.ContainerID,
-		root:        utils.ProcRootPath(int32(process.Pid)),
-	}
-
-	select {
-	case r.workloadAnalysisQueue <- req:
-		seclog.Infof("Queued workload analysis for %s", process.ContainerID)
-	default:
-		seclog.Infof("Dropped workload analysis for %s", process.ContainerID)
-	}
+	r.workloads[process.ContainerID] = workload
+	return nil
 }
 
 // Retain increments the reference counter of the SBOM of a workload
 func (r *SBOMResolver) Retain(process *model.ProcessCacheEntry) {
-	if process.ContainerID == "" {
-		return
-	}
-
 	r.workloadsLock.Lock()
 	defer r.workloadsLock.Unlock()
 
-	sbom, ok := r.workloads[process.ContainerID]
-	if !ok {
-		r.queueWorkloadAnalysis(process)
+	if len(process.ContainerID) == 0 {
 		return
 	}
 
-	sbom.Lock()
-	defer sbom.Unlock()
-	sbom.ReferenceCounter.Add(1)
+	workload, ok := r.workloads[process.ContainerID]
+	if !ok {
+		err := r.newWorkloadEntry(process)
+		if err != nil {
+			seclog.Errorf("couldn't create new SBOM entry for workload '%s': %w", err)
+		}
+		return
+	}
+
+	workload.Lock()
+	defer workload.Unlock()
+	workload.ReferenceCounter.Add(1)
+
+	// add root candidate if the SBOM hasn't been generated yet
+	if workload.shouldScan {
+		workload.rootCandidates.Add(process.Pid, utils.ProcRootPath(int32(process.Pid)))
+	}
 	return
 }
 
@@ -348,16 +381,20 @@ func (r *SBOMResolver) Release(process *model.ProcessCacheEntry) {
 	r.workloadsLock.RLock()
 	defer r.workloadsLock.RUnlock()
 
-	sbom, ok := r.workloads[process.ContainerID]
+	workload, ok := r.workloads[process.ContainerID]
 	if !ok {
 		return
 	}
 
-	sbom.Lock()
-	defer sbom.Unlock()
-	counter := sbom.ReferenceCounter.Sub(1)
+	workload.Lock()
+	defer workload.Unlock()
+	counter := workload.ReferenceCounter.Sub(1)
+
+	// delete root candidate
+	workload.rootCandidates.Remove(process.Pid)
+
 	// only delete sbom if it has already been sent, delay the deletion to the sender otherwise
-	if counter <= 0 && sbom.sent {
+	if counter <= 0 && workload.sent {
 		r.deleteSBOM(process.ContainerID)
 	}
 }
@@ -366,8 +403,6 @@ func (r *SBOMResolver) Release(process *model.ProcessCacheEntry) {
 func (r *SBOMResolver) deleteSBOM(containerID string) {
 	// remove SBOM entry
 	delete(r.workloads, containerID)
-	// to be safe, delete the init counters as well
-	delete(r.queuedWorkloadsInitCounters, containerID)
 }
 
 // AddContextTags Adds the tags resolved by the resolver to the provided SBOM
@@ -403,8 +438,8 @@ func (r *SBOMResolver) SendAvailableSBOMs() error {
 	defer r.workloadsLock.Unlock()
 	now := time.Now()
 
-	for _, sbom := range r.workloads {
-		if err := r.processSBOM(sbom, now); err != nil {
+	for _, workload := range r.workloads {
+		if err := r.processWorkload(workload, now); err != nil {
 			return err
 		}
 	}
@@ -412,37 +447,38 @@ func (r *SBOMResolver) SendAvailableSBOMs() error {
 	return nil
 }
 
-// processSBOM resolves the tags of the provided SBOM, send it and delete it when applicable
-func (r *SBOMResolver) processSBOM(sbom *SBOM, now time.Time) error {
-	sbom.Lock()
-	defer sbom.Unlock()
+// processWorkload resolves the tags of the provided SBOM, send it and delete it when applicable
+func (r *SBOMResolver) processWorkload(workload *SBOM, now time.Time) error {
+	workload.Lock()
+	defer workload.Unlock()
 
-	if !sbom.sent {
+	if !workload.sent {
 		// resolve tags
-		_ = sbom.resolveTags()
+		_ = workload.resolveTags()
 	}
 
-	if now.After(sbom.doNotSendBefore) {
+	if now.After(workload.doNotSendBefore) {
 
 		// check if we should send the SBOM now
-		if !sbom.sent {
-			r.AddContextTags(sbom)
+		if !workload.sent {
+			r.AddContextTags(workload)
 
 			// resolve the service if it is defined
-			sbom.Service = utils.GetTagValue("service", sbom.Tags)
+			workload.Service = utils.GetTagValue("service", workload.Tags)
 
 			// send SBOM to the security agent
-			sbomMsg, err := sbom.ToSBOMMessage()
+			sbomMsg, err := workload.ToSBOMMessage()
 			if err != nil {
-				return fmt.Errorf("couldn't serialize SBOM to JSON: %w", err)
+				return fmt.Errorf("couldn't serialize SBOM to protobuf: %w", err)
 			}
+			seclog.Infof("dispatching workload '%s'", workload.ContainerID)
 			r.probe.DispatchSBOM(sbomMsg)
-			sbom.sent = true
+			workload.sent = true
 		}
 
 		// check if we should delete the sbom
-		if sbom.ReferenceCounter.Load() == 0 {
-			r.deleteSBOM(sbom.ContainerID)
+		if workload.ReferenceCounter.Load() == 0 {
+			r.deleteSBOM(workload.ContainerID)
 		}
 	}
 	return nil

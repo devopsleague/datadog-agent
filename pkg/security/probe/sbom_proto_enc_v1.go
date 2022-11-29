@@ -23,7 +23,7 @@ func (s *SBOM) ToSBOMMessage() (*api.SBOMMessage, error) {
 		Service: s.Service,
 		Source:  s.Source,
 		Tags:    make([]string, len(s.Tags)),
-		BOM:     cycloneDXToProto(s.Report.CycloneDX),
+		BOM:     cycloneDXToProto(s.report.CycloneDX),
 	}
 	copy(msg.Tags, s.Tags)
 	return msg, nil
