@@ -151,10 +151,10 @@ func (r *SBOMResolver) Start(ctx context.Context) {
 		ctx, cancel := context.WithCancel(ctx)
 		defer cancel()
 
-		scannerTick := time.NewTimer(10 * time.Second)
+		scannerTick := time.NewTicker(10 * time.Second)
 		defer scannerTick.Stop()
 
-		senderTick := time.NewTimer(1 * time.Minute)
+		senderTick := time.NewTicker(1 * time.Minute)
 		defer senderTick.Stop()
 
 		for {
@@ -261,6 +261,9 @@ func (r *SBOMResolver) listWorkloadsToScan() []*SBOM {
 // analyzeWorkload generates the SBOM of the provided workload and send it to the security agent
 func (r *SBOMResolver) analyzeWorkload(workload *SBOM) error {
 	seclog.Infof("analyzing workload '%s': %v", workload.ContainerID, workload.rootCandidates.Keys())
+	workload.Lock()
+	defer workload.Unlock()
+
 	var lastErr error
 	for _, rootCandidateKey := range workload.rootCandidates.Keys() {
 		rootCandidate, ok := workload.rootCandidates.Peek(rootCandidateKey)
