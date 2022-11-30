@@ -179,6 +179,14 @@ type Config struct {
 	EventStreamUseRingBuffer bool
 	// EventStreamBufferSize specifies the buffer size of the eBPF map used for events
 	EventStreamBufferSize int
+
+	// SBOMResolverEnabled defines if the SBOM resolver should be enabled
+	SBOMResolverEnabled bool
+	// SBOMResolverSBOMSenderDelay defines the amount of time a SBOM should be delayed before the sender forwards it to
+	// Datadog. This delay is introduces to give a chance for the tags to be properly resolved.
+	SBOMResolverSBOMSenderDelay time.Duration
+	// SBOMResolverSBOMSenderTick defines the ticker for the SBOM sender
+	SBOMResolverSBOMSenderTick time.Duration
 }
 
 // IsRuntimeEnabled returns true if any feature is enabled. Has to be applied in config package too
@@ -274,6 +282,11 @@ func NewConfig(cfg *config.Config) (*Config, error) {
 			}
 			return mds * (1 << 10)
 		},
+
+		// SBOM resolver
+		SBOMResolverEnabled:         coreconfig.Datadog.GetBool("runtime_security_config.sbom.enabled"),
+		SBOMResolverSBOMSenderDelay: time.Duration(coreconfig.Datadog.GetInt("runtime_security_config.sbom.sbom_sender.delay")) * time.Second,
+		SBOMResolverSBOMSenderTick:  time.Duration(coreconfig.Datadog.GetInt("runtime_security_config.sbom.sbom_sender.tick")) * time.Second,
 	}
 
 	if err := c.sanitize(); err != nil {

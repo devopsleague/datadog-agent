@@ -74,7 +74,7 @@ func NewSBOM(r *SBOMResolver, process *model.ProcessCacheEntry) (*SBOM, error) {
 		sbomResolver:     r,
 		shouldScan:       true,
 		rootCandidates:   lru,
-		doNotSendBefore:  time.Now().Add(5 * time.Minute),
+		doNotSendBefore:  time.Now().Add(r.probe.Config.SBOMResolverSBOMSenderDelay),
 	}, nil
 }
 
@@ -112,6 +112,9 @@ func NewSBOMResolver(p *Probe) (*SBOMResolver, error) {
 		workloads:   make(map[string]*SBOM),
 		scannerChan: make(chan *SBOM, 100),
 	}
+	if !p.Config.SBOMResolverEnabled {
+		return resolver, nil
+	}
 	resolver.prepareContextTags()
 	return resolver, nil
 }
@@ -143,11 +146,15 @@ func (r *SBOMResolver) prepareContextTags() {
 
 // Start starts the goroutine of the SBOM resolver
 func (r *SBOMResolver) Start(ctx context.Context) {
+	if !r.probe.Config.SBOMResolverEnabled {
+		return
+	}
+
 	go func() {
 		ctx, cancel := context.WithCancel(ctx)
 		defer cancel()
 
-		senderTick := time.NewTicker(10 * time.Second)
+		senderTick := time.NewTicker(r.probe.Config.SBOMResolverSBOMSenderTick)
 		defer senderTick.Stop()
 
 		for {
@@ -273,6 +280,10 @@ func (r *SBOMResolver) analyzeWorkload(workload *SBOM) error {
 
 // RefreshSBOM analyzes the file system of a workload to refresh its SBOM.
 func (r *SBOMResolver) RefreshSBOM(process *model.ProcessCacheEntry) error {
+	if !r.probe.Config.SBOMResolverEnabled {
+		return nil
+	}
+
 	r.workloadsLock.Lock()
 	defer r.workloadsLock.Unlock()
 	workload, ok := r.workloads[process.ContainerID]
@@ -305,6 +316,10 @@ func (r *SBOMResolver) RefreshSBOM(process *model.ProcessCacheEntry) error {
 // ResolvePackage returns the Package that owns the provided file. Make sure the internal fields of "file" are properly
 // resolved.
 func (r *SBOMResolver) ResolvePackage(containerID string, file *model.FileEvent) *Package {
+	if !r.probe.Config.SBOMResolverEnabled {
+		return nil
+	}
+
 	r.workloadsLock.RLock()
 	defer r.workloadsLock.RUnlock()
 	workload, ok := r.workloads[containerID]
@@ -334,6 +349,10 @@ func (r *SBOMResolver) newWorkloadEntry(process *model.ProcessCacheEntry) (*SBOM
 
 // Retain increments the reference counter of the SBOM of a workload
 func (r *SBOMResolver) Retain(process *model.ProcessCacheEntry) {
+	if !r.probe.Config.SBOMResolverEnabled {
+		return
+	}
+
 	r.workloadsLock.Lock()
 	defer r.workloadsLock.Unlock()
 
@@ -370,6 +389,10 @@ func (r *SBOMResolver) Retain(process *model.ProcessCacheEntry) {
 
 // Release decrements the reference counter of the SBOM of a workload
 func (r *SBOMResolver) Release(process *model.ProcessCacheEntry) {
+	if !r.probe.Config.SBOMResolverEnabled {
+		return
+	}
+
 	r.workloadsLock.RLock()
 	defer r.workloadsLock.RUnlock()
 
