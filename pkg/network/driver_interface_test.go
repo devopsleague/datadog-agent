@@ -75,6 +75,7 @@ func TestConnectionStatsInfiniteLoop(t *testing.T) {
 	_, err = di.GetClosedConnectionStats(closedBuf, func(c *ConnectionStats) bool {
 		return true
 	})
+	require.NoError(t, err, "Failed to get connection stats")
 	_, err = di.GetOpenConnectionStats(activeBuf, func(c *ConnectionStats) bool {
 		return true
 	})

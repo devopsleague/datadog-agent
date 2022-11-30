@@ -52,8 +52,8 @@ type driverResizeResult int
 
 const (
 	ResizedDecreased driverResizeResult = -1
-	ResizedUnchanged                    = 0
-	ResizedIncreased                    = 1
+	ResizedUnchanged driverResizeResult = 0
+	ResizedIncreased driverResizeResult = 1
 )
 
 // DriverInterface holds all necessary information for interacting with the windows driver
@@ -133,7 +133,7 @@ func NewDriverInterface(cfg *config.Config, handleFunc HandleCreateFn) (*DriverI
 // Close shuts down the driver interface
 func (di *DriverInterface) Close() error {
 	if err := di.driverFlowHandle.Close(); err != nil {
-		log.Warnf("error closing flow file handle: %w", err)
+		log.Warnf("error closing flow file handle: %v", err)
 	}
 	if err := windows.CloseHandle(di.closeFlowEvent); err != nil {
 		log.Warnf("Error closing closed flow wait handle")
