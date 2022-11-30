@@ -89,7 +89,7 @@ func (storage *SBOMRemoteStorage) sendToEndpoint(url string, apiKey string, body
 	if err != nil {
 		return err
 	}
-	r.Header.Set("Content-Type", "application/json")
+	r.Header.Set("Content-Type", "application/x-protobuf")
 	r.Header.Add("dd-api-key", apiKey)
 
 	if storage.compression {
