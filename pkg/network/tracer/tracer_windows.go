@@ -137,6 +137,7 @@ func (t *Tracer) Stop() {
 	if err != nil {
 		log.Errorf("error closing driver interface: %s", err)
 	}
+	t.closedEventLoop.Wait()
 }
 
 // GetActiveConnections returns all active connections
@@ -154,7 +155,7 @@ func (t *Tracer) GetActiveConnections(clientID string) (*network.Connections, er
 		return !t.shouldSkipConnection(c)
 	})
 	if err != nil {
-		return nil, fmt.Errorf("error retrieving open connections from driver: %w", err)
+		return nil, fmt.Errorf("error retrieving closed connections from driver: %w", err)
 	}
 	activeConnStats := t.activeBuffer.Connections()
 	closedConnStats := t.closedBuffer.Connections()
