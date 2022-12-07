@@ -47,7 +47,7 @@ require (
 	github.com/DataDog/datadog-agent/pkg/obfuscate v0.41.0-rc.3
 	github.com/DataDog/datadog-agent/pkg/otlp/model v0.41.0-rc.3
 	github.com/DataDog/datadog-agent/pkg/quantile v0.41.0-rc.3
-	github.com/DataDog/datadog-agent/pkg/remoteconfig/state v0.41.0-rc.3
+	github.com/DataDog/datadog-agent/pkg/remoteconfig/state v0.41.0-rc.3.0.20221207140548-a500ba1a95be
 	github.com/DataDog/datadog-agent/pkg/security/secl v0.41.0-rc.3
 	github.com/DataDog/datadog-agent/pkg/trace v0.41.0-rc.3
 	github.com/DataDog/datadog-agent/pkg/util/cgroups v0.41.0-rc.3
