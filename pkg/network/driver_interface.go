@@ -135,9 +135,11 @@ func (di *DriverInterface) Close() error {
 	if err := di.driverFlowHandle.Close(); err != nil {
 		log.Warnf("error closing flow file handle: %v", err)
 	}
+	windows.SetEvent(di.closeFlowEvent)
 	if err := windows.CloseHandle(di.closeFlowEvent); err != nil {
 		log.Warnf("Error closing closed flow wait handle")
 	}
+	di.closeFlowEvent = windows.Handle(0)
 	return nil
 }
 
@@ -311,7 +313,11 @@ func (di *DriverInterface) getFlowConnectionStats(ioctl uint32, connbuffer *driv
 		// provided buffer is too small to contain all entries in one of
 		// the hashmap's linkedlists
 		if bytesRead == 0 && err == windows.ERROR_MORE_DATA {
-			return 0, fmt.Errorf("Buffer not large enough for hash bucket"), 0, 0
+			//log.Warnf("Buffer not large enough for hash bucket")
+			//return 0, fmt.Errorf("Buffer not large enough for hash bucket"), 0, 0
+			connbuffer.resizeDriverBuffer(len(*connbuffer) * 2)
+			increases++
+			continue
 		}
 		totalBytesRead += bytesRead
 

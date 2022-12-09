@@ -104,6 +104,7 @@ func NewTracer(config *config.Config) (*Tracer, error) {
 
 		runtime.LockOSThread()
 		defer runtime.UnlockOSThread()
+	waitloop:
 		for {
 			evt, _ := windows.WaitForSingleObject(di.GetClosedFlowsEvent(), windows.INFINITE)
 			switch evt {
@@ -111,14 +112,15 @@ func NewTracer(config *config.Config) (*Tracer, error) {
 				_, err = tr.driverInterface.GetClosedConnectionStats(tr.closedBuffer, func(c *network.ConnectionStats) bool {
 					return !tr.shouldSkipConnection(c)
 				})
-				log.Infof("Getting closed connections due to signal")
 				closedConnStats := tr.closedBuffer.Connections()
 
 				tr.state.StoreClosedConnections(closedConnStats)
 
 			case windows.WAIT_FAILED:
-				break
+				break waitloop
 
+			default:
+				log.Infof("got other wait value %v", evt)
 			}
 		}
 

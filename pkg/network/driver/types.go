@@ -53,11 +53,11 @@ type Stats C.struct__stats
 
 const StatsSize = C.sizeof_struct__stats
 
-type PerFlowData C.struct__perFlowData
+type PerFlowData C.struct__userFlowData
 type TCPFlowData C.struct__tcpFlowData
 type UDPFlowData C.struct__udpFlowData
 
-const PerFlowDataSize = C.sizeof_struct__perFlowData
+const PerFlowDataSize = C.sizeof_struct__userFlowData
 
 const (
 	FlowDirectionMask     = C.FLOW_DIRECTION_MASK

@@ -125,19 +125,20 @@ type PerFlowData struct {
 	Tls_version_chosen       uint16
 	Tls_alpn_requested       uint64
 	Tls_alpn_chosen          uint64
-	Protocol_u               [32]byte
+	Protocol_u               [36]byte
 }
 type TCPFlowData struct {
-	IRTT            uint64
-	SRTT            uint64
-	RttVariance     uint64
-	RetransmitCount uint64
+	IRTT             uint64
+	SRTT             uint64
+	RttVariance      uint64
+	RetransmitCount  uint64
+	ConnectionStatus uint32
 }
 type UDPFlowData struct {
 	Reserved uint64
 }
 
-const PerFlowDataSize = 0xb0
+const PerFlowDataSize = 0xb4
 
 const (
 	FlowDirectionMask     = 0x300
