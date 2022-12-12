@@ -118,7 +118,7 @@ func (storage *SBOMRemoteStorage) SendSBOM(sbom *api.SBOMMessage) error {
 		if err = storage.sendToEndpoint(url, storage.apiKeys[i], body); err != nil {
 			seclog.Warnf("couldn't sent SBOM to [%s, body size: %d]: %v", url, body.Len(), err)
 		} else {
-			seclog.Infof("SBOM for '%s' successfully sent to [%s]", sbom.GetContainerID(), url)
+			seclog.Infof("SBOM for '%s - %s - %s' successfully sent to [%s]", sbom.GetHost(), sbom.GetContainerID(), sbom.GetTags(), url)
 		}
 	}
 
