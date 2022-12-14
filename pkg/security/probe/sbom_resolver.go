@@ -10,15 +10,11 @@ package probe
 
 import (
 	"context"
-	"errors"
 	"fmt"
-	"os"
 	"strings"
 	"sync"
 	"time"
 
-	"github.com/aquasecurity/trivy/pkg/commands/artifact"
-	"github.com/aquasecurity/trivy/pkg/flag"
 	trivyReport "github.com/aquasecurity/trivy/pkg/types"
 	"github.com/hashicorp/golang-lru/v2/simplelru"
 	"go.uber.org/atomic"
@@ -27,6 +23,7 @@ import (
 	"github.com/DataDog/datadog-agent/pkg/security/secl/model"
 	"github.com/DataDog/datadog-agent/pkg/security/seclog"
 	"github.com/DataDog/datadog-agent/pkg/security/utils"
+	"github.com/DataDog/datadog-agent/pkg/util/sbom"
 )
 
 // SBOMSource defines is the default log source for the SBOM events
@@ -98,6 +95,7 @@ type SBOMResolver struct {
 	workloads     map[string]*SBOM
 	scannerChan   chan *SBOM
 	probe         *Probe
+	trivyScanner  *sbom.TrivyCollector
 
 	// context tags and attributes
 	hostname    string
@@ -108,9 +106,10 @@ type SBOMResolver struct {
 // NewSBOMResolver returns a new instance of SBOMResolver
 func NewSBOMResolver(p *Probe) (*SBOMResolver, error) {
 	resolver := &SBOMResolver{
-		probe:       p,
-		workloads:   make(map[string]*SBOM),
-		scannerChan: make(chan *SBOM, 100),
+		probe:        p,
+		workloads:    make(map[string]*SBOM),
+		scannerChan:  make(chan *SBOM, 100),
+		trivyScanner: sbom.NewTrivyCollector(),
 	}
 	if !p.Config.SBOMResolverEnabled {
 		return resolver, nil
@@ -176,56 +175,14 @@ func (r *SBOMResolver) Start(ctx context.Context) {
 
 // generateSBOM calls Trivy to generate the SBOM of a workload
 func (r *SBOMResolver) generateSBOM(root string, workload *SBOM) error {
-	seclog.Infof("generating SBOM for %s", root)
+	seclog.Infof("Generating SBOM for %s", root)
 
-	reportFlagGroup := flag.NewReportFlagGroup()
-	fsFlags := &flag.Flags{
-		ReportFlagGroup: reportFlagGroup,
-		ScanFlagGroup:   flag.NewScanFlagGroup()}
-	globalFlags := flag.NewGlobalFlagGroup()
-
-	opts, err := fsFlags.ToOptions("", []string{root}, globalFlags, os.Stdout)
+	report, err := r.trivyScanner.ScanRootfs(context.Background(), root)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to generate SBOM for %s: %w", root, err)
 	}
 
-	opts.Format = "table"
-	opts.Timeout = 60 * time.Second
-	opts.ListAllPkgs = true
-
-	ctx, cancel := context.WithTimeout(context.Background(), opts.Timeout)
-	defer cancel()
-
-	defer func() {
-		if errors.Is(err, context.DeadlineExceeded) {
-			seclog.Warnf("increase --timeout value")
-		}
-	}()
-
-	runner, err := artifact.NewRunner(ctx, opts)
-	if err != nil {
-		if errors.Is(err, artifact.SkipScan) {
-			return nil
-		}
-		return fmt.Errorf("init error: %w", err)
-	}
-	defer runner.Close(ctx)
-
-	report, err := runner.ScanRootfs(ctx, opts)
-	if err != nil {
-		return fmt.Errorf("rootfs scan error: %w", err)
-	}
-
-	report, err = runner.Filter(ctx, opts, report)
-	if err != nil {
-		return fmt.Errorf("filter error: %w", err)
-	}
-
-	if err = runner.Report(opts, report); err != nil {
-		return fmt.Errorf("report error: %w", err)
-	}
-
-	workload.report = report
+	workload.report = *report
 	workload.shouldScan = false
 	workload.rootCandidates.Purge()
 
