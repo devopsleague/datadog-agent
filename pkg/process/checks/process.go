@@ -13,6 +13,7 @@ import (
 	model "github.com/DataDog/agent-payload/v5/process"
 	"github.com/DataDog/gopsutil/cpu"
 
+	ddconfig "github.com/DataDog/datadog-agent/pkg/config"
 	"github.com/DataDog/datadog-agent/pkg/process/config"
 	"github.com/DataDog/datadog-agent/pkg/process/net"
 	"github.com/DataDog/datadog-agent/pkg/process/procutil"
@@ -30,6 +31,10 @@ var Process = &ProcessCheck{}
 var _ CheckWithRealTime = (*ProcessCheck)(nil)
 
 var errEmptyCPUTime = errors.New("empty CPU time information returned")
+
+const (
+	ProcessDiscoveryHintPosition = 0
+)
 
 // ProcessCheck collects full state, including cmdline args and related metadata,
 // for live and running processes. The instance will store some state between
@@ -61,6 +66,9 @@ type ProcessCheck struct {
 
 	maxBatchSize  int
 	maxBatchBytes int
+
+	checkCount uint32
+	skipAmount uint32
 }
 
 // Init initializes the singleton ProcessCheck.
@@ -79,6 +87,8 @@ func (p *ProcessCheck) Init(_ *config.AgentConfig, info *model.SystemInfo) {
 
 	p.maxBatchSize = getMaxBatchSize()
 	p.maxBatchBytes = getMaxBatchBytes()
+
+	p.skipAmount = uint32(ddconfig.Datadog.GetInt32("process_config.checks_between_hints"))
 }
 
 // Name returns the name of the ProcessCheck.
@@ -169,9 +179,12 @@ func (p *ProcessCheck) run(cfg *config.AgentConfig, groupID int32, collectRealTi
 		return &RunResult{}, nil
 	}
 
+	collectorProcHints := p.generateHints()
+	p.checkCount++
+
 	connsByPID := Connections.getLastConnectionsByPID()
 	procsByCtr := fmtProcesses(cfg, procs, p.lastProcs, pidToCid, cpuTimes[0], p.lastCPUTime, p.lastRun, connsByPID)
-	messages, totalProcs, totalContainers := createProcCtrMessages(procsByCtr, containers, cfg, p.maxBatchSize, p.maxBatchBytes, p.sysInfo, groupID, p.networkID)
+	messages, totalProcs, totalContainers := createProcCtrMessages(procsByCtr, containers, cfg, p.maxBatchSize, p.maxBatchBytes, p.sysInfo, groupID, p.networkID, collectorProcHints)
 
 	// Store the last state for comparison on the next run.
 	// Note: not storing the filtered in case there are new processes that haven't had a chance to show up twice.
@@ -219,6 +232,21 @@ func (p *ProcessCheck) run(cfg *config.AgentConfig, groupID int32, collectRealTi
 	return result, nil
 }
 
+// Sets the bit at pos in the integer n.
+func setBit(n int32, pos uint) int32 {
+	n |= (1 << pos)
+	return n
+}
+
+func (p *ProcessCheck) generateHints() int32 {
+	var hints int32 = 0
+
+	if p.checkCount%p.skipAmount == 0 {
+		hints = setBit(hints, ProcessDiscoveryHintPosition)
+	}
+	return hints
+}
+
 func procsToStats(procs map[int32]*procutil.Process) map[int32]*procutil.Stats {
 	stats := map[int32]*procutil.Stats{}
 	for pid, proc := range procs {
@@ -251,6 +279,7 @@ func createProcCtrMessages(
 	sysInfo *model.SystemInfo,
 	groupID int32,
 	networkID string,
+	hints int32,
 ) ([]model.MessageBody, int, int) {
 	collectorProcs, totalProcs, totalContainers := chunkProcessesAndContainers(procsByCtr, containers, maxBatchSize, maxBatchWeight)
 	// fill in GroupSize for each CollectorProc and convert them to final messages
@@ -263,6 +292,7 @@ func createProcCtrMessages(
 		m.Info = sysInfo
 		m.GroupId = groupID
 		m.ContainerHostType = cfg.ContainerHostType
+		m.HintMask = hints
 
 		messages = append(messages, m)
 	}
