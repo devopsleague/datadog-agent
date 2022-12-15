@@ -292,7 +292,7 @@ func createProcCtrMessages(
 		m.Info = sysInfo
 		m.GroupId = groupID
 		m.ContainerHostType = cfg.ContainerHostType
-		m.HintMask = hints
+		m.Hints = &model.CollectorProc_HintMask{HintMask: hints}
 
 		messages = append(messages, m)
 	}

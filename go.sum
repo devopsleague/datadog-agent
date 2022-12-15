@@ -128,6 +128,8 @@ github.com/DataDog/agent-payload/v5 v5.0.46 h1:flmDbLb7QFTLNvbfjkL0BiwFfwP5umS17
 github.com/DataDog/agent-payload/v5 v5.0.46/go.mod h1:vhXPNG7eNDOLeW94Z7dLNUBv61kRBHK7vXnQ+RQfckk=
 github.com/DataDog/agent-payload/v5 v5.0.48-0.20221213224926-dc7d45a4b7ae h1:0tkQlLfWxFKe78Qifn7WOqWvkP+iM7ybborHds79jUo=
 github.com/DataDog/agent-payload/v5 v5.0.48-0.20221213224926-dc7d45a4b7ae/go.mod h1:vhXPNG7eNDOLeW94Z7dLNUBv61kRBHK7vXnQ+RQfckk=
+github.com/DataDog/agent-payload/v5 v5.0.48-0.20221214215213-c827fba13bc6 h1:3sFdmYcZM1vYsRsIv7s7QtrQVc9iw3gKohtaUwpElho=
+github.com/DataDog/agent-payload/v5 v5.0.48-0.20221214215213-c827fba13bc6/go.mod h1:vhXPNG7eNDOLeW94Z7dLNUBv61kRBHK7vXnQ+RQfckk=
 github.com/DataDog/aptly v1.5.0 h1:Oy6JVRC9iDgnmpeVYa4diXwP/exU7wJ/U1kuI4Zacxg=
 github.com/DataDog/aptly v1.5.0/go.mod h1:KVyvkYXGcFugxadGFZ+u5Fc3M6q/EfzFZyeTD9HVbkY=
 github.com/DataDog/cast v1.3.1-0.20190301154711-1ee8c8bd14a3 h1:SobA9WYm4K/MUtWlbKaomWTmnuYp1KhIm8Wlx3vmpsg=
@@ -141,6 +143,8 @@ github.com/DataDog/datadog-go/v5 v5.1.1/go.mod h1:KhiYb2Badlv9/rofz+OznKoEF5XKTo
 github.com/DataDog/datadog-operator v0.7.0/go.mod h1:FYKcI42D9d32cTM8+0l/1d8LxaxaPvMFtMdtQA/2X6g=
 github.com/DataDog/datadog-operator v0.7.1-0.20220602134901-4f6af09bf54f h1:A7WPfKHAeZB+yD83KtY8Y4mZKFAbZgBziulshnpErK4=
 github.com/DataDog/datadog-operator v0.7.1-0.20220602134901-4f6af09bf54f/go.mod h1:KAQEFctpgWNlJ2/ef9PRKqy79UAa/URSOWZzgaCrwug=
+github.com/DataDog/datadog-operator v0.8.3 h1:p/YpSHqdpKfQE79OUbfEsgCPssE5RrW1bORND2NFVy0=
+github.com/DataDog/datadog-operator v0.8.3/go.mod h1:IRkzZHOweGLuszkSVuOQcDm1qGcYqBs3p4wuDozcd1M=
 github.com/DataDog/ebpf-manager v0.1.0 h1:IsyrQibXHXNfxicihzMJ4mEbursWuwn6fVEtQL1Bo28=
 github.com/DataDog/ebpf-manager v0.1.0/go.mod h1:oUCSIP1dv/SGMlSzJ8ZII3nCHdUqFQOjXD5QvQcdk+8=
 github.com/DataDog/extendeddaemonset v0.5.1-0.20210315105301-41547d4ff09c/go.mod h1:lMIXf2EAzxbIv2zEvWu1bdqlaclUWoCtN13MHuPcY5I=
@@ -712,6 +716,7 @@ github.com/go-openapi/spec v0.17.0/go.mod h1:XkF/MOi14NmjsfZ8VtAKf8pIlbZzyoTvZsd
 github.com/go-openapi/spec v0.18.0/go.mod h1:XkF/MOi14NmjsfZ8VtAKf8pIlbZzyoTvZsdfssdxcBI=
 github.com/go-openapi/spec v0.19.2/go.mod h1:sCxk3jxKgioEJikev4fgkNmwS+3kuYdJtcsZsD5zxMY=
 github.com/go-openapi/spec v0.19.3/go.mod h1:FpwSN1ksY1eteniUU7X0N/BgJ7a4WvBFVA8Lj9mJglo=
+github.com/go-openapi/spec v0.20.3 h1:uH9RQ6vdyPSs2pSy9fL8QPspDF2AMIMPtmK5coSSjtQ=
 github.com/go-openapi/spec v0.20.3/go.mod h1:gG4F8wdEDN+YPBMVnzE85Rbhf+Th2DTvA9nFPQ5AYEg=
 github.com/go-openapi/strfmt v0.17.0/go.mod h1:P82hnJI0CXkErkXi8IKjPbNBM6lV6+5pLP5l494TcyU=
 github.com/go-openapi/strfmt v0.18.0/go.mod h1:P82hnJI0CXkErkXi8IKjPbNBM6lV6+5pLP5l494TcyU=

@@ -113,31 +113,31 @@ func TestProcessCheckSecondRun(t *testing.T) {
 			Processes: []*model.Process{makeProcessModel(t, proc1)},
 			GroupSize: int32(len(processesByPid)),
 			Info:      processCheck.sysInfo,
-			HintMask:  0b1,
+			Hints:     &model.CollectorProc_HintMask{HintMask: 0b1},
 		},
 		&model.CollectorProc{
 			Processes: []*model.Process{makeProcessModel(t, proc2)},
 			GroupSize: int32(len(processesByPid)),
 			Info:      processCheck.sysInfo,
-			HintMask:  0b1,
+			Hints:     &model.CollectorProc_HintMask{HintMask: 0b1},
 		},
 		&model.CollectorProc{
 			Processes: []*model.Process{makeProcessModel(t, proc3)},
 			GroupSize: int32(len(processesByPid)),
 			Info:      processCheck.sysInfo,
-			HintMask:  0b1,
+			Hints:     &model.CollectorProc_HintMask{HintMask: 0b1},
 		},
 		&model.CollectorProc{
 			Processes: []*model.Process{makeProcessModel(t, proc4)},
 			GroupSize: int32(len(processesByPid)),
 			Info:      processCheck.sysInfo,
-			HintMask:  0b1,
+			Hints:     &model.CollectorProc_HintMask{HintMask: 0b1},
 		},
 		&model.CollectorProc{
 			Processes: []*model.Process{makeProcessModel(t, proc5)},
 			GroupSize: int32(len(processesByPid)),
 			Info:      processCheck.sysInfo,
-			HintMask:  0b1,
+			Hints:     &model.CollectorProc_HintMask{HintMask: 0b1},
 		},
 	}
 	actual, err := processCheck.run(config.NewDefaultAgentConfig(), 0, false)
@@ -169,26 +169,31 @@ func TestProcessCheckWithRealtime(t *testing.T) {
 			Processes: []*model.Process{makeProcessModel(t, proc1)},
 			GroupSize: int32(len(processesByPid)),
 			Info:      processCheck.sysInfo,
+			Hints:     &model.CollectorProc_HintMask{HintMask: 0b1},
 		},
 		&model.CollectorProc{
 			Processes: []*model.Process{makeProcessModel(t, proc2)},
 			GroupSize: int32(len(processesByPid)),
 			Info:      processCheck.sysInfo,
+			Hints:     &model.CollectorProc_HintMask{HintMask: 0b1},
 		},
 		&model.CollectorProc{
 			Processes: []*model.Process{makeProcessModel(t, proc3)},
 			GroupSize: int32(len(processesByPid)),
 			Info:      processCheck.sysInfo,
+			Hints:     &model.CollectorProc_HintMask{HintMask: 0b1},
 		},
 		&model.CollectorProc{
 			Processes: []*model.Process{makeProcessModel(t, proc4)},
 			GroupSize: int32(len(processesByPid)),
 			Info:      processCheck.sysInfo,
+			Hints:     &model.CollectorProc_HintMask{HintMask: 0b1},
 		},
 		&model.CollectorProc{
 			Processes: []*model.Process{makeProcessModel(t, proc5)},
 			GroupSize: int32(len(processesByPid)),
 			Info:      processCheck.sysInfo,
+			Hints:     &model.CollectorProc_HintMask{HintMask: 0b1},
 		},
 	}
 
@@ -223,7 +228,7 @@ func TestProcessCheckHints(t *testing.T) {
 			Processes: []*model.Process{makeProcessModel(t, proc1)},
 			GroupSize: int32(len(processesByPid)),
 			Info:      processCheck.sysInfo,
-			HintMask:  0b1,
+			Hints:     &model.CollectorProc_HintMask{HintMask: 0b1},
 		},
 	}
 	actual, err := processCheck.run(config.NewDefaultAgentConfig(), 0, false)
@@ -236,7 +241,7 @@ func TestProcessCheckHints(t *testing.T) {
 			Processes: []*model.Process{makeProcessModel(t, proc1)},
 			GroupSize: int32(len(processesByPid)),
 			Info:      processCheck.sysInfo,
-			HintMask:  0b0,
+			Hints:     &model.CollectorProc_HintMask{HintMask: 0b0},
 		},
 	}
 
@@ -249,7 +254,7 @@ func TestProcessCheckHints(t *testing.T) {
 			Processes: []*model.Process{makeProcessModel(t, proc1)},
 			GroupSize: int32(len(processesByPid)),
 			Info:      processCheck.sysInfo,
-			HintMask:  0b1,
+			Hints:     &model.CollectorProc_HintMask{HintMask: 0b1},
 		},
 	}
 
