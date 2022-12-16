@@ -32,11 +32,14 @@ import (
 	"github.com/DataDog/datadog-agent/pkg/status/health"
 )
 
-// DefaultFlushInterval aggregator default flush interval
-const DefaultFlushInterval = 15 * time.Second // flush interval
-const bucketSize = 10                         // fixed for now
-// MetricSamplePoolBatchSize is the batch size of the metric sample pool.
-const MetricSamplePoolBatchSize = 32
+const (
+	// DefaultFlushInterval aggregator default flush interval
+	DefaultFlushInterval = 15 * time.Second // flush interval
+	// MetricSamplePoolBatchSize is the batch size of the metric sample pool.
+	MetricSamplePoolBatchSize = 32
+
+	bucketSize = 10 // fixed for now
+)
 
 // tagsetTlm handles telemetry for large tagsets.
 var tagsetTlm *tagsetTelemetry
@@ -237,6 +240,7 @@ type BufferedAggregator struct {
 
 	tlmContainerTagsEnabled bool                                              // Whether we should call the tagger to tag agent telemetry metrics
 	agentTags               func(collectors.TagCardinality) ([]string, error) // This function gets the agent tags from the tagger (defined as a struct field to ease testing)
+	globalTags              func(collectors.TagCardinality) ([]string, error) // This function gets global tags from the tagger when host tags are not available
 
 	flushAndSerializeInParallel FlushAndSerializeInParallel
 }
@@ -304,6 +308,7 @@ func NewBufferedAggregator(s serializer.MetricSerializer, eventPlatformForwarder
 		agentName:                   agentName,
 		tlmContainerTagsEnabled:     config.Datadog.GetBool("basic_telemetry_add_container_tags"),
 		agentTags:                   tagger.AgentTags,
+		globalTags:                  tagger.GlobalTags,
 		flushAndSerializeInParallel: NewFlushAndSerializeInParallel(config.Datadog),
 	}
 
@@ -474,7 +479,8 @@ func (agg *BufferedAggregator) GetSeriesAndSketches(before time.Time) (metrics.S
 func (agg *BufferedAggregator) getSeriesAndSketches(
 	before time.Time,
 	seriesSink metrics.SerieSink,
-	sketchesSink metrics.SketchesSink) {
+	sketchesSink metrics.SketchesSink,
+) {
 	agg.mu.Lock()
 	defer agg.mu.Unlock()
 
@@ -819,16 +825,33 @@ func (agg *BufferedAggregator) handleContainerLifecycleEvent(event senderContain
 // tags returns the list of tags that should be added to the agent telemetry metrics
 // Container agent tags may be missing in the first seconds after agent startup
 func (agg *BufferedAggregator) tags(withVersion bool) []string {
-	tags := []string{}
-	if agg.tlmContainerTagsEnabled {
+	var tags []string
+	if agg.hostname == "" {
 		var err error
-		tags, err = agg.agentTags(tagger.ChecksCardinality)
+		tags, err = agg.globalTags(tagger.ChecksCardinality)
 		if err != nil {
+			log.Debugf("Couldn't get Global tags: %v", err)
+		}
+	}
+	if agg.tlmContainerTagsEnabled {
+		agentTags, err := agg.agentTags(tagger.ChecksCardinality)
+		if err == nil {
+			if tags == nil {
+				tags = agentTags
+			} else {
+				tags = append(tags, agentTags...)
+			}
+		} else {
 			log.Debugf("Couldn't get Agent tags: %v", err)
 		}
 	}
 	if withVersion {
-		return append(tags, "version:"+version.AgentVersion)
+		tags = append(tags, "version:"+version.AgentVersion)
+	}
+	// nil to empty string
+	// This is expected by other components/tests
+	if tags == nil {
+		tags = []string{}
 	}
 	return tags
 }
