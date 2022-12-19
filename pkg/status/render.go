@@ -58,59 +58,70 @@ func FormatStatus(data []byte) (string, error) {
 	title := fmt.Sprintf("Agent (v%s)", stats["version"])
 	stats["title"] = title
 
-	headerFunc := func() { renderStatusTemplate(b, "/header.tmpl", stats) }
-	checkStatsFunc := func() {
-		renderChecksStats(b, runnerStats, pyLoaderStats, pythonInit, autoConfigStats, checkSchedulerStats,
-			inventoriesStats, "")
+	headerFunc := func() error { return renderStatusTemplate(b, "/header.tmpl", stats) }
+	checkStatsFunc := func() error {
+		return renderChecksStats(b, runnerStats, pyLoaderStats, pythonInit, autoConfigStats, checkSchedulerStats, inventoriesStats, "")
 	}
-	jmxFetchFunc := func() { renderStatusTemplate(b, "/jmxfetch.tmpl", stats) }
-	forwarderFunc := func() { renderStatusTemplate(b, "/forwarder.tmpl", forwarderStats) }
-	endpointsFunc := func() { renderStatusTemplate(b, "/endpoints.tmpl", endpointsInfos) }
-	logsAgentFunc := func() { renderStatusTemplate(b, "/logsagent.tmpl", logsStats) }
-	systemProbeFunc := func() {
+	jmxFetchFunc := func() error { return renderStatusTemplate(b, "/jmxfetch.tmpl", stats) }
+	forwarderFunc := func() error { return renderStatusTemplate(b, "/forwarder.tmpl", forwarderStats) }
+	endpointsFunc := func() error { return renderStatusTemplate(b, "/endpoints.tmpl", endpointsInfos) }
+	logsAgentFunc := func() error { return renderStatusTemplate(b, "/logsagent.tmpl", logsStats) }
+	systemProbeFunc := func() error {
 		if config.Datadog.GetBool("system_probe_config.enabled") {
-			renderStatusTemplate(b, "/systemprobe.tmpl", systemProbeStats)
+			return renderStatusTemplate(b, "/systemprobe.tmpl", systemProbeStats)
 		}
+		return nil
 	}
-	processAgentFunc := func() { renderStatusTemplate(b, "/process-agent.tmpl", processAgentStatus) }
-	traceAgentFunc := func() { renderStatusTemplate(b, "/trace-agent.tmpl", stats["apmStats"]) }
-	aggregatorFunc := func() { renderStatusTemplate(b, "/aggregator.tmpl", aggregatorStats) }
-	dogstatsdFunc := func() { renderStatusTemplate(b, "/dogstatsd.tmpl", dogstatsdStats) }
-	clusterAgentFunc := func() {
+	processAgentFunc := func() error { return renderStatusTemplate(b, "/process-agent.tmpl", processAgentStatus) }
+	traceAgentFunc := func() error { return renderStatusTemplate(b, "/trace-agent.tmpl", stats["apmStats"]) }
+	aggregatorFunc := func() error { return renderStatusTemplate(b, "/aggregator.tmpl", aggregatorStats) }
+	dogstatsdFunc := func() error { return renderStatusTemplate(b, "/dogstatsd.tmpl", dogstatsdStats) }
+	clusterAgentFunc := func() error {
 		if config.Datadog.GetBool("cluster_agent.enabled") || config.Datadog.GetBool("cluster_checks.enabled") {
-			renderStatusTemplate(b, "/clusteragent.tmpl", dcaStats)
+			return renderStatusTemplate(b, "/clusteragent.tmpl", dcaStats)
 		}
+		return nil
 	}
-	snmpTrapFunc := func() {
+	snmpTrapFunc := func() error {
 		if traps.IsEnabled() {
-			renderStatusTemplate(b, "/snmp-traps.tmpl", snmpTrapsStats)
+			return renderStatusTemplate(b, "/snmp-traps.tmpl", snmpTrapsStats)
 		}
+		return nil
 	}
-	autodiscoveryFunc := func() {
+	autodiscoveryFunc := func() error {
 		if config.IsContainerized() {
-			renderAutodiscoveryStats(b, stats["adEnabledFeatures"], stats["adConfigErrors"],
+			return renderAutodiscoveryStats(b, stats["adEnabledFeatures"], stats["adConfigErrors"],
 				stats["filterErrors"])
 		}
+		return nil
 	}
-
-	otlpFunc := func() {
+	otlpFunc := func() error {
 		if otlp.IsDisplayed() {
-			renderStatusTemplate(b, "/otlp.tmpl", stats)
+			return renderStatusTemplate(b, "/otlp.tmpl", stats)
 		}
+		return nil
 	}
 
-	var renderFuncs []func()
-
+	var renderFuncs []func() error
 	if config.IsCLCRunner() {
-		renderFuncs = []func(){headerFunc, checkStatsFunc, aggregatorFunc, endpointsFunc, clusterAgentFunc,
+		renderFuncs = []func() error{headerFunc, checkStatsFunc, aggregatorFunc, endpointsFunc, clusterAgentFunc,
 			autodiscoveryFunc}
 	} else {
-		renderFuncs = []func(){headerFunc, checkStatsFunc, jmxFetchFunc, forwarderFunc, endpointsFunc,
+		renderFuncs = []func() error{headerFunc, checkStatsFunc, jmxFetchFunc, forwarderFunc, endpointsFunc,
 			logsAgentFunc, systemProbeFunc, processAgentFunc, traceAgentFunc, aggregatorFunc, dogstatsdFunc,
 			clusterAgentFunc, snmpTrapFunc, autodiscoveryFunc, otlpFunc}
 	}
-
-	renderAgentSections(renderFuncs)
+	var errs []error
+	for _, f := range renderFuncs {
+		if err := f(); err != nil {
+			errs = append(errs, err)
+		}
+	}
+	if 0 < len(errs) {
+		if err := renderStatusTemplate(b, "/rendererrors.tmpl", errs); err != nil {
+			fmt.Println(err)
+		}
+	}
 
 	return b.String(), nil
 }
@@ -196,7 +207,7 @@ func FormatMetadataMapCLI(data []byte) (string, error) {
 	return b.String(), nil
 }
 
-func renderChecksStats(w io.Writer, runnerStats, pyLoaderStats, pythonInit, autoConfigStats, checkSchedulerStats, inventoriesStats interface{}, onlyCheck string) {
+func renderChecksStats(w io.Writer, runnerStats, pyLoaderStats, pythonInit, autoConfigStats, checkSchedulerStats, inventoriesStats interface{}, onlyCheck string) error {
 	checkStats := make(map[string]interface{})
 	checkStats["RunnerStats"] = runnerStats
 	checkStats["pyLoaderStats"] = pyLoaderStats
@@ -205,7 +216,7 @@ func renderChecksStats(w io.Writer, runnerStats, pyLoaderStats, pythonInit, auto
 	checkStats["CheckSchedulerStats"] = checkSchedulerStats
 	checkStats["OnlyCheck"] = onlyCheck
 	checkStats["CheckMetadata"] = inventoriesStats
-	renderStatusTemplate(w, "/collector.tmpl", checkStats)
+	return renderStatusTemplate(w, "/collector.tmpl", checkStats)
 }
 
 func renderCheckStats(data []byte, checkName string) (string, error) {
@@ -238,32 +249,22 @@ func renderRuntimeSecurityStats(w io.Writer, runtimeSecurityStatus interface{}) 
 	renderStatusTemplate(w, "/runtimesecurity.tmpl", status)
 }
 
-func renderAutodiscoveryStats(w io.Writer, adEnabledFeatures interface{}, adConfigErrors interface{}, filterErrors interface{}) {
+func renderAutodiscoveryStats(w io.Writer, adEnabledFeatures interface{}, adConfigErrors interface{}, filterErrors interface{}) error {
 	autodiscoveryStats := make(map[string]interface{})
 	autodiscoveryStats["adEnabledFeatures"] = adEnabledFeatures
 	autodiscoveryStats["adConfigErrors"] = adConfigErrors
 	autodiscoveryStats["filterErrors"] = filterErrors
-	renderStatusTemplate(w, "/autodiscovery.tmpl", autodiscoveryStats)
+	return renderStatusTemplate(w, "/autodiscovery.tmpl", autodiscoveryStats)
 }
 
 //go:embed templates
 var templatesFS embed.FS
 
-func renderStatusTemplate(w io.Writer, templateName string, stats interface{}) {
+func renderStatusTemplate(w io.Writer, templateName string, stats interface{}) error {
 	tmpl, tmplErr := templatesFS.ReadFile(path.Join("templates", templateName))
 	if tmplErr != nil {
-		fmt.Println(tmplErr)
-		return
+		return tmplErr
 	}
 	t := template.Must(template.New(templateName).Funcs(fmap).Parse(string(tmpl)))
-	err := t.Execute(w, stats)
-	if err != nil {
-		fmt.Println(err)
-	}
-}
-
-func renderAgentSections(renderFuncs []func()) {
-	for _, f := range renderFuncs {
-		f()
-	}
+	return t.Execute(w, stats)
 }
