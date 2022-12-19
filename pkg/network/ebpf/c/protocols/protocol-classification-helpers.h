@@ -88,9 +88,53 @@ static __always_inline bool is_http(const char *buf, __u32 size) {
     return http;
 }
 
+// Checks if the given buffers start with `HTTP` prefix (represents a response) or starts with `<method> /` which represents
+// a request, where <method> is one of: GET, POST, PUT, DELETE, HEAD, OPTIONS, or PATCH.
+static __always_inline bool is_mongo(conn_tuple_t *tup, const char *buf, __u32 size) {
+    CHECK_PRELIMINARY_BUFFER_CONDITIONS(buf, size, MONGO_HEADER_LENGTH)
+
+    mongo_msg_header header = *((mongo_msg_header*)buf);
+
+    // The message length should contain the size of headers
+    if (header.message_length < MONGO_HEADER_LENGTH) {
+        return false;
+    }
+
+    if (header.request_id < 0) {
+        return false;
+    }
+
+    mongo_key key = {};
+    key.tup = *tup;
+
+    switch (header.op_code) {
+    case MONGO_OP_REPLY:
+        key.req_id = header.response_to;
+        void *val = bpf_map_lookup_elem(&mongo_request_id, &key);
+        return val != NULL;
+    case MONGO_OP_UPDATE:
+    case MONGO_OP_INSERT:
+    case MONGO_OP_RESERVED:
+    case MONGO_OP_QUERY:
+    case MONGO_OP_GET_MORE:
+    case MONGO_OP_DELETE:
+    case MONGO_OP_KILL_CURSORS:
+    case MONGO_OP_COMPRESSED:
+    case MONGO_OP_MSG:
+        if (header.response_to == 0) {
+            const bool val = true;
+            key.req_id = header.request_id;
+            bpf_map_update_elem(&mongo_request_id, &key, &val, BPF_ANY);
+            return true;
+        }
+    }
+
+    return false;
+}
+
 // Determines the protocols of the given buffer. If we already classified the payload (a.k.a protocol out param
 // has a known protocol), then we do nothing.
-static __always_inline void classify_protocol(protocol_t *protocol, const char *buf, __u32 size) {
+static __always_inline void classify_protocol(protocol_t *protocol, conn_tuple_t *tup, const char *buf, __u32 size) {
     if (protocol == NULL || *protocol != PROTOCOL_UNKNOWN) {
         return;
     }
@@ -99,6 +143,8 @@ static __always_inline void classify_protocol(protocol_t *protocol, const char *
         *protocol = PROTOCOL_HTTP;
     } else if (is_http2(buf, size)) {
         *protocol = PROTOCOL_HTTP2;
+    } else if (is_mongo(tup, buf, size)) {
+        *protocol = PROTOCOL_MONGO;
     } else {
         *protocol = PROTOCOL_UNKNOWN;
     }
@@ -201,7 +247,7 @@ static __always_inline void protocol_classifier_entrypoint(struct __sk_buff *skb
     read_into_buffer_for_classification((char *)request_fragment, skb, &skb_info);
     const size_t payload_length = skb->len - skb_info.data_off;
     const size_t final_fragment_size = payload_length < CLASSIFICATION_MAX_BUFFER ? payload_length : CLASSIFICATION_MAX_BUFFER;
-    classify_protocol(&cur_fragment_protocol, request_fragment, final_fragment_size);
+    classify_protocol(&cur_fragment_protocol, &skb_tup, request_fragment, final_fragment_size);
     // If there has been a change in the classification, save the new protocol.
     if (cur_fragment_protocol != PROTOCOL_UNKNOWN) {
         bpf_map_update_with_telemetry(connection_protocol, &skb_tup, &cur_fragment_protocol, BPF_NOEXIST);

@@ -22,4 +22,13 @@ BPF_HASH_MAP(conn_tuple_to_socket_skb_conn_tuple, conn_tuple_t, conn_tuple_t, 10
 // interfaces or retransmissions.
 BPF_HASH_MAP(connection_states, conn_tuple_t, u32, 1024)
 
+typedef struct {
+    conn_tuple_t tup;
+    __s32 req_id;
+} mongo_key;
+
+// Maps a connection tuple to latest tcp segment we've processed. Helps to detect same packets that travels multiple
+// interfaces or retransmissions.
+BPF_HASH_MAP(mongo_request_id, mongo_key, bool, 1024)
+
 #endif
