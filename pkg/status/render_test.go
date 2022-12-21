@@ -6,16 +6,25 @@
 package status
 
 import (
-	"bytes"
-	"encoding/json"
-	"errors"
-	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func TestFormatStatus(t *testing.T) {
+	t.Run("invalid JSON", func(t *testing.T) {
+		actual, err := FormatStatus([]byte(`-`))
+		assert.Nil(t, err)
+		want := `
+====================
+Status render errors
+====================
+  invalid character ' ' in numeric literal
+
+
+`
+		assert.Equal(t, want, actual)
+	})
 
 	t.Run("success", func(t *testing.T) {
 		actual, err := FormatStatus([]byte(agentStatusJSON))
@@ -491,32 +500,6 @@ DogStatsD
 `
 		assert.Equal(t, want, actual)
 	})
-}
-
-func Test_renderErrors(t *testing.T) {
-	var b = new(bytes.Buffer)
-	err := renderStatusTemplate(b, "/rendererrors.tmpl", []error{
-		errors.New("someting wrong 1"),
-		errors.New("someting wrong 2"),
-		errors.New("someting wrong 3"),
-		errors.New("someting wrong 4"),
-	})
-	assert.Nil(t, err)
-	want := `
-====================
-Status render errors
-====================
-  someting wrong 1
-
-  someting wrong 2
-
-  someting wrong 3
-
-  someting wrong 4
-
-
-`
-	assert.Equal(t, want, b.String())
 }
 
 // JSON with simplified actual `kubectl exec <DD_AGENT_POD> -- agent status -p`
