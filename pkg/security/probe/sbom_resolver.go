@@ -105,15 +105,22 @@ type SBOMResolver struct {
 
 // NewSBOMResolver returns a new instance of SBOMResolver
 func NewSBOMResolver(p *Probe) (*SBOMResolver, error) {
+	trivyScanner, err := sbom.NewTrivyCollector()
+	if err != nil {
+		return nil, err
+	}
+
 	resolver := &SBOMResolver{
 		probe:        p,
 		workloads:    make(map[string]*SBOM),
 		scannerChan:  make(chan *SBOM, 100),
-		trivyScanner: sbom.NewTrivyCollector(),
+		trivyScanner: trivyScanner,
 	}
+
 	if !p.Config.SBOMResolverEnabled {
 		return resolver, nil
 	}
+
 	resolver.prepareContextTags()
 	return resolver, nil
 }
