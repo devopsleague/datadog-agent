@@ -6,17 +6,12 @@
 package status
 
 import (
-	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func TestFormatStatus(t *testing.T) {
-	tz := os.Getenv("TZ")
-	os.Setenv("TZ", "GMT")
-	defer os.Setenv("TZ", tz)
-
 	t.Run("invalid JSON", func(t *testing.T) {
 		actual, err := FormatStatus([]byte(`-`))
 		assert.Nil(t, err)
@@ -39,8 +34,8 @@ Status render errors
 Agent (vx.y.z)
 ==============
 
-  Status date: 2022-12-20 22:52:01.796 GMT (1671576721796)
-  Agent start: 2022-12-20 19:21:27.793 GMT (1671564087793)
+  Status date: 2022-12-20 22:52:01.796 UTC (1671576721796)
+  Agent start: 2022-12-20 19:21:27.793 UTC (1671564087793)
   Pid: 12136
   Go Version: go1.18.8
   Python Version: 3.8.14
@@ -58,11 +53,11 @@ Agent (vx.y.z)
   Clocks
   ======
     NTP offset: 35µs
-    System time: 2022-12-20 22:52:01.796 GMT (1671576721796)
+    System time: 2022-12-20 22:52:01.796 UTC (1671576721796)
 
   Host Info
   =========
-    bootTime: 2022-12-20 19:19:03 GMT (1671563943000)
+    bootTime: 2022-12-20 19:19:03 UTC (1671563943000)
     hostId: d23fb05c-2393-9a7a-fbf3-92cd755df12a
     kernelArch: x86_64
     kernelVersion: 5.10.133+
@@ -143,7 +138,7 @@ Collector
       Events: Last Run: 0, Total: 0
       Service Checks: Last Run: 1, Total: 842
       Average Execution Time : 8ms
-      Last Execution Date : 2022-12-20 22:51:54 GMT (1671576714000)
+      Last Execution Date : 2022-12-20 22:51:54 UTC (1671576714000)
       Last Successful Execution Date : Never
       Error: HTTPConnectionPool(host='10.146.15.207', port=9090): Max retries exceeded with url: /metrics (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f20296ba430>: Failed to establish a new connection: [Errno 111] Connection refused'))
       Traceback (most recent call last):
@@ -233,8 +228,8 @@ Collector
       Events: Last Run: 0, Total: 0
       Service Checks: Last Run: 1, Total: 842
       Average Execution Time : 29ms
-      Last Execution Date : 2022-12-20 22:52:01 GMT (1671576721000)
-      Last Successful Execution Date : 2022-12-20 22:52:01 GMT (1671576721000)
+      Last Execution Date : 2022-12-20 22:52:01 UTC (1671576721000)
+      Last Successful Execution Date : 2022-12-20 22:52:01 UTC (1671576721000)
       
       Instance ID: datadog_cluster_agent:79dc7329a0398f09 [OK]
       Configuration Source: file:/etc/datadog-agent/conf.d/datadog_cluster_agent.d/auto_conf.yaml
@@ -243,8 +238,8 @@ Collector
       Events: Last Run: 0, Total: 0
       Service Checks: Last Run: 1, Total: 838
       Average Execution Time : 25ms
-      Last Execution Date : 2022-12-20 22:51:59 GMT (1671576719000)
-      Last Successful Execution Date : 2022-12-20 22:51:59 GMT (1671576719000)
+      Last Execution Date : 2022-12-20 22:51:59 UTC (1671576719000)
+      Last Successful Execution Date : 2022-12-20 22:51:59 UTC (1671576719000)
       
     
     network (2.9.2)
@@ -256,8 +251,8 @@ Collector
       Events: Last Run: 0, Total: 0
       Service Checks: Last Run: 0, Total: 0
       Average Execution Time : 6ms
-      Last Execution Date : 2022-12-20 22:51:48 GMT (1671576708000)
-      Last Successful Execution Date : 2022-12-20 22:51:48 GMT (1671576708000)
+      Last Execution Date : 2022-12-20 22:51:48 UTC (1671576708000)
+      Last Successful Execution Date : 2022-12-20 22:51:48 UTC (1671576708000)
       
   Check Initialization Errors
   ===========================
@@ -416,8 +411,8 @@ Process Agent
 =============
 
   Version: x.y.z
-  Status date: 2022-12-20 22:52:01.802 GMT (1671576721802)
-  Process Agent Start: 2022-12-20 19:21:28.069 GMT (1671564088069)
+  Status date: 2022-12-20 22:52:01.802 UTC (1671576721802)
+  Process Agent Start: 2022-12-20 19:21:28.069 UTC (1671564088069)
   Pid: 12223
   Go Version: go1.18.8
   Build arch: amd64
@@ -2699,7 +2694,7 @@ const agentStatusJSON = `{
          "socket-fqdn":"dd-datadog-c4kcx",
          "socket-hostname":"dd-datadog-c4kcx",
          "timezones":[
-            "GMT"
+            "UTC"
          ]
       },
       "network":null,
@@ -2802,7 +2797,7 @@ const agentStatusJSON = `{
                "socket-fqdn":"dd-datadog-c4kcx",
                "socket-hostname":"dd-datadog-c4kcx",
                "timezones":[
-                  "GMT"
+                  "UTC"
                ]
             },
             "network":null,
