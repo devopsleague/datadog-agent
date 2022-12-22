@@ -7,11 +7,13 @@ package status
 
 import (
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func TestFormatStatus(t *testing.T) {
+	time.Local = time.UTC
 	t.Run("invalid JSON", func(t *testing.T) {
 		actual, err := FormatStatus([]byte(`-`))
 		assert.Nil(t, err)
