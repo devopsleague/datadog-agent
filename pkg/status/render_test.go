@@ -497,7 +497,15 @@ DogStatsD
   Uds Packet Reading Errors: 0
   Uds Packets: 1
   Unterminated Metric Errors: 0
-`
+
+====
+OTLP
+====
+  
+  Status: Not enabled
+  Collector status: Not running
+  
+  `
 		assert.Equal(t, want, actual)
 	})
 }
