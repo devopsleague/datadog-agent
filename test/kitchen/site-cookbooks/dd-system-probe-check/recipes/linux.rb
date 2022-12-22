@@ -35,6 +35,8 @@ case node[:platform]
     package 'iptables'
 end
 
+package 'busybox'
+
 package 'conntrack'
 
 package 'netcat' do
