@@ -67,7 +67,7 @@ func Commands(globalParams *command.GlobalParams) []*cobra.Command {
 			return fxutil.OneShot(start,
 				fx.Supply(params),
 				fx.Supply(core.BundleParams{
-					ConfigParams: config.NewSecurityAgentParams(globalParams.ConfigFilePaths),
+					ConfigParams: config.NewSecurityAgentParams(params.ConfigFilePaths),
 					LogParams:    log.LogForOneShot(command.LoggerName, "info", true)}),
 				core.Bundle,
 			)
