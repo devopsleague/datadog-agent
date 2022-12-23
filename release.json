@@ -14,7 +14,7 @@
         "WINDOWS_DDNPM_DRIVER": "release-signed",
         "WINDOWS_DDNPM_VERSION": "2.1.1",
         "WINDOWS_DDNPM_SHASUM": "f52d4db27715e32008c5903393d0bc990ceb134f269fa10e76d08b3659587731",
-        "SECURITY_AGENT_POLICIES_VERSION": "master"
+        "SECURITY_AGENT_POLICIES_VERSION": "lebauce/cis-ubuntu-2204"
     },
     "nightly-a7": {
         "INTEGRATIONS_CORE_VERSION": "master",
@@ -26,7 +26,7 @@
         "WINDOWS_DDNPM_DRIVER": "release-signed",
         "WINDOWS_DDNPM_VERSION": "2.1.1",
         "WINDOWS_DDNPM_SHASUM": "f52d4db27715e32008c5903393d0bc990ceb134f269fa10e76d08b3659587731",
-        "SECURITY_AGENT_POLICIES_VERSION": "master"
+        "SECURITY_AGENT_POLICIES_VERSION": "lebauce/cis-ubuntu-2204"
     },
     "release-a6": {
         "INTEGRATIONS_CORE_VERSION": "7.42.0-rc.3",
